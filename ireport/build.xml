@@ -17,10 +17,12 @@
     <!-- uncomment the above lines to use ANT outside of Eclipse -->
     <target name="main">
         <fatjar.build output="ireport_fat.jar">
-        	<fatjar.manifest mergemanifests="false" removesigners="false" manifestfile="WebRoot\META-INF\MANIFEST.MF"/>
+        	<fatjar.manifest mergemanifests="false" manifestfile="WebRoot\META-INF\MANIFEST.MF"/>
             <fatjar.filesource path="D:\workspace\ireport\WebRoot\WEB-INF\classes" relpath="">
-                <fatjar.exclude relpath=".svn/"/>
+                <fatjar.exclude relpath="**/.svn/*"/>
                 <fatjar.exclude relpath="plugins/"/>
+            	<fatjar.exclude relpath=".svn/"/>
+            	<fatjar.exclude relpath="ant/"/>
                 <fatjar.exclude relpath="net/"/>
                 <fatjar.exclude relpath="lib/"/>
                 <fatjar.exclude relpath="a/"/>
@@ -47,14 +49,14 @@
             <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\jasperreports-flash-2.0.5.jar" relpath=""/>
             <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\cincom-jr-xmla.jar" relpath=""/>
             <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\sqleonardo-2007.03.jar" relpath=""/>
-            <fatjar.jarsource file="D:\eclipse_plug\struts-2.1.2-all\struts-2.1.2\lib\commons-beanutils-1.7.0.jar" relpath=""/>
-            <fatjar.jarsource file="D:\eclipse_plug\struts-2.1.2-all\struts-2.1.2\lib\commons-logging-1.0.4.jar" relpath=""/>
+            <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\commons-beanutils-1.7.0.jar" relpath=""/>
+            <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\commons-logging-1.0.4.jar" relpath=""/>
             <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\ojdbc14.jar" relpath=""/>
             <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\commons-collections-3.2.jar" relpath=""/>
             <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\swing-layout-1.0.3.jar" relpath=""/>
             <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\jxl.jar" relpath=""/>
             <fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\org-openide-util.jar" relpath=""/>
-        	<fatjar.jarsource file="D:\workspace\ireport\lib\jasperreports-3.0.0.jar" relpath=""/>
+        	<fatjar.jarsource file="D:\workspace\ireport\WebRoot\WEB-INF\lib\jasperreports-3.0.0.jar" relpath=""/>
         </fatjar.build>
     </target>
 </project>
