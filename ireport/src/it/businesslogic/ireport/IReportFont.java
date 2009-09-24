@@ -60,7 +60,7 @@ public class IReportFont extends IReportHashMapBean {
     static public final String  DEFAULT_REPORT_FONT = "";
 
     //LIMAO SansSerif => ËÎÌו
-    static public final String  DEFAULT_FONT_NAME = "SansSerif";
+    static public final String  DEFAULT_FONT_NAME = "ËÎÌו";
 
     //LIMAO: Helvetica=>STSong-Light
     static public final String  DEFAULT_PDF_FONT_NAME = "STSong-Light";

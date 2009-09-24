@@ -6,16 +6,70 @@
 
 package it.businesslogic.ireport.plugin.templatemanager;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
+
+import javax.swing.JFileChooser;
+
+import com.chinacreator.ireport.IreportConstant;
+import com.chinacreator.ireport.IreportUtil;
+import com.chinacreator.ireport.component.DialogFactory;
+import com.chinacreator.ireport.component.FileSelectFilter;
+import com.chinacreator.ireport.component.ImageSelectPreview;
+
 /**
  *
  * @author  Administrator
  */
 public class NewServerTemplate extends javax.swing.JDialog {
-
+	
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     /** Creates new form NewJDialog */
     public NewServerTemplate(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        jTextField1.setEnabled(false);
+        jButton1.setEnabled(false);
+        
+        ItemListener itemListener = new ItemListener(){
+    		public void itemStateChanged(ItemEvent e) {
+    			Object obj=e.getItem(); 
+                if(obj.equals(jCheckBox1)){ 
+                    if(jCheckBox1.isSelected()){ 
+                        jTextField1.setEnabled(false);
+                        jButton1.setEnabled(false);
+                        jComboBox1.setEnabled(true);
+                    }else{ 
+                    	jTextField1.setEnabled(true);
+                        jButton1.setEnabled(true);
+                        jComboBox1.setEnabled(false);
+                    } 
+                } 
+    			
+    		}
+            
+        };
+        jCheckBox1.setSelected(true);
+        jCheckBox1.addItemListener(itemListener);
     }
 
     /** This method is called from within the constructor to
@@ -154,7 +208,7 @@ public class NewServerTemplate extends javax.swing.JDialog {
 
         jLabel3.setText("新建模板文件名");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { IreportConstant.TEMPLATE_C, IreportConstant.TEMPLATE_T }));
 
         jLabel5.setText("模板文件类型");
 
@@ -234,21 +288,74 @@ public class NewServerTemplate extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>
-
+ 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {
-       System.out.print("浏览文件");
+    	if(jCheckBox1.isSelected()){
+    		return;
+    	}
+       JFileChooser jfc = new JFileChooser();
+       jfc.setFont(new java.awt.Font("宋体", 0, 12));
+       jfc.setFileFilter(new FileSelectFilter("xml","模板文件选择(*.xml)"));
+       jfc.setDialogTitle("选择模板文件");
+       int result = jfc.showOpenDialog(null);
+       
+       if (result == JFileChooser.APPROVE_OPTION) {
+      	 File file = jfc.getSelectedFile();
+      	 jTextField1.setText(file.getPath());
+       }
+       
     }
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {
-        System.out.print("浏览图片");
+    	JFileChooser jfc = new JFileChooser();
+    	 ImageSelectPreview preview = new ImageSelectPreview(jfc);
+         jfc.addPropertyChangeListener(preview);
+         jfc.setDialogTitle("选择模板预览图片");
+         jfc.setAccessory(preview);
+         int result = jfc.showOpenDialog(null);
+         
+         if (result == JFileChooser.APPROVE_OPTION) {
+        	 File file = jfc.getSelectedFile();
+        	 jTextField2.setText(file.getPath());
+         }
+
+         
     }
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {
+    	String tfile = null;
+    	String imgFile = null;
+    	String ttype = null;
+    	String tname = null;
+       if(jCheckBox1.isSelected()){
+    	   tfile = (String)jComboBox1.getSelectedItem();
+       }else{
+    	   tfile = jTextField1.getText();
+       }
+       if(IreportUtil.isBlank(tfile)){
+    	   DialogFactory.showErrorMessageDialog(this, "你未选择模板文件", "新建错误");
+    	   return;
+       }
+       imgFile = jTextField2.getText();
+       if(IreportUtil.isBlank(imgFile)){
+    	   DialogFactory.showErrorMessageDialog(this, "你未选择模板预览图片", "新建错误");
+    	   return;
+       }
+       ttype = (String)jComboBox2.getSelectedItem();
+       
+       tname = jTextField3.getText();
+       if(IreportUtil.isBlank(tname)){
+    	   DialogFactory.showErrorMessageDialog(this, "未填写模板文件名", "新建错误");
+    	   return;
+       }
+       
        System.out.print("新建到服务器");
+       
     }
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {
-         System.out.print("取消");
+    	this.setVisible(false);
+    	this.dispose();
     }
 
     /**
@@ -267,27 +374,4 @@ public class NewServerTemplate extends javax.swing.JDialog {
             }
         });
     }
-
-    // Variables declaration - do not modify
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    // End of variables declaration
-
 }

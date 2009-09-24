@@ -74,14 +74,12 @@ public class TemplatesFrame extends javax.swing.JDialog {
         setSize(d);
         setLocationRelativeTo(null);
 
-        addWindowListener(new WindowAdapter() {
+        addWindowListener(new WindowAdapter(){
 
-            @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
             }
-        });
-
+        }); 
 
     }
 
@@ -128,7 +126,8 @@ public class TemplatesFrame extends javax.swing.JDialog {
         deleteTemplate = new javax.swing.JButton();
         addTemplate = new javax.swing.JButton();
         modifyTemplate = new javax.swing.JButton();
-
+        editorJrxml =  new javax.swing.JButton();
+        
         jButton1 = new javax.swing.JButton();
         jLabelDescription = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -220,7 +219,7 @@ public class TemplatesFrame extends javax.swing.JDialog {
         newWithTemplate.setText("从模板新建"); // NOI18N
         newWithTemplate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	System.out.println("aaaaaaa");
+            	
             }
         });
 
@@ -237,7 +236,19 @@ public class TemplatesFrame extends javax.swing.JDialog {
             }
         });
 
+        jPanel1.add(editorJrxml, new java.awt.GridBagConstraints());
 
+        editorJrxml.setFont(new java.awt.Font("宋体", 0, 12));
+        editorJrxml.setText("编辑该模板"); // NOI18N
+        editorJrxml.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+            	JDialog jd = new ModifyTemplate((Frame) com,true);
+            	it.businesslogic.ireport.util.Misc.centerFrame(jd);
+            	jd.setVisible(true);
+            }
+        });
+        
         jPanel1.add(modifyTemplate, new java.awt.GridBagConstraints());
 
         modifyTemplate.setFont(new java.awt.Font("宋体", 0, 12));
@@ -446,6 +457,7 @@ public class TemplatesFrame extends javax.swing.JDialog {
     private javax.swing.JButton deleteTemplate;
     private javax.swing.JButton addTemplate;
     private javax.swing.JButton modifyTemplate;
+    private javax.swing.JButton editorJrxml;
 
     private javax.swing.JList jListTemplateItems;
     private javax.swing.JPanel jPanel1;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 - 2008 JasperSoft Corporation.  All rights reserved.
+ * Copyright (C) 2005 - 2008 JasperSoft Corporation.  All rights reserved. 
  * http://www.jaspersoft.com.
  *
  * Unless you have purchased a commercial license agreement from JasperSoft,
@@ -25,56 +25,34 @@
  *
  *
  * ReportElementSheetPanel.java
- *
+ * 
  * Created on 16 febbraio 2005, 6.57
  *
  */
 
 package it.businesslogic.ireport.gui.sheet;
 
-import it.businesslogic.ireport.Band;
+import it.businesslogic.ireport.*;
 import it.businesslogic.ireport.BarcodeReportElement;
-import it.businesslogic.ireport.BreakReportElement;
-import it.businesslogic.ireport.ChartReportElement2;
-import it.businesslogic.ireport.ExpressionContext;
+import it.businesslogic.ireport.FontListLoader;
 import it.businesslogic.ireport.GraphicReportElement;
-import it.businesslogic.ireport.IRFont;
 import it.businesslogic.ireport.IReportFont;
-import it.businesslogic.ireport.ImageReportElement;
 import it.businesslogic.ireport.LineReportElement;
-import it.businesslogic.ireport.Pen;
 import it.businesslogic.ireport.RectangleReportElement;
-import it.businesslogic.ireport.ReportElement;
-import it.businesslogic.ireport.StaticTextReportElement;
-import it.businesslogic.ireport.Style;
 import it.businesslogic.ireport.TextFieldReportElement;
 import it.businesslogic.ireport.TextReportElement;
-import it.businesslogic.ireport.TransformationType;
-import it.businesslogic.ireport.UndefinedStyle;
 import it.businesslogic.ireport.crosstab.CrosstabCell;
+import it.businesslogic.ireport.gui.*;
+import it.businesslogic.ireport.gui.JNumberComboBox;
 import it.businesslogic.ireport.gui.JNumberField;
-import it.businesslogic.ireport.gui.JReportFrame;
-import it.businesslogic.ireport.gui.MainFrame;
-import it.businesslogic.ireport.gui.event.FontsListChangedEvent;
-import it.businesslogic.ireport.gui.event.FontsListChangedListener;
-import it.businesslogic.ireport.gui.event.ReportBandChangedEvent;
-import it.businesslogic.ireport.gui.event.ReportBandsSelectionEvent;
-import it.businesslogic.ireport.gui.event.ReportElementChangedEvent;
-import it.businesslogic.ireport.gui.event.ReportElementsSelectionEvent;
-import it.businesslogic.ireport.gui.event.ReportFrameActivatedEvent;
-import it.businesslogic.ireport.gui.event.ReportFrameActivatedListener;
-import it.businesslogic.ireport.gui.event.ReportListener;
-import it.businesslogic.ireport.gui.event.ReportObjectsSelectionEvent;
-import it.businesslogic.ireport.gui.event.SheetPropertyValueChangedEvent;
-import it.businesslogic.ireport.util.I18n;
+import it.businesslogic.ireport.gui.event.*;
+import it.businesslogic.ireport.util.*;
 import it.businesslogic.ireport.util.LanguageChangedEvent;
 import it.businesslogic.ireport.util.LanguageChangedListener;
-import it.businesslogic.ireport.util.Misc;
-
 import java.awt.Point;
-import java.util.Enumeration;
-import java.util.Vector;
-
+import java.util.*;
+import javax.swing.FocusManager;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -84,7 +62,7 @@ import javax.swing.SwingUtilities;
  * @author  Administrator
  */
 public class ReportElementSheetPanel extends CategorySheetPanel implements ReportListener, LanguageChangedListener, ReportFrameActivatedListener {
-
+    
     // Sheet properties
     private ComboBoxSheetProperty spBands;
     private SheetProperty spTop;
@@ -94,7 +72,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
     private SheetProperty spFgColor;
     private SheetProperty spBgColor;
     private SheetProperty spMode;
-
+    
     private SheetProperty spPrintRepeatedValues;
     private SheetProperty spPrintWhenDetailOverflows;
     private SheetProperty spPrintInFirstWholeBand;
@@ -103,25 +81,25 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
     private SheetProperty spElementKey;
     private SheetProperty spStretchType;
     private ComboBoxSheetProperty spStyle;
-
+    
     private ComboBoxSheetProperty spGroups;
     private ExpressionSheetProperty spPrintWhenExpression;
-
+    
     private SheetProperty spFill;
     private SheetProperty spPen;
     private SheetProperty spLineWidth;
     private LineComboBoxSheetProperty spLineStyle;
-
+    
     private SheetProperty spRadius;
     private SheetProperty spDirection;
-
+    
     private SheetProperty spTextHAlign;
     private SheetProperty spTextVAlign;
     private SheetProperty spStyledText;
     private SheetProperty spLineSpacing;
     private SheetProperty spRotate;
     private SheetProperty spMarkup;
-
+    
     private SheetProperty spFontName;
     private NumberComboBoxSheetProperty spFontSize;
     private SheetProperty spPdfFontName;
@@ -131,7 +109,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
     private SheetProperty spStriketrough;
     private SheetProperty spPdfEmbedded;
     private SheetProperty spPdfEncoding;
-
+    
     private ExpressionSheetProperty spStaticText;
     private ExpressionSheetProperty spTextfieldExpression;
     private SheetProperty spTextfieldExpressionClass;
@@ -140,7 +118,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
     private SheetProperty spStretchWithOverflow;
     private SheetProperty spTextfieldBlankWhenNull;
     private PatternSheetProperty spPattern;
-
+    
     private ExpressionSheetProperty spImageExpression;
     private SheetProperty spImageExpressionClass;
     private SheetProperty spImageEvaluationTime;
@@ -148,13 +126,13 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
     private SheetProperty spImageScale;
     private SheetProperty spImageError;
     private SheetProperty spRenderType;
-
+    
     private SheetProperty spImageHAlign;
     private SheetProperty spImageVAlign;
     private SheetProperty spImageLazy;
     private SheetProperty spImageCache;
-
-
+    
+    
     private SheetProperty spBCType;
     private SheetProperty spBCChecksum;
     private SheetProperty spBCShowText;
@@ -168,57 +146,57 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
     private SheetProperty spBCVAlign;
     private SheetProperty spBCEvaluationTime;
     private ComboBoxSheetProperty spBCEvaluationGroup;
-
+    
     private SheetProperty spBreakType;
-
+    
     // --- CAHRT ---
     private SheetProperty spChartEvaluationTime;
     private ComboBoxSheetProperty spChartEvaluationGroup;
-
-
+    
+    
     public  static java.awt.Color sharedDifferentValueLabelColor = java.awt.Color.red.darker().darker();
     public  static java.awt.Color mandatoryPropertiesLabelColor = java.awt.Color.blue;
     public  static java.awt.Color notMandatoryPropertiesLabelColor = java.awt.Color.black;
-
+        
     private JReportFrame jrf = null;
-    private boolean init = false;
-
+    private boolean init = false;   
+    
     private Vector elementSelection = new Vector();
-
+    
     /** Creates a new instance of ReportElementSheetPanel */
     public ReportElementSheetPanel() {
         super();
-
+        
         initSheetProperties();
         // We have to register for element changes...
         MainFrame mf = MainFrame.getMainInstance();
         mf.addReportListener( this );
         mf.addReportFrameActivatedListener( this);
-
+        
         I18n.addOnLanguageChangedListener( this );
-
+        
         MainFrame.getMainInstance().addFontsListChangedListener( new FontsListChangedListener() {
             public void fontsListChanged(FontsListChangedEvent evt) {
-
+                
                 boolean localinit = isInit();
                 setInit(true);
                 updateReportFonts();
                 setInit(localinit);
             }
         } );
-
-
+        
+        
     }
 
     public void reportFrameActivated(ReportFrameActivatedEvent evt) {
-
+    
         if (evt.getReportFrame() == null)
         {
             updateSelection(evt.getReportFrame());
         }
-
+        
     }
-
+    
     public void languageChanged(LanguageChangedEvent evt) {
         super.applyI18n();
         this.removeAllProperties();
@@ -226,13 +204,13 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         updateSelection();
     }
 
-
+    
      public void updateSelection()
      {
          JReportFrame newJrf = MainFrame.getMainInstance().getActiveReportFrame();
          updateSelection(newJrf);
      }
-
+     
      /**
       * Numbers do not change when the focus is lost due to a selection change.
       * This apply the value....
@@ -264,18 +242,18 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                     return; // Only a component can be focused at time...
                  }
              }
-
+             
          }
      }
-
+     
     /**
      * Update all the element properties...
-     *
+     * 
      */
      public void updateSelection(JReportFrame newJrf)
      {
         if (getElementSelection().size() == 0 &&
-            (newJrf == null ||
+            (newJrf == null || 
             (newJrf.getSelectedCrosstabEditorPanel() != null &&
              newJrf.getSelectedCrosstabEditorPanel().getSelectedElements().size() == 0) ||
              newJrf.getSelectedCrosstabEditorPanel() == null &&
@@ -284,14 +262,14 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             // Nothind to do!
             return;
         }
-
+        
         // Fix for numbers focus losing...
-        //****//
-
+        //****//       
+        
         applyValueForNumbers();
 
         setInit(true);
-
+        
         if (newJrf != null)
         {
              if (newJrf.getSelectedCrosstabEditorPanel() == null)
@@ -307,13 +285,13 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         {
              getElementSelection().removeAllElements();
         }
-
+        
 
         this.removeAllProperties();
 
-
+        
         this.jrf = newJrf;
-
+        
         if (jrf == null || getElementSelection().size() == 0)
         {
             this.recreateSheet();
@@ -322,11 +300,11 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
 
 
         updateAllComboBoxes();
-
-
+      
+        
         try {
         Vector selectedElements = getElementSelection();
-
+        
         boolean sameBand = true;
         boolean sameTop = true;
         boolean sameLeft = true;
@@ -344,22 +322,22 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         boolean sameStretchType = true;
         boolean sameStyle = true;
         boolean samePrintWhenExpression = true;
-
+        
         // ---- GRAPHICS ELEMENT -----
         boolean areAllGraphicsElements = true;
         boolean sameFill = true;
         boolean samePen = true;
         boolean sameLineWidth = true;
         boolean sameLineStyle = true;
-
+        
         // ---- RECTANGLE ELEMENT -----
         boolean areAllRectangleElements = true;
         boolean sameRadius = true;
-
+        
         // ---- LINE ELEMENT -----
         boolean areAllLineElements = true;
         boolean sameDirection = true;
-
+        
         // ---- TEXT ELEMENT ELEMENT -----
         boolean areAllTextElements = true;
         boolean sameHAlign = true;
@@ -377,15 +355,15 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         boolean samePDFFontName = true;
         boolean samePdfEncoding = true;
         boolean sameMarkup = true;
-
+        
         // ---- BREAK ELEMENT ELEMENT -----
         boolean areAllBreakElements = true;
         boolean sameBreakType = true;
-
+        
         // ---- SATIC TEXT ELEMENT ELEMENT -----
         boolean areAllStaticTextElements = true;
         boolean sameText = true;
-
+        
         // ---- TEXTFIELD ELEMENT ELEMENT -----
         boolean areAllTextfieldElements = true;
         boolean sameTextfieldExpression = true;
@@ -395,7 +373,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         boolean sameStrtchWithOverflow = true;
         boolean sameBlankWhenNull = true;
         boolean samePattern = true;
-
+        
         // ---- IAMGE ELEMENT -----
         boolean areAllImageElements = true;
         boolean sameImageExpression = true;
@@ -408,8 +386,8 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         boolean sameImageOnError = true;
         boolean sameImageVAlign = true;
         boolean sameImageHAlign = true;
-
-
+        
+        
         // ---- BARCODE ELEMENT ----
         boolean areAllBarcodeElements = true;
         boolean sameBCType = true;
@@ -425,7 +403,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         boolean sameBCVAlign = true;
         boolean sameBCEvaluationTime = true;
         boolean sameBCEvaluationGroup = true;
-
+        
         // --- CHART ELEMENT ----
         boolean areAllChartElements = true;
         boolean sameChartEvaluationTime = true;
@@ -433,11 +411,11 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         boolean sameRenderType = true;
 
         boolean isTheFirstElement = true;
-
+        
         //spBands.setSetting(true);
         Band last_band = null;
         int y_location = 0;
-
+                
         for (int i=0; i<selectedElements.size(); ++i)
         {
             ReportElement re = (ReportElement)selectedElements.elementAt(i);
@@ -453,32 +431,32 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                 y_location = re.getCell().getTop();
                 x_location = re.getCell().getLeft();
             }
-
+                
             //if (sameBand) sameBand = setComboBox(isTheFirstElement, (re.getBand() == null) ? (Object)re.getCell() : (Object)re.getBand(), (JComboBox)spBands.getEditor());
-
+            
             if (sameTop)
             {
                 int position_y = re.getPosition().y;
                 if (re.getParentElement() != null) position_y -= re.getParentElement().getPosition().y;
                 else position_y = position_y - y_location - 10;
-
+                
                 sameTop = this.setElementNumber(isTheFirstElement, (double)position_y, (JNumberField)spTop.getEditor());
             }
-
+            
             if (sameLeft)
             {
                 int position_x = re.getPosition().x;
                 if (re.getParentElement() != null) position_x -= re.getParentElement().getPosition().x;
                 else position_x = position_x - 10 - x_location;
-
+                
                 sameLeft = this.setElementNumber(isTheFirstElement,position_x, (JNumberField)spLeft.getEditor());
             }
-            if (sameWidth)  sameWidth = this.setElementNumber(isTheFirstElement, re.getWidth(), (JNumberField)spWidth.getEditor());
+            if (sameWidth)  sameWidth = this.setElementNumber(isTheFirstElement, re.getWidth(), (JNumberField)spWidth.getEditor()); 
             if (sameHeight)  sameHeight = this.setElementNumber(isTheFirstElement, re.getHeight(), (JNumberField)spHeight.getEditor());
             if (sameForeground)  sameForeground = this.setColorProperty(isTheFirstElement, re.getColorValue(re.FGCOLOR, null), spFgColor);
             if (sameBackground)  sameBackground = this.setColorProperty(isTheFirstElement, re.getColorValue(re.BGCOLOR, null), spBgColor);
-
-            if (sameMode)  sameMode = this.setCheckBox(isTheFirstElement, re.getTransparent().equals("Transparent"), re.getPropertyValue(re.MODE)==null, spMode );
+            
+            if (sameMode)  sameMode = this.setCheckBox(isTheFirstElement, re.getTransparent().equals("Transparent"), re.getPropertyValue(re.MODE)==null, spMode );            
             if (samePrintRepeatedValues)  samePrintRepeatedValues = this.setCheckBox(isTheFirstElement, re.isIsPrintRepeatedValues(), false, spPrintRepeatedValues );
             if (samePrintWhenDetailOverflows)  samePrintWhenDetailOverflows= this.setCheckBox(isTheFirstElement, re.isIsPrintWhenDetailOverflows(), false, spPrintWhenDetailOverflows );
             if (samePrintInFirstWholeBand)  samePrintInFirstWholeBand = this.setCheckBox(isTheFirstElement, re.isIsPrintInFirstWholeBand(), false, spPrintInFirstWholeBand );
@@ -488,7 +466,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             if (sameStretchType) sameStretchType = setTagComboBox(isTheFirstElement, re.getStretchType(), spStretchType);
             if (sameStyle) sameStyle = setTagComboBox(isTheFirstElement, (re.getStyle() == null) ? (Object)"" : (Object)re.getStyle(), spStyle);
             if (samePrintWhenExpression) samePrintWhenExpression = setTextArea(isTheFirstElement, re.getPrintWhenExpression(), spPrintWhenExpression);
-            if (i==0) spElementKey.setValue(re.getKey());
+            if (i==0) spElementKey.setValue(re.getKey());           
 
             // ---- GRAPHIC ELEMENTS ----
             if (areAllGraphicsElements && (re instanceof GraphicReportElement))
@@ -496,7 +474,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                 GraphicReportElement gre = (GraphicReportElement)re;
                 if (sameLineStyle) sameLineStyle = setComboBox(isTheFirstElement, gre.getPen() != null ? gre.getPen().getLineStyle() : null, (JComboBox)spLineStyle.getEditor() );
                 if (sameLineWidth) sameLineWidth = setElementNumber(isTheFirstElement, gre.getPen() != null ? gre.getPen().getLineWidth() : 0.0, (JNumberField)spLineWidth.getEditor() );
-
+                        
                 if (samePen) samePen = setTagComboBox(isTheFirstElement, re.getPropertyValue(gre.PEN), spPen);
                 if (sameFill) sameFill = setTagComboBox(isTheFirstElement, re.getPropertyValue(gre.FILL), spFill);
             }
@@ -504,7 +482,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             {
                 areAllGraphicsElements = false;
             }
-
+            
             // ---- RECTANGLE ELEMENTS ----
             if (areAllRectangleElements && (re instanceof RectangleReportElement))
             {
@@ -514,8 +492,8 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             else
             {
                 areAllRectangleElements = false;
-            }
-
+            }   
+            
             // ---- LINE ELEMENTS ----
             if (areAllLineElements && (re instanceof LineReportElement))
             {
@@ -525,19 +503,19 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             else
             {
                 areAllLineElements = false;
-            }
-
+            }   
+            
             // ---- TEXT ELEMENTS ----
             if (areAllTextElements && (re instanceof TextReportElement))
             {
                 TextReportElement rre = (TextReportElement)re;
                 if (sameHAlign) sameHAlign = setTagComboBox(isTheFirstElement, re.getPropertyValue(rre.ALIGN), spTextHAlign);
                 if (sameVAlign) sameVAlign = setTagComboBox(isTheFirstElement, re.getPropertyValue(rre.VERTICAL_ALIGN), spTextVAlign);
-                if (sameStyledText)  sameStyledText = this.setCheckBox(isTheFirstElement, rre.isIsStyledText(), re.getPropertyValue(rre.IS_STYLED_TEXT)==null, spStyledText );
+                if (sameStyledText)  sameStyledText = this.setCheckBox(isTheFirstElement, rre.isIsStyledText(), re.getPropertyValue(rre.IS_STYLED_TEXT)==null, spStyledText ); 
                 if (sameLineSpacing) sameLineSpacing = setTagComboBox(isTheFirstElement, re.getPropertyValue(rre.LINE_SPACING), spLineSpacing);
                 if (sameRotate) sameRotate = setTagComboBox(isTheFirstElement, re.getPropertyValue(rre.ROTATE), spRotate);
                 if (sameMarkup) sameMarkup = setTagComboBox(isTheFirstElement, re.getPropertyValue(rre.MARKUP), spMarkup);
-
+                
                 if (sameBold)  sameBold = this.setCheckBox(isTheFirstElement, rre.isBold(), rre.getIReportFont().getPropertyValue( IReportFont.IS_BOLD)==null, spBold );
                 if (sameItalic)  sameItalic = this.setCheckBox(isTheFirstElement, rre.isItalic(), rre.getIReportFont().getPropertyValue( IReportFont.IS_ITALIC)==null, spItalic );
                 if (sameUnderline)  sameUnderline = this.setCheckBox(isTheFirstElement, rre.isUnderline(), rre.getIReportFont().getPropertyValue( IReportFont.IS_UNDERLINE)==null, spUnderline );
@@ -547,13 +525,13 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                 if (sameFontName) sameFontName = setTagComboBox(isTheFirstElement, rre.getIReportFont().getPropertyValue( IReportFont.FONT_NAME), spFontName);
                 if (samePDFFontName) samePDFFontName = this.setTagComboBox(isTheFirstElement, rre.getIReportFont().getPropertyValue( IReportFont.PDF_FONT_NAME) , spPdfFontName );
                 if (samePdfEncoding) samePdfEncoding = this.setTagComboBox(isTheFirstElement, rre.getIReportFont().getPropertyValue( IReportFont.PDF_ENCODING) , spPdfEncoding );
-
+                
             }
             else
             {
                 areAllTextElements = false;
-            }
-
+            }   
+            
             // ---- STATIC TEXT ELEMENTS ----
             if (areAllStaticTextElements && (re instanceof StaticTextReportElement))
             {
@@ -563,8 +541,8 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             else
             {
                 areAllStaticTextElements = false;
-            }
-
+            }   
+            
             // ---- TEXTFIELD ELEMENTS ----
             if (areAllTextfieldElements && (re instanceof TextFieldReportElement))
             {
@@ -574,14 +552,14 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                 if (sameTextfieldEvaluationTime) sameTextfieldEvaluationTime = setTagComboBox(isTheFirstElement, rre.getEvaluationTime(), spTextfieldEvaluationTime);
                 if (sameTextfieldEvaluationGroup && sameTextfieldEvaluationTime) sameTextfieldEvaluationGroup = setTagComboBox(isTheFirstElement, rre.getGroup(), spTextfieldEvaluationGroup);
                 if (sameStrtchWithOverflow) sameStrtchWithOverflow = setCheckBox(isTheFirstElement, rre.isStretchWithOverflow(), false, spStretchWithOverflow);
-                if (sameBlankWhenNull) sameBlankWhenNull = setCheckBox(isTheFirstElement, rre.isBlankWhenNull(), false, spTextfieldBlankWhenNull);
+                if (sameBlankWhenNull) sameBlankWhenNull = setCheckBox(isTheFirstElement, rre.isBlankWhenNull(), false, spTextfieldBlankWhenNull);     
                 if (samePattern) samePattern = setTextPattern(isTheFirstElement, re.getPropertyValue( rre.PATTERN ), spPattern);
             }
             else
             {
                 areAllTextfieldElements = false;
             }
-
+            
             // ---- IMAGE ELEMENTS ----
             if (areAllImageElements && (re instanceof ImageReportElement) && !(re instanceof BarcodeReportElement))
             {
@@ -592,7 +570,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                 if (sameImageEvaluationGroup && sameImageEvaluationTime) sameImageEvaluationGroup = setTagComboBox(isTheFirstElement, rre.getEvaluationGroup(), spImageEvaluationGroup);
                 if (sameImageLazy) sameImageLazy = setCheckBox(isTheFirstElement, rre.isIsLazy(), false, spImageLazy);
                 if (sameImageScale) sameImageScale = setTagComboBox(isTheFirstElement, re.getPropertyValue(rre.SCALE), spImageScale);
-                if (sameImageCache) sameImageCache = setCheckBox(isTheFirstElement, rre.isIsUsingCache(), rre.getPropertyValue(rre.USING_CACHE)==null, spImageCache);
+                if (sameImageCache) sameImageCache = setCheckBox(isTheFirstElement, rre.isIsUsingCache(), rre.getPropertyValue(rre.USING_CACHE)==null, spImageCache);     
                 if (sameImageVAlign) sameImageVAlign = setTagComboBox(isTheFirstElement, re.getPropertyValue(rre.VERTICAL_ALIGN), spImageVAlign);
                 if (sameImageHAlign) sameImageHAlign = setTagComboBox(isTheFirstElement, re.getPropertyValue(rre.HORIZONTAL_ALIGN), spImageHAlign);
             }
@@ -600,7 +578,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             {
                 areAllImageElements = false;
             }
-
+        
             // ---- IMAGE ELEMENTS ----
             if (areAllBarcodeElements && re instanceof BarcodeReportElement)
             {
@@ -622,18 +600,18 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             {
                 areAllBarcodeElements = false;
             }
-
+            
             if (areAllBreakElements && (re instanceof BreakReportElement))
             {
                 BreakReportElement rre = (BreakReportElement)re;
                 if (sameBreakType) sameBreakType = setTagComboBox(isTheFirstElement, rre.getType(), spBreakType);
-
+                
             }
             else
             {
                 areAllBreakElements = false;
             }
-
+            
             // ---- IMAGE ELEMENTS ----
             if (areAllChartElements && re instanceof ChartReportElement2)
             {
@@ -646,11 +624,11 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             {
                 areAllChartElements = false;
             }
-
+            
             if (sameBand) sameBand = setComboBox(isTheFirstElement, (re.getBand() == null) ? (Object)re.getCell() : (Object)re.getBand(), (JComboBox)spBands.getEditor());
-
+            
             isTheFirstElement = false;
-        }
+        }        
 
         spBands.setLabelColor( (sameBand) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spTop.setLabelColor( (sameTop) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
@@ -699,7 +677,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spStretchWithOverflow.setLabelColor( (sameStrtchWithOverflow) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spTextfieldBlankWhenNull.setLabelColor( (sameBlankWhenNull) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spPattern.setLabelColor( (sameBlankWhenNull) ? notMandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
-
+        
         spImageExpression.setLabelColor( (sameImageExpression) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spImageExpressionClass.setLabelColor( (sameImageExpressionClass) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spImageEvaluationTime.setLabelColor( (sameImageEvaluationTime) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
@@ -708,7 +686,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spImageCache.setLabelColor( (sameImageCache) ? notMandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spImageScale.setLabelColor( (sameImageScale) ? notMandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spImageError.setLabelColor( (sameImageOnError) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
-
+        
         spImageVAlign.setLabelColor( (sameImageVAlign) ? notMandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spImageHAlign.setLabelColor( (sameImageHAlign) ? notMandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spBCType.setLabelColor( (sameBCType) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
@@ -728,7 +706,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spChartEvaluationGroup.setLabelColor( (sameChartEvaluationGroup) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
         spRenderType.setLabelColor( (sameRenderType) ? mandatoryPropertiesLabelColor : sharedDifferentValueLabelColor );
 
-
+                
         ExpressionContext ec = new ExpressionContext();
         if (jrf.getSelectedCrosstabEditorPanel() == null)
         {
@@ -743,21 +721,21 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spImageExpression.setExpressionContext( ec );
         spBCExpression.setExpressionContext( ec );
         spBCApplicationIdentifier.setExpressionContext( ec );
+        
 
-
-
+        
         String commonStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.common","Common");
         this.addSheetProperty(commonStr, spBands);
         this.addSheetProperty(commonStr, spTop);
         this.addSheetProperty(commonStr, spLeft);
         this.addSheetProperty(commonStr, spHeight);
-        this.addSheetProperty(commonStr, spWidth);
+        this.addSheetProperty(commonStr, spWidth); 
         this.addSheetProperty(commonStr, spFgColor);
         this.addSheetProperty(commonStr, spBgColor);
         this.addSheetProperty(commonStr, spMode);
-
+        
         spPrintRepeatedValues.setDefaultValue( new Boolean(true));
-
+        
         this.addSheetProperty(commonStr, spRemoveLineWhenBlank);
         this.addSheetProperty(commonStr, spPrintInFirstWholeBand);
         this.addSheetProperty(commonStr, spPrintWhenDetailOverflows);
@@ -771,41 +749,41 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         this.addSheetProperty(commonStr, spStretchType);
         this.addSheetProperty(commonStr, spStyle);
         this.addSheetProperty(commonStr, spPrintWhenExpression);
-
+        
         if (areAllGraphicsElements)
         {
             String graphicStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.graphic","Graphic");
-
+            
             this.addSheetProperty(graphicStr, spLineWidth);
             this.addSheetProperty(graphicStr, spLineStyle);
-
+            
             this.addSheetProperty(graphicStr, spPen);
             this.addSheetProperty(graphicStr, spFill);
         }
-
+        
         if (areAllRectangleElements)
         {
             String rectangleStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.rectangle","Rectangle");
             this.addSheetProperty(rectangleStr, spRadius);
         }
-
+        
         if (areAllLineElements)
         {
             String lineStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.line","Line");
             this.addSheetProperty(lineStr, spDirection);
         }
-
+        
         if (areAllBreakElements)
         {
             String breakStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.break","Break");
             this.addSheetProperty(breakStr, spBreakType);
         }
-
-
+        
+        
         if (areAllTextElements)
         {
             String textStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.text","Text");
-
+            
             this.addSheetProperty(textStr, spFontName);
             this.addSheetProperty(textStr, spFontSize);
             this.addSheetProperty(textStr, spBold);
@@ -821,15 +799,15 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             this.addSheetProperty(textStr, spRotate);
             this.addSheetProperty(textStr, spStyledText);
             this.addSheetProperty(textStr, spMarkup);
-
+                      
         }
-
+        
         if (areAllStaticTextElements)
         {
             String staticTextStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.staticText","Static text");
             this.addSheetProperty(staticTextStr, spStaticText);
         }
-
+        
         if (areAllTextfieldElements)
         {
             String textFieldStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textField","Textfield");
@@ -840,7 +818,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             this.addSheetProperty(textFieldStr, spStretchWithOverflow);
             this.addSheetProperty(textFieldStr, spTextfieldBlankWhenNull);
             this.addSheetProperty(textFieldStr, spPattern);
-
+            
             if (!sameTextfieldEvaluationTime || !spTextfieldEvaluationTime.getValue().equals("Group"))
             {
                 spTextfieldEvaluationGroup.setReadOnly(true);
@@ -850,7 +828,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                 spTextfieldEvaluationGroup.setReadOnly(false);
             }
         }
-
+        
         if (areAllImageElements)
         {
             String imageStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.image","Image");
@@ -864,9 +842,9 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             this.addSheetProperty(imageStr, spImageHAlign);
             this.addSheetProperty(imageStr, spImageLazy);
             this.addSheetProperty(imageStr, spImageCache);
-
-
-
+            
+            
+            
             if (!sameImageEvaluationTime || !spImageEvaluationTime.getValue().equals("Group"))
             {
                 spImageEvaluationGroup.setReadOnly(true);
@@ -876,7 +854,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                 spImageEvaluationGroup.setReadOnly(false);
             }
         }
-
+        
         if (areAllBarcodeElements)
         {
             String barcodeStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.barcode","Barcode");
@@ -893,7 +871,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             this.addSheetProperty(barcodeStr, spBCVAlign);
             this.addSheetProperty(barcodeStr, spBCEvaluationTime);
             this.addSheetProperty(barcodeStr, spBCEvaluationGroup);
-
+            
             if (!sameBCEvaluationTime || !spBCEvaluationTime.getValue().equals("Group"))
             {
                 spBCEvaluationGroup.setReadOnly(true);
@@ -903,13 +881,13 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                 spBCEvaluationGroup.setReadOnly(false);
             }
         }
-
+        
         if (areAllChartElements)
         {
             String chartStr = it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.chart","Chart");
             this.addSheetProperty(chartStr, spChartEvaluationTime);
             this.addSheetProperty(chartStr, spChartEvaluationGroup);
-
+            
             if (!sameChartEvaluationTime || !spChartEvaluationTime.getValue().equals("Group"))
             {
                 spChartEvaluationGroup.setReadOnly(true);
@@ -918,11 +896,11 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             {
                 spChartEvaluationGroup.setReadOnly(false);
             }
-
+            
             this.addSheetProperty(chartStr, spRenderType);
         }
 
-
+        
 
         for (int i=0; i< this.getProperties().size(); ++i)
         {
@@ -930,7 +908,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             sp.setLabelError(null);
         }
 
-
+        
         this.recreateSheet();
 
         } catch (Exception ex)
@@ -939,41 +917,41 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         }
         finally
         {
-
+            
         }
-
+        
         setInit(false);
-
+        
      }
-
-
-
-
-
+     
+     
+    
+     
+     
      /**
       * This methos is called when a property changes...
       */
      public void sheetPropertyValueChanged(SheetPropertyValueChangedEvent evt)
      {
          if (isInit()) return;
-
-
-
+         
+         
+         
          //System.out.println("Changed: " + evt.getPropertyName());
          if (isNullItem((SheetProperty)evt.getSource())) return;
-
+         
          removeNullItem( (SheetProperty)evt.getSource() );
-
+         
          Vector selectedElements = getElementSelection();
-
+         
          for (int i=0; i<selectedElements.size(); ++i)
          {
-
+             
              ReportElement re = (ReportElement)selectedElements.elementAt(i);
              applyNewProperty(re,evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
          }
          repaintEditor();
-
+         
          ReportElementChangedEvent changedEvent = new ReportElementChangedEvent(jrf , selectedElements , ReportElementChangedEvent.CHANGED);
          changedEvent.setEventSource( this );
          if (evt.getPropertyName().equals("textfieldEvaluationTime"))
@@ -984,19 +962,19 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
          jrf.fireReportListenerReportElementsChanged(changedEvent);
          MainFrame.getMainInstance().getElementPropertiesDialog().updateSelection();
      }
-
-
+     
+     
      /*
       * This method apply the new value for the specified property
       * The oldValue can be wrong or null if a multiselection was performed
       */
      private void applyNewProperty(ReportElement re, String propertyName, Object oldValue, Object newValue)
      {
-
-
+         
+         
          if (propertyName == null) return;
          if (isInit()) return;
-
+         
          if (propertyName.equals("band"))
          {
             if (newValue != null && newValue instanceof Band) re.setBand((Band)newValue);
@@ -1005,24 +983,24 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
          else if (propertyName.equals("top"))
          {
             if (newValue != null && !newValue.equals(""))
-            {
+            {   
                 int val = Integer.parseInt(""+newValue);
                 int y_location = 0;
                 // For each panel, search
                 if (re.getBand() != null) {
                     y_location = this.jrf.getReport().getBandYLocation(re.getBand());
                 }
-
+            
                 if (re.getBand() == null && re.getCell() !=null)
                 {
                     y_location = re.getCell().getTop();
                 }
-
+                
                 if (re.getParentElement() != null)
                 {
                     y_location = (int)(re.getParentElement().getPosition().getY())-10;
                 }
-
+            
                 //System.out.println("Imposto position a: " + (val - (re.getPosition().y - 10 - y_location) ));
                 re.trasform( new Point(0, val - (re.getPosition().y - 10 - y_location) ) , TransformationType.TRANSFORMATION_MOVE);
             }
@@ -1030,9 +1008,9 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
          else if (propertyName.equals("left"))
          {
             if (newValue != null && !newValue.equals("") && !(re instanceof BreakReportElement))
-            {
+            {   
                 int val = Integer.parseInt(""+newValue);
-
+                
                 int normalization = 0;
                 if (re.getParentElement() != null)
                 {
@@ -1046,14 +1024,14 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                 {
                     normalization = jrf.getReport().getLeftMargin();
                 }
-
+                            
                 re.trasform( new Point( val - (re.getPosition().x-10-normalization) ,0 ), TransformationType.TRANSFORMATION_MOVE);
             }
          }
          else if (propertyName.equals("width"))
          {
             if (newValue != null && !newValue.equals("") && !(re instanceof BreakReportElement))
-            {
+            {   
                 int val = Integer.parseInt(""+newValue);
                 re.trasform( new Point( val - re.getWidth(),0 ), TransformationType.TRANSFORMATION_RESIZE_E);
             }
@@ -1061,7 +1039,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
          else if (propertyName.equals("height"))
          {
             if (newValue != null && !newValue.equals("") && !(re instanceof BreakReportElement))
-            {
+            {   
                 int val = Integer.parseInt(""+newValue);
                 re.trasform( new Point(0, val- re.getHeight() ), TransformationType.TRANSFORMATION_RESIZE_S);
             }
@@ -1139,7 +1117,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
          else if (propertyName.equals("style"))
          {
             if ((newValue+"").equals("")) newValue = null;
-
+            
             if (newValue != null && newValue instanceof String)
             {
                 String sname = (""+newValue).trim();
@@ -1166,15 +1144,15 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                     jrf.getReport().addStyle(us);
                     final Vector styles = jrf.getReport().getStyles();
                     SwingUtilities.invokeLater(new Runnable(){
-
+                    
                         public void run()
                         {
                             ((JComboBox)sp.getEditor()).addItem(us);
                         }
                     });
-
+                    
                 }
-
+                
             }
             else
             {
@@ -1236,7 +1214,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             if (newValue != null)
             {
                 try {
-
+                    
                    newValue = ""+(int)Double.parseDouble(""+ newValue);
                 } catch (Exception ex)
                 {
@@ -1344,7 +1322,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                  ((TextFieldReportElement)re).setGroup("");
              }
              spTextfieldEvaluationGroup.updateLabel();
-         }
+         } 
          else if (propertyName.equals("textfieldEvaluationGroup"))
          {
              ((TextFieldReportElement)re).setGroup( (newValue == null) ? "" : ""+newValue);
@@ -1388,7 +1366,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                  ((ImageReportElement)re).setEvaluationGroup("");
              }
              spImageEvaluationGroup.updateLabel();
-         }
+         } 
          else if (propertyName.equals("imageEvaluationGroup"))
          {
              ((ImageReportElement)re).setEvaluationGroup( (newValue == null) ? "" : ""+newValue);
@@ -1423,17 +1401,17 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
          {
             ((BarcodeReportElement)re).setType( Integer.parseInt( (newValue == null) ? "13" : ""+newValue));
             ((BarcodeReportElement)re).update();
-
+            
          }
          else if (propertyName.equals("barcodeBarWidth"))
          {
             ((BarcodeReportElement)re).setImageWidth( Integer.parseInt( (newValue == null) ? "1" : ""+newValue));
-
+            
          }
          else if (propertyName.equals("barcodeBarHeight"))
          {
             ((BarcodeReportElement)re).setImageHeight( Integer.parseInt( (newValue == null) ? "1" : ""+newValue));
-
+            
          }
          else if (propertyName.equals("barcodeExpression"))
          {
@@ -1457,7 +1435,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                  ((ImageReportElement)re).setEvaluationGroup("");
              }
              spBCEvaluationGroup.updateLabel();
-         }
+         } 
          else if (propertyName.equals("barcodeEvaluationGroup"))
          {
              ((ImageReportElement)re).setEvaluationGroup( (newValue == null) ? "" : ""+newValue);
@@ -1508,30 +1486,30 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                  ((ChartReportElement2)re).setEvaluationGroup("");
              }
              spChartEvaluationGroup.updateLabel();
-         }
+         } 
          else if (propertyName.equals("chartEvaluationGroup"))
          {
              ((ChartReportElement2)re).setEvaluationGroup( (newValue == null) ? "" : ""+newValue);
          }
      }
-
+     
      /**
       *     This method is called when a new element is selected,
       *     or deselected.
       */
-
+     
      public void reportElementsSelectionChanged(ReportElementsSelectionEvent evt){
 
             updateSelection();
 
      }
 
-
+   
      /*
       *     This method is called when an element is removed, changed or added.
       */
       public void reportElementsChanged(ReportElementChangedEvent evt){
-
+        
           if (evt.getEventSource() == null || evt.getEventSource() != this)
           {
               if (evt.getType() == evt.CHANGED && evt.getPropertyChanged() != null &&
@@ -1545,32 +1523,31 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
               }
           }
       }
-
+      
      /*
       *     This method is called when a band is removed, changed or added.
-      */
+      */ 
      public void reportBandChanged(ReportBandChangedEvent evt ) {
          updateSelection();
      }
-
-     @SuppressWarnings("unchecked")
-	protected void initSheetProperties()
+     
+     protected void initSheetProperties()
      {
         spBands = new ComboBoxSheetProperty("band",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.band","Band"));
         spBands.setShowResetButton(false);
-
+        
         spLeft =  new SheetProperty("left",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.left","Left"), SheetProperty.INTEGER);
         spLeft.setShowResetButton(false);
-
+        
         spTop =  new SheetProperty("top",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.top","Top"), SheetProperty.INTEGER);
         spTop.setShowResetButton(false);
-
+        
         spWidth =  new SheetProperty("width",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.width","Width"), SheetProperty.INTEGER);
         spWidth.setShowResetButton(false);
-
+        
         spHeight =  new SheetProperty("height",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.height","Height"), SheetProperty.INTEGER);
         spHeight.setShowResetButton(false);
-
+        
         spFgColor =  new SheetProperty("fgcolor",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.fgcolor","Foreground"), SheetProperty.COLOR);
         spBgColor =  new SheetProperty("bgcolor",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.bgcolor","Background"), SheetProperty.COLOR);
         spMode =  new SheetProperty("mode",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.mode","Transparent"), SheetProperty.BOOLEAN);
@@ -1582,40 +1559,40 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spPrintInFirstWholeBand.setShowResetButton(false);
         spRemoveLineWhenBlank =  new SheetProperty("removeLineWhenBlank",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.removeLineWhenBlank","Remove line when blank"), SheetProperty.BOOLEAN);
         spRemoveLineWhenBlank.setShowResetButton(false);
-
-
+        
+        
         spPositionType = new SheetProperty("positionType",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.positionType","Position type"), SheetProperty.COMBOBOX);
         spPositionType.setTags( new Tag[]{ new Tag("FixRelativeToTop",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.positionType.FixRelativeToTop","Fix relative to top")),
                                            new Tag("Float",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.positionType.Float","Float")),
                                            new Tag("FixRelativeToBottom",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.positionType.FixRelativeToBottom","Fix relative to bottom"))});
         spPositionType.setDefaultValue("FixRelativeToTop");
         spPositionType.setShowResetButton(false);
-
-
+                                           
+                                           
         spGroups = new ComboBoxSheetProperty("printWhenGroupChanges",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.printWhenGroupChanges","Print when group changes"));
         spGroups.setShowResetButton(false);
         spElementKey = new SheetProperty("elementKey",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.elementKey","Element key"), SheetProperty.STRING);
         spElementKey.setShowResetButton(false);
-
+        
         spStretchType = new SheetProperty("stretchType",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.stretchType","Stretch type"), SheetProperty.COMBOBOX);
         spStretchType.setTags( new Tag[]{ new Tag("NoStretch",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.stretchType.NoStretch","Fix relative to top")),
                                            new Tag("RelativeToTallestObject",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.stretchType.RelativeToTallestObject","Float")),
                                            new Tag("RelativeToBandHeight",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.stretchType.RelativeToBandHeight","Fix relative to bottom"))});
         spStretchType.setDefaultValue("NoStretch");
         spStretchType.setShowResetButton(false);
-
+        
         spStyle = new ComboBoxSheetProperty("style",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.style","Style"));
         spStyle.setShowResetButton(false);
         ((JComboBox)spStyle.getEditor()).setEditable(true);
         spStyle.setDefaultValue("");
-
+        
         spPrintWhenExpression = new ExpressionSheetProperty("printWhenExpression",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.printWhenExpression","Print When Expression"));
         spPrintWhenExpression.setShowResetButton(false);
 
         spLineWidth = new SheetProperty("lineWidth",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.lineWidth","Line Width"), SheetProperty.NUMBER);
         spLineWidth.setDefaultValue("0");
         spLineStyle = new LineComboBoxSheetProperty("lineStyle",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.lineStyle","Line Style"));
-
+        
         spPen = new SheetProperty("pen","<html><s></b><font color=\"#888888\">" + it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.pen","Pen"), SheetProperty.COMBOBOX);
         spPen.setTags( new Tag[]{ new Tag("",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.default","Default")),
                                           new Tag("None",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.pen.None","None")),
@@ -1625,83 +1602,72 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                                           new Tag("4Point",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.pen.4Point","4Point")),
                                           new Tag("Dotted",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.pen.Dotted","Dotted"))});
         spPen.setDefaultValue("");
-
+        
         spFill = new SheetProperty("fill",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.fill","Fill"), SheetProperty.COMBOBOX);
         spFill.setTags( new Tag[]{ new Tag("",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.default","Default")),
                                           new Tag("Solid",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.fill.Solid","Solid"))});
         spFill.setDefaultValue("");
-
+        
         spRadius = new SheetProperty("radius",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.radius","Radius"), SheetProperty.NUMBER);
         try {
         ((JNumberField)(spRadius.getEditor())).setDecimals(0);
         } catch (Exception ex) {};
-
+        
         spDirection = new SheetProperty("direction",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.direction","Direction"), SheetProperty.COMBOBOX);
         spDirection.setTags( new Tag[]{ new Tag("TopDown",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.direction.TopDown","Top-down (\\)")),
                                           new Tag("BottomUp",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.direction.BottomUp","Bottom-up (/)"))});
         spDirection.setShowResetButton(false);
-
-
+        
+        
         spBreakType = new SheetProperty("breakType",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.breakType","Type"), SheetProperty.COMBOBOX);
         spBreakType.setTags( new Tag[]{ new Tag("Page",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.breakType.page","Page")),
                                           new Tag("Column",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.breakType.column","Column"))});
         spBreakType.setShowResetButton(false);
-
+        
         spTextHAlign = new SheetProperty("hAlign",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign","Align"), SheetProperty.COMBOBOX);
         spTextHAlign.setTags( new Tag[]{  new Tag("Left",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Left","Left")),
                                           new Tag("Center",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Center","Center")),
                                           new Tag("Right",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Right","Right")),
                                           new Tag("Justified",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Justified","Justified"))});
         spTextHAlign.setDefaultValue("Left");
-
+        
         spTextVAlign = new SheetProperty("vAlign",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign","Vertical align"), SheetProperty.COMBOBOX);
         spTextVAlign.setTags( new Tag[]{  new Tag("Top",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign.Top","Top")),
                                           new Tag("Middle",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign.Middle","Middle")),
                                           new Tag("Bottom",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign.Bottom","Bottom"))});
         spTextVAlign.setDefaultValue("Top");
-
+        
         spStyledText =  new SheetProperty("styledText",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.styledText","Styled text"), SheetProperty.BOOLEAN);
-
+        
         spLineSpacing = new SheetProperty("lineSpacing",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.lineSpacing","Line spacing"), SheetProperty.COMBOBOX);
         spLineSpacing.setTags( new Tag[]{ new Tag("Single",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.lineSpacing.Single","Single")),
                                           new Tag("1_1_2",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.lineSpacing.1_1_2","1_1_2")),
                                           new Tag("Double",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.lineSpacing.Double","Double"))});
         spLineSpacing.setDefaultValue("Single");
-
+                                          
         spRotate = new SheetProperty("rotate",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.rotate","Ratation"), SheetProperty.COMBOBOX);
         spRotate.setTags( new Tag[]{ new Tag("None",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.rotate.None","None")),
                                           new Tag("Left",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.rotate.Left","Left")),
                                           new Tag("Right",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.rotate.Right","Right")),
                                           new Tag("UpsideDown",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.rotate.UpsideDown","Upside down")) });
         spRotate.setDefaultValue("None");
-
+        
         spMarkup = new SheetProperty("markup",it.businesslogic.ireport.util.I18n.getString("styleDialog.sheetProperty.markup","Markup"), SheetProperty.COMBOBOX);
         spMarkup.setTags( new Tag[]{ new Tag(null,it.businesslogic.ireport.util.I18n.getString("styleDialog.sheetProperty.markup.default","Default")),
                                           new Tag("html",it.businesslogic.ireport.util.I18n.getString("styleDialog.sheetProperty.markup.html","HTML")),
                                           new Tag("rtf",it.businesslogic.ireport.util.I18n.getString("styleDialog.sheetProperty.markup.rtf","RTF"))});
         spMarkup.setDefaultValue(null);
-
+        
         spFontName = new SheetProperty("fontName",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.fontName","Font"), SheetProperty.COMBOBOX);
-
-        //LIMAO: 默认宋体 若有的话
         Vector fontsVec = new Vector();
-        boolean songti = false;
         String[] fontFamilies = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         for (int i=0; i<fontFamilies.length; ++i) {
-        	if("宋体".equals(fontFamilies[i])){
-        		songti = true;
-        	}
             fontsVec.add( new Tag(fontFamilies[i]));
         }
         spFontName.setTags( fontsVec );
-        //if(songti){
-        //	spFontName.setDefaultValue("宋体");
-        //}else{
-        	spFontName.setDefaultValue("SansSerif");
-       // }
-
-
-
+        spFontName.setDefaultValue("SansSerif");
+        
+        
         spFontSize =  new NumberComboBoxSheetProperty("fontSize",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.fontSize","Font size"));
         spFontSize.addEntry("3",3);
         spFontSize.addEntry("5",5);
@@ -1717,7 +1683,6 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         //spPdfFontName;
         spPdfFontName = new SheetProperty("pdfFontName",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.pdfFontName","PDF Font"), SheetProperty.COMBOBOX);
         fontsVec = new Vector();
-        fontsVec.addElement(new Tag("STSong-Light")); // modify add to first limao
         fontsVec.addElement(new Tag("Helvetica"));
         fontsVec.addElement(new Tag("Helvetica-Bold"));
         fontsVec.addElement(new Tag("Helvetica-BoldOblique"));
@@ -1732,6 +1697,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         fontsVec.addElement(new Tag("Times-BoldItalic"));
         fontsVec.addElement(new Tag("Times-Italic"));
         fontsVec.addElement(new Tag("ZapfDingbats"));
+        fontsVec.addElement(new Tag("STSong-Light"));
         fontsVec.addElement(new Tag("MHei-Medium"));
         fontsVec.addElement(new Tag("MSung-Light"));
         fontsVec.addElement(new Tag("HeiseiKakuGo-W5"));
@@ -1741,23 +1707,23 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         Vector iRfonts = MainFrame.getMainInstance().getTtfFonts();
         for (int i_f=0; i_f<iRfonts.size(); ++i_f)
         {
-            fontsVec.addElement(new Tag( ((IRFont)iRfonts.elementAt(i_f)).getFile(),
+            fontsVec.addElement(new Tag( ((IRFont)iRfonts.elementAt(i_f)).getFile(), 
                                    iRfonts.elementAt(i_f)+""));
         }
-
+        
         spPdfFontName.setTags( fontsVec );
-        spPdfFontName.setDefaultValue("Helvetica");
+        spPdfFontName.setDefaultValue("Helvetica");     
         ((JComboBox)(spPdfFontName.getEditor())).setEditable(true);
-
-
+        
+        
         spBold =  new SheetProperty("bold",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.Bold","Bold"), SheetProperty.BOOLEAN);
         spItalic =  new SheetProperty("italic",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.Italic","Italic"), SheetProperty.BOOLEAN);
         spUnderline =  new SheetProperty("underline",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.Underline","Underline"), SheetProperty.BOOLEAN);
         spStriketrough =  new SheetProperty("strikethrough",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.Strikethrough","Strike through"), SheetProperty.BOOLEAN);
         spPdfEmbedded =  new SheetProperty("pdfEmbedded",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.PdfEmbedded","PDF embedded"), SheetProperty.BOOLEAN);
         //spPdfEncoding;
-
-
+    
+        
         spPdfEncoding = new SheetProperty("pdfEncoding",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.pdfEncoding","PDF Encoding"), SheetProperty.COMBOBOX);
         fontsVec = new Vector();
         fontsVec.addElement(new Tag("Cp1250","CP1250 (Central European)"));
@@ -1784,8 +1750,8 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
 
         spPdfEncoding.setTags( fontsVec );
         ((JComboBox)spPdfEncoding.getEditor()).setEditable(true);
-        spPdfEncoding.setDefaultValue("Cp1250");
-
+        spPdfEncoding.setDefaultValue("Cp1250");     
+        
         spStaticText = new ExpressionSheetProperty("text",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.text","Text"));
         spStaticText.setPlainTextEditor(true);
         spStaticText.setShowResetButton(false);
@@ -1809,7 +1775,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spTextfieldExpressionClass.setTags(fontsVec);
         spTextfieldExpressionClass.setDefaultValue("java.lang.String");
         spTextfieldExpressionClass.setShowResetButton(false);
-
+        
         spTextfieldEvaluationTime = new SheetProperty("textfieldEvaluationTime",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textfieldEvaluationTime","Eval. time"), SheetProperty.COMBOBOX);
         // Text field Evaluation Time...
         fontsVec = new Vector();
@@ -1823,17 +1789,17 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spTextfieldEvaluationTime.setTags(fontsVec);
         spTextfieldEvaluationTime.setDefaultValue("Now");
         spTextfieldEvaluationTime.setShowResetButton(false);
-
+        
         spTextfieldEvaluationGroup = new ComboBoxSheetProperty("textfieldEvaluationGroup",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textfieldEvaluationGroup","Eval. group"));
         spTextfieldEvaluationGroup.setShowResetButton(false);
-
+        
         spStretchWithOverflow = new SheetProperty("stretchWithOverflow",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.stretchWithOverflow","Stretch with overflow"), SheetProperty.BOOLEAN);
         spStretchWithOverflow.setShowResetButton(false);
         spTextfieldBlankWhenNull = new SheetProperty("blankWhenNull",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.blankWehnNull","Blank when null"), SheetProperty.BOOLEAN);
         spTextfieldBlankWhenNull.setShowResetButton(false);
         spPattern = new PatternSheetProperty("pattern",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.Pattern","Pattern"));
         spPattern.setDefaultValue("");
-
+        
         spImageExpression = new ExpressionSheetProperty("imageExpression",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageExpression","Image expression"));
         spImageExpression.setShowResetButton(false);
         spImageExpressionClass= new SheetProperty("imageExpressionClass",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textfieldExpressionClass","Exp. class"), SheetProperty.COMBOBOX);
@@ -1847,7 +1813,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spImageExpressionClass.setTags(fontsVec);
         //spImageExpressionClass.setDefaultValue("java.lang.String");
         spImageExpressionClass.setShowResetButton(false);
-
+        
         spImageEvaluationTime = new SheetProperty("imageEvaluationTime",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textfieldEvaluationTime","Eval. time"), SheetProperty.COMBOBOX);
         // Text field Evaluation Time...
         fontsVec = new Vector();
@@ -1861,7 +1827,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spImageEvaluationTime.setTags(fontsVec);
         spImageEvaluationTime.setDefaultValue("Now");
         spImageEvaluationTime.setShowResetButton(false);
-
+        
         spImageEvaluationGroup = new ComboBoxSheetProperty("imageEvaluationGroup",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textfieldEvaluationGroup","Eval. group"));
         spImageEvaluationGroup.setShowResetButton(false);
         spImageScale = new SheetProperty("imageScale",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageScale","Image scale"), SheetProperty.COMBOBOX);
@@ -1871,7 +1837,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         fontsVec.addElement(new Tag("RetainShape",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageScale.RetainShape","Retain shape")));
         spImageScale.setTags(fontsVec);
         spImageScale.setDefaultValue("FillFrame");
-
+        
         spImageError = new SheetProperty("imageError",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageError","On error type"), SheetProperty.COMBOBOX);
         fontsVec = new Vector();
         fontsVec.addElement(new Tag("Error",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageScale.Error","Error")));
@@ -1880,25 +1846,25 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spImageError.setTags(fontsVec);
         spImageError.setDefaultValue("Error");
         spImageError.setShowResetButton(false);
-
+        
         spImageHAlign = new SheetProperty("imageHAlign",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign","Align"), SheetProperty.COMBOBOX);
         spImageHAlign.setTags( new Tag[]{  new Tag("Left",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Left","Left")),
                                           new Tag("Center",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Center","Center")),
                                           new Tag("Right",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Right","Right"))});
         spImageHAlign.setDefaultValue("Left");
-
+        
         spImageVAlign = new SheetProperty("imageVAlign",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign","Vertical align"), SheetProperty.COMBOBOX);
         spImageVAlign.setTags( new Tag[]{  new Tag("Top",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign.Top","Top")),
                                           new Tag("Middle",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign.Middle","Middle")),
                                           new Tag("Bottom",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign.Bottom","Bottom"))});
         spImageVAlign.setDefaultValue("Top");
-
+        
         spImageLazy = new SheetProperty("imageLazy",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageLazy","Is lazy"), SheetProperty.BOOLEAN);
         spImageLazy.setShowResetButton(false);
-
+        
         spImageCache = new SheetProperty("imageCache",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageCache","Using cache"), SheetProperty.BOOLEAN);
-
-
+        
+        
         spRenderType = new SheetProperty("renderType",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.sheetProperty.renderType","Render type"), SheetProperty.COMBOBOX);
         spRenderType.setTags( new Tag[]{ new Tag(null,it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.sheetProperty.renderType.default","Default")),
                                           new Tag("draw",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.sheetProperty.renderType.draw","Draw")),
@@ -1906,19 +1872,19 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
                                           new Tag("svg",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.sheetProperty.renderType.svg","SVG"))});
         spRenderType.setDefaultValue(null);
         //spBarcodeGroup = new ComboBoxSheetProperty("barcode_group","Evaluation group");
-
+        
         spBCExpression = new ExpressionSheetProperty("barcodeExpression",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.barcodeExpression","Barcode expression"));
         spBCExpression.setShowResetButton(false);
-
+        
         spBCApplicationIdentifier = new ExpressionSheetProperty("barcodeAppIdentifierExpression",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.barcodeApplicationIdentifier","Applic. identifier"));
         spBCApplicationIdentifier.setShowResetButton(false);
-
+        
         spBCBarWidth = new SheetProperty("barcodeBarWidth",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.barcodeBarWidth","Bar width"), SheetProperty.INTEGER);
         spBCBarWidth.setShowResetButton(false);
-
+        
         spBCBarHeight = new SheetProperty("barcodeBarHeight",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.barcodeBarHeight","Bar height"), SheetProperty.INTEGER);
         spBCBarHeight.setShowResetButton(false);
-
+        
         spBCType= new SheetProperty("barcodeType",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.barcodeType","Type"), SheetProperty.COMBOBOX);
         fontsVec = new Vector();
         fontsVec.add(new Tag("1","2of7"));
@@ -1950,7 +1916,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spBCType.setTags(fontsVec);
         //spImageExpressionClass.setDefaultValue("java.lang.String");
         spBCType.setShowResetButton(false);
-
+        
         spBCEvaluationTime = new SheetProperty("barcodeEvaluationTime",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textfieldEvaluationTime","Eval. time"), SheetProperty.COMBOBOX);
         // Text field Evaluation Time...
         fontsVec = new Vector();
@@ -1964,7 +1930,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spBCEvaluationTime.setTags(fontsVec);
         spBCEvaluationTime.setDefaultValue("Now");
         spBCEvaluationTime.setShowResetButton(false);
-
+        
         spBCEvaluationGroup = new ComboBoxSheetProperty("barcodeEvaluationGroup",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textfieldEvaluationGroup","Eval. group"));
         spBCEvaluationGroup.setShowResetButton(false);
         spBCScale = new SheetProperty("barcodeScale",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageScale","Image scale"), SheetProperty.COMBOBOX);
@@ -1974,7 +1940,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         fontsVec.addElement(new Tag("RetainShape",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageScale.RetainShape","Retain shape")));
         spBCScale.setTags(fontsVec);
         spBCScale.setDefaultValue("FillFrame");
-
+        
         spBCError = new SheetProperty("barcodeError",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageError","On error type"), SheetProperty.COMBOBOX);
         fontsVec = new Vector();
         fontsVec.addElement(new Tag("Error",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.imageScale.Error","Error")));
@@ -1983,26 +1949,26 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spBCError.setTags(fontsVec);
         spBCError.setDefaultValue("Error");
         spBCError.setShowResetButton(false);
-
+        
         spBCHAlign = new SheetProperty("barcodeHAlign",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign","Align"), SheetProperty.COMBOBOX);
         spBCHAlign.setTags( new Tag[]{  new Tag("Left",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Left","Left")),
                                           new Tag("Center",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Center","Center")),
                                           new Tag("Right",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.halign.Right","Right"))});
         spBCHAlign.setDefaultValue("Left");
-
+        
         spBCVAlign = new SheetProperty("barcodeVAlign",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign","Vertical align"), SheetProperty.COMBOBOX);
         spBCVAlign.setTags( new Tag[]{  new Tag("Top",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign.Top","Top")),
                                           new Tag("Middle",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign.Middle","Middle")),
                                           new Tag("Bottom",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.valign.Bottom","Bottom"))});
         spBCVAlign.setDefaultValue("Top");
-
+        
         spBCChecksum = new SheetProperty("barcodeChecksum",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.barcodeChecksum","Checksum"), SheetProperty.BOOLEAN);
         spBCChecksum.setShowResetButton(false);
-
+        
         spBCShowText = new SheetProperty("barcodeShowText",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.barcodeShowText","Show Text"), SheetProperty.BOOLEAN);
         spBCShowText.setShowResetButton(false);
-
-
+        
+        
         spChartEvaluationTime = new SheetProperty("chartEvaluationTime",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textfieldEvaluationTime","Eval. time"), SheetProperty.COMBOBOX);
         // Text field Evaluation Time...
         fontsVec = new Vector();
@@ -2016,11 +1982,11 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         spChartEvaluationTime.setTags(fontsVec);
         spChartEvaluationTime.setDefaultValue("Now");
         spChartEvaluationTime.setShowResetButton(false);
-
+        
         spChartEvaluationGroup = new ComboBoxSheetProperty("chartEvaluationGroup",it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.textfieldEvaluationGroup","Eval. group"));
         spChartEvaluationGroup.setShowResetButton(false);
      }
-
+     
      /**
       * Update groups
       */
@@ -2033,16 +1999,16 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
          while (e.hasMoreElements()) {
             group_names.addElement(""+e.nextElement());
          }
-
+         
          spTextfieldEvaluationGroup.updateValues( group_names,false);
          spImageEvaluationGroup.updateValues( group_names,false);
          spBCEvaluationGroup.updateValues( group_names,false);
          spChartEvaluationGroup.updateValues( group_names,false);
-
+         
          group_names.insertElementAt("",0);
          spGroups.updateValues( group_names,false);
-
-
+         
+         
          Vector styles = new Vector();
          e = jrf.getReport().getStyles().elements();
          while (e.hasMoreElements()) {
@@ -2050,17 +2016,17 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
          }
          styles.insertElementAt("",0);
          spStyle.updateValues( styles , true);
-
+         
          updateBandsCell();
-
+         
      }
-
-
+     
+     
      protected void updateBandsCell()
      {
          // Put all the bands in a tag...
          this.setInit(true);
-
+         
          if (jrf.getSelectedCrosstabEditorPanel() == null)
          {
            spBands.setName(it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.band","Band"));
@@ -2071,7 +2037,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
            spBands.setName(it.businesslogic.ireport.util.I18n.getString("gui.elementpropertiessheet.cell","Cell"));
            Misc.updateComboBox( (JComboBox)spBands.getEditor(), jrf.getSelectedCrosstabEditorPanel().getCrosstabElement().getCells(), false);
          }
-
+         
          this.setInit(false);
     }
 
@@ -2082,8 +2048,8 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
     public void setInit(boolean init) {
         this.init = init;
     }
-
-
+    
+   
 
     public ComboBoxSheetProperty getSpBands() {
         return spBands;
@@ -2141,8 +2107,8 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
     public void setJrf(JReportFrame jrf) {
         this.jrf = jrf;
     }
-
-
+    
+    
     /**
      * Redraw the correct editor panel (JReportPanel or the active CrosstabPanel)
      *
@@ -2159,7 +2125,7 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
             jrf.getSelectedCrosstabEditorPanel().repaint();
         }
     }
-
+    
     public Vector getElementSelection()
     {
         return elementSelection;
@@ -2167,16 +2133,16 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
     }
 
     public void setElementSelection(Vector newElementSelection) {
-
+        
         this.elementSelection.removeAllElements();
         if (newElementSelection == null) return;
         this.elementSelection.addAll(newElementSelection);
     }
-
+    
     protected void updateReportFonts()
     {
         Object value = spPdfFontName.getValue();
-
+        
         Vector fontsVec = new Vector();
         fontsVec.addElement(new Tag("Helvetica"));
         fontsVec.addElement(new Tag("Helvetica-Bold"));
@@ -2202,17 +2168,17 @@ public class ReportElementSheetPanel extends CategorySheetPanel implements Repor
         Vector iRfonts = MainFrame.getMainInstance().getTtfFonts();
         for (int i_f=0; i_f<iRfonts.size(); ++i_f)
         {
-            fontsVec.addElement(new Tag( ((IRFont)iRfonts.elementAt(i_f)).getFile(),
+            fontsVec.addElement(new Tag( ((IRFont)iRfonts.elementAt(i_f)).getFile(), 
                                    iRfonts.elementAt(i_f)+""));
         }
-
+        
         Misc.updateComboBox( (JComboBox)spPdfFontName.getEditor(), fontsVec );
         spPdfFontName.setEditorValue( spPdfFontName.getEditor(), value );
     }
 
     public void reportBandsSelectionChanged(ReportBandsSelectionEvent evt) {
     }
-
+    
     public void reportObjectsSelectionChanged(ReportObjectsSelectionEvent evt) {
     }
 }

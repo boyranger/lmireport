@@ -78,6 +78,7 @@ import java.io.PrintWriter;
  *
  * @author  Administrator
  */
+//LIMAO : 该类为绘制jrxml文件类
 public class ReportWriter {
 
    private Report report = null;
@@ -333,7 +334,6 @@ public class ReportWriter {
             }
 
             e = getReport().getFonts().elements();
-
             while (e.hasMoreElements()) {
                 IReportFont font = (IReportFont)e.nextElement();
                 pw.print("\t<reportFont name=\""+ font.getReportFont() + "\" ");
@@ -1771,7 +1771,7 @@ public class ReportWriter {
     }
 
     void writeXMLTextElementElement(TextReportElement re, PrintWriter pw) {
-        java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
+    	java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
         nf.setGroupingUsed(false);
         nf.setMaximumFractionDigits(0);
 
@@ -1838,26 +1838,30 @@ public class ReportWriter {
             }
             pw.print(" reportFont=\""+ re.getReportFont() +"\"");
         }
-
+      
         if (font == null || !font.getFontName().equals(re.getFontName() ))
         {
             //if (CompatibilitySupport.version < CompatibilitySupport.JR111 ||  !Style.isDefaultValue(re.getFontName()+"",Style.ATTRIBUTE_fontName,re.getStyle(), getDefaultStyle()))
             if (re.getIReportFont().getPropertyValue( IReportFont.FONT_NAME) != null)
             {
                 pw.print(" fontName=\"" + re.getFontName() +"\"");
+            }else{
+            	pw.print(" fontName=\"" + IReportFont.DEFAULT_FONT_NAME +"\"");
             }
         }
-
-
+        
         if (font == null || !font.getPDFFontName().equalsIgnoreCase(re.getPDFFontName()))
         {
             //if (CompatibilitySupport.version < CompatibilitySupport.JR111 ||  !Style.isDefaultValue(re.getPDFFontName()+"",Style.ATTRIBUTE_pdfFontName,re.getStyle(), getDefaultStyle()))
             if (re.getIReportFont().getPropertyValue( IReportFont.PDF_FONT_NAME ) != null)
             {
                 pw.print(" pdfFontName=\"" + re.getPDFFontName() +"\"");
+            }else{
+            	 pw.print(" pdfFontName=\"" + IReportFont.DEFAULT_PDF_FONT_NAME +"\"");
             }
         }
 
+        
         //pw.print(" pdfEncoding=\"Times-Roman\"");
         if (font == null || font.getFontSize() != re.getFontSize())
         {
@@ -1908,6 +1912,8 @@ public class ReportWriter {
                     re.getPdfEncoding().length() > 0)
                 {
                     pw.print(" pdfEncoding =\"" + re.getPdfEncoding() +"\"");
+                }else{
+                	 pw.print(" pdfEncoding =\"" + IReportFont.DEFAULT_PDF_ENCODING +"\"");
                 }
             //}
         }

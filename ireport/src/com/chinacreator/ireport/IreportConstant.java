@@ -70,6 +70,10 @@ public final class IreportConstant {
 	public final static int RIGHT_ = -49;
 	public final static int INFO_ = -48;
 	public final static int WARN_ = -47;
+	
+	//模板类型
+	public final static String TEMPLATE_C = "列式";
+	public final static String TEMPLATE_T = "表格式";
 }
 
 //end IreportConstant.java

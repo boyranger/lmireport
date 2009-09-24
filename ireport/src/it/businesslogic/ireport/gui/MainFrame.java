@@ -6807,7 +6807,7 @@ public class MainFrame extends javax.swing.JFrame
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
     // LIMAO : ±£´æ modify by li.mao since 3.0 [2009-8-18 ÏÂÎç02:21:09]
-
+    
     public void save(JReportFrame jrf)
     {
             String reportName = jrf.getReport().getName();
