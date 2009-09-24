@@ -19,8 +19,9 @@ import com.chinacreator.ireport.component.FileSelectFilter;
 import com.chinacreator.ireport.component.ImageSelectPreview;
 
 /**
+ * 
+ * @author limao
  *
- * @author  Administrator
  */
 public class NewServerTemplate extends javax.swing.JDialog {
 	
@@ -43,6 +44,7 @@ public class NewServerTemplate extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    
     /** Creates new form NewJDialog */
     public NewServerTemplate(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

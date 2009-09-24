@@ -29,10 +29,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-/**
- *
- * @author gtoffoli
- */
 public class TemplatesFrame extends javax.swing.JDialog {
 
 	public Component com = null;
