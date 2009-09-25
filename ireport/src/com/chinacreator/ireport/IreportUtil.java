@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,6 +36,8 @@ import java.util.regex.Pattern;
 import javax.swing.JInternalFrame;
 
 import com.chinacreator.ireport.rmi.ReportLock;
+import com.chinacreator.ireport.rmi.TemplateFiles;
+
 
 /**
  * @author 李茂
@@ -310,6 +313,130 @@ public class IreportUtil {
 		}
 		return name;
 	}
+	
+	
+	public static String getTemplateType(String tName){
+		String tmpTemplate = MainFrame.IREPORT_TMP_TEMPLATE_DIR;
+		System.out.println(tmpTemplate + File.separator+tName+"C.xml");
+		File cf = new File(tmpTemplate + File.separator+tName+"C.xml");
+		File tf = new File(tmpTemplate + File.separator+tName+"T.xml");
+		if((!cf.exists()) && (!tf.exists())){
+			return null;
+		}
+		if(cf.exists()){
+			return IreportConstant.TEMPLATE_C;
+		}
+		
+		if(tf.exists()){
+			return IreportConstant.TEMPLATE_T;
+		}
+		return null;
+	}
+	
+	public static Object saveTemplatesFile(TemplateFiles tf,boolean editor) {
+		File xf = null;
+		File mf = null;
+		String typeString = null;
+		String tpath = MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator;
+		try {
+		if(tf==null){
+			throw new RuntimeException("上传模板信息文件为空");
+		}
+		typeString = tf.getType().equals(IreportConstant.TEMPLATE_C)?"C":"T";
+		
+		String xmlPath = tpath + tf.getName()+typeString+".xml";
+		String imgPath = tpath+ tf.getName() + ".png";
+		
+		 xf = new File(xmlPath);
+		 mf = new File(imgPath);
+		
+		if((!editor) && (xf.exists() || mf.exists()) ){
+			throw new RuntimeException("模板名已经存在");
+		}
+		if(editor){
+			String xp= tpath + tf.getOldName()+typeString+".xml";
+			
+			System.out.println(xp);
+			if(!new File(xp).exists()){
+				throw new RuntimeException("你需要修改的模板["+tf.getOldName()+"]在客户端不存在");
+			}
+			//是否修改了文件
+			if(tf.getXmlContent()!=null && tf.getXmlContent().length>0){
+				IreportUtil.bytesToFile(xmlPath, tf.getXmlContent());
+				
+				if(!tf.getName().equals(tf.getOldName())){
+					 String oldXml =  tpath + tf.getOldName()+typeString+".xml";
+					 File oldXmlFile = new File(oldXml);
+					 if(oldXmlFile!=null && oldXmlFile.exists()){
+						 oldXmlFile.delete();
+					 }
+				}
+			}
+			
+			//是否修改了图片
+			if(tf.getImgContent()!=null && tf.getImgContent().length>0){
+				IreportUtil.bytesToFile(imgPath, tf.getImgContent());	
+				
+				if(!tf.getName().equals(tf.getOldName())){
+					 String imgP = tpath+ tf.getOldName() + ".png";
+					 File oldImgFile = new File(imgP);
+					 
+					 if(oldImgFile!=null && oldImgFile.exists()){
+						 oldImgFile.delete();
+					 }
+				}
+			}
+			
+			//是否创建了新文件
+			if(tf.getName().equals(tf.getOldName())){
+				//未改变名称
+			}else{
+				//改变了名称
+				 String oldXml =  tpath + tf.getOldName()+typeString+".xml";
+				 String imgP = tpath+ tf.getOldName() + ".png";
+				 File oldXmlFile = new File(oldXml);
+				 File oldImgFile = new File(imgP);
+				 
+				 if(oldXmlFile!=null && oldXmlFile.exists()){
+					 oldXmlFile.renameTo(new File( tpath + tf.getName()+typeString+".xml"));
+				 }
+				 
+				 if(oldImgFile!=null && oldImgFile.exists()){
+					 oldImgFile.renameTo(new File(tpath+ tf.getName() + ".png"));
+				 }
+				 
+			}
+			
+		}else{
+			//模板文件必须存在
+			if(tf.getXmlContent()==null || tf.getXmlContent().length<=0){
+				throw new RuntimeException("模板文件内容不存在");
+			}
+			IreportUtil.bytesToFile(xmlPath, tf.getXmlContent());	
+			
+			//预览图片可以不存在
+			if(tf.getImgContent()!=null && tf.getImgContent().length>0){
+				IreportUtil.bytesToFile(imgPath, tf.getImgContent());	
+			}
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			//非修改操作，
+			if(!editor){
+				if(xf!=null && xf.exists()){
+					xf.delete();
+				}
+				if(mf!=null && mf.exists()){
+					mf.delete();
+				}
+			}
+			throw new RuntimeException(e.getMessage());
+		}
+		
+		
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(isAllowedNewReport("_12345678901234567890"));
 	}

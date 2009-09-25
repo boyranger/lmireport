@@ -61,12 +61,12 @@ public class IreportRmiClient {
 				System.out.println("》》》》》》创建客户端RMI连接，IP："+ip+"端口："+port);
 			}
 			if(flag){
-				AddedOperator.log("创建于服务器的RMI连接[IP:"+ip+",PORT:"+port+"]成功", IreportConstant.RIGHT_);
+				//AddedOperator.log("创建于服务器的RMI连接[IP:"+ip+",PORT:"+port+"]成功", IreportConstant.RIGHT_);
 				flag = false;
 			}
 		}
 		} catch (Exception e) {
-			AddedOperator.log("创建于服务器的RMI连接[IP:"+ip+",PORT:"+port+"]失败，你的所有远程操作将不能进行,由于："+e.getMessage(), IreportConstant.ERROR_);
+			//AddedOperator.log("创建于服务器的RMI连接[IP:"+ip+",PORT:"+port+"]失败，你的所有远程操作将不能进行,由于："+e.getMessage(), IreportConstant.ERROR_);
 			e.printStackTrace();
 			flag = true;
 		}

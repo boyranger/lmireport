@@ -6,16 +6,120 @@
 
 package it.businesslogic.ireport.plugin.templatemanager;
 
+import it.businesslogic.ireport.gui.MainFrame;
+
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+
+import com.chinacreator.ireport.IreportConstant;
+import com.chinacreator.ireport.IreportUtil;
+import com.chinacreator.ireport.component.DialogFactory;
+import com.chinacreator.ireport.component.FileSelectFilter;
+import com.chinacreator.ireport.component.ImageSelectPreview;
+import com.chinacreator.ireport.rmi.IreportRmiClient;
+import com.chinacreator.ireport.rmi.TemplateFiles;
+
 /**
  *
  * @author  Administrator
  */
 public class ModifyTemplate extends javax.swing.JDialog {
-    
+    public String mName = null;
+    public JDialog fatherFrame = null;
     /** Creates new form ModifyTemplate */
-    public ModifyTemplate(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public ModifyTemplate(java.awt.Component parent, boolean modal,String tname) {
+        //super(parent, modal);
+    	fatherFrame = (JDialog) parent;
+        mName = tname;
         initComponents();
+        jButton4.setEnabled(false);
+        jComboBox1.setEnabled(false);
+        ItemListener itemListener = new ItemListener(){
+    		public void itemStateChanged(ItemEvent e) {
+    			Object obj=e.getItem();
+    			
+                if(obj.equals(jCheckBox3)){ 
+                    if(jCheckBox3.isSelected()){ 
+                    	jCheckBox1.setSelected(false);
+                    	jCheckBox2.setSelected(false);
+                    	jComboBox1.setEnabled(false);
+                    	jTextField5.setEnabled(false);
+                    	jButton4.setEnabled(false);
+                    	jPanel7.setBackground(new Color(204, 204, 204));
+                    	jTextField5.setBackground(new Color(204, 204, 204));
+                    }
+                }else if(obj.equals(jCheckBox1)){
+                	if(jCheckBox1.isSelected()){
+	                	jCheckBox2.setSelected(false);
+	                	jCheckBox3.setSelected(false);
+	                	jTextField5.setEnabled(false);
+	                	jButton4.setEnabled(false);
+	                	jComboBox1.setEnabled(true);
+	                	jPanel7.setBackground(new Color(244, 244, 244));
+	                	jTextField5.setBackground(new Color(204, 204, 204));
+                	}
+                }else if(obj.equals(jCheckBox2)){ 
+                	if(jCheckBox2.isSelected()){
+	                	jCheckBox1.setSelected(false);
+	                	jCheckBox3.setSelected(false);
+	                	jComboBox1.setEnabled(false);
+	                	jTextField5.setEnabled(true);
+	                	jButton4.setEnabled(true);
+	                	jPanel7.setBackground(new Color(244, 244, 244));
+	                	jTextField5.setBackground(Color.WHITE);
+                } 
+                }
+    		}
+            
+        };
+        
+        jCheckBox1.addItemListener(itemListener);
+        jCheckBox2.addItemListener(itemListener);
+        jCheckBox3.addItemListener(itemListener);
+        
+        jCheckBox1.addMouseListener(new MouseAdapter(){
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		super.mouseClicked(e);
+        		JCheckBox jc = (JCheckBox) e.getSource();
+        		if(!jc.isSelected()){
+        			jc.setSelected(true);
+        			return;
+        		}
+        	}
+        });
+        jCheckBox2.addMouseListener(new MouseAdapter(){
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		super.mouseClicked(e);
+        		JCheckBox jc = (JCheckBox) e.getSource();
+        		if(!jc.isSelected()){
+        			jc.setSelected(true);
+        			return;
+        		}
+        	}
+        });
+        jCheckBox3.addMouseListener(new MouseAdapter(){
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		super.mouseClicked(e);
+        		JCheckBox jc = (JCheckBox) e.getSource();
+        		if(!jc.isSelected()){
+        			jc.setSelected(true);
+        			return;
+        		}
+        	}
+        });
     }
     
     /** This method is called from within the constructor to
@@ -64,9 +168,10 @@ public class ModifyTemplate extends javax.swing.JDialog {
 
         jLabel2.setText("模板类型");
 
-        jLabel9.setText("模板的名称....");
-
-        jLabel10.setText("模板的类型...");
+        
+        jLabel9.setText(mName);
+        String ttype = IreportUtil.getTemplateType(mName);
+        jLabel10.setText(ttype==null?"未知":ttype);
 
         org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -98,8 +203,20 @@ public class ModifyTemplate extends javax.swing.JDialog {
                     .add(jLabel10))
                 .addContainerGap(119, Short.MAX_VALUE))
         );
-
-        jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Documents and Settings\\Administrator\\桌面\\mypic\\grayT.gif")); // NOI18N
+        File imgFile = new File(MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator+mName+".png");
+        javax.swing.ImageIcon showImg = null;
+        if(imgFile.exists()){
+        	showImg = new ImageIcon(imgFile.getPath());
+        }else{
+        	showImg = new ImageIcon(getClass().getResource("/it/businesslogic/ireport/plugin/templatemanager/no_preview.png"));
+        }
+        
+        double dsix =new Double(showImg.getIconHeight()) / new Double(showImg.getIconWidth()) ; //高度与宽度的比率
+        
+        //保持宽与高的比率不变而缩放
+        showImg.setImage(showImg.getImage().getScaledInstance(100,(int)Math.round(100*dsix),Image.SCALE_DEFAULT));
+        jLabel3.setBorder(new ReportBorder());
+        jLabel3.setIcon(showImg); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -139,8 +256,6 @@ public class ModifyTemplate extends javax.swing.JDialog {
         jLabel4.setText("模板名称");
 
         jLabel5.setText("预览图片");
-
-        jTextField4.setText("jTextField4");
 
         jButton1.setText("浏览...");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -242,7 +357,7 @@ public class ModifyTemplate extends javax.swing.JDialog {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
-
+        
         jLabel7.setText("          若不选择文件将保持默认");
 
         jLabel8.setText("           不填写将保持当前名称");
@@ -339,19 +454,97 @@ public class ModifyTemplate extends javax.swing.JDialog {
     }// </editor-fold>
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {
-        System.out.print("浏览");
+    	if(jCheckBox1.isSelected() || jCheckBox3.isSelected()){
+    		return;
+    	}
+       JFileChooser jfc = new JFileChooser();
+       jfc.setFont(new java.awt.Font("宋体", 0, 12));
+       jfc.setFileFilter(new FileSelectFilter("xml","模板文件选择(*.xml)"));
+       jfc.setDialogTitle("选择模板文件");
+       int result = jfc.showOpenDialog(null);
+       
+       if (result == JFileChooser.APPROVE_OPTION) {
+      	 File file = jfc.getSelectedFile();
+      	 jTextField5.setText(file.getPath());
+       }
     }
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {
-       System.out.print("浏览图片");
+    	JFileChooser jfc = new JFileChooser();
+   	    ImageSelectPreview preview = new ImageSelectPreview(jfc);
+        jfc.addPropertyChangeListener(preview);
+        jfc.setDialogTitle("选择模板预览图片");
+        jfc.setAccessory(preview);
+        int result = jfc.showOpenDialog(null);
+        
+        if (result == JFileChooser.APPROVE_OPTION) {
+       	 File file = jfc.getSelectedFile();
+       	jTextField4.setText(file.getPath());
+        }
     }
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {
-        System.out.print("确定");
+        TemplateFiles tf = new TemplateFiles();
+        String name = jTextField3.getText();
+        if(IreportUtil.isBlank(name)){
+        	tf.setName(mName);
+        	tf.setOldName(mName);
+        }else{
+        	tf.setName(name);
+        	tf.setOldName(mName);
+        }
+        
+        if(jCheckBox3.isSelected()){
+        	tf.setXmlContent(null);
+        }else if(jCheckBox1.isSelected()){
+        	//从已经打开的文件
+        	tf.setXmlContent(null);
+        }else if(jCheckBox2.isSelected()){
+        	String f = jTextField5.getText();
+        	if(IreportUtil.isBlank(f)){
+        		DialogFactory.showErrorMessageDialog(this, "你没有选择任何文件", "文件选择错误");
+        		return;
+        	}
+        	byte[] xmlBytes = IreportUtil.fileToBytes(f);
+        	if(xmlBytes==null || xmlBytes.length<=0){
+        		DialogFactory.showErrorMessageDialog(this, "你选择的文件内容为空", "文件选择错误");
+        		return;
+        	}
+        	tf.setXmlContent(xmlBytes);
+        }
+        String imgP = jTextField4.getText();
+        if(!IreportUtil.isBlank(imgP)){
+        	tf.setImgContent(IreportUtil.fileToBytes(imgP));
+        }
+        String ttype = jLabel10.getText();
+        if(ttype.equals(IreportConstant.TEMPLATE_C)){
+        	tf.setType(IreportConstant.TEMPLATE_C); 
+        }else if(ttype.equals(IreportConstant.TEMPLATE_T)){
+        	tf.setType(IreportConstant.TEMPLATE_T);
+        }else{
+        	DialogFactory.showErrorMessageDialog(this, "模板类型存在错误", "模板修改");
+        	return;
+        }
+        
+        try {
+			
+        	IreportRmiClient.getInstance().getRmiRemoteInterface().saveTemplatesFile(tf, true);
+        	//AddedOperator.log("修改模板文件["+mName+"]信息成功", IreportConstant.RIGHT_);
+        	IreportUtil.saveTemplatesFile(tf, true);
+        	((TemplatesFrame)fatherFrame).loadItems();
+        	
+        	this.setVisible(false);
+        	this.dispose();
+        } catch (Exception e) {
+        	//AddedOperator.log("修改模板文件失败:"+e.getMessage(), IreportConstant.ERROR_);
+        	DialogFactory.showErrorMessageDialog(this,"修改模板文件失败:"+e.getMessage(), "修改错误");
+        	e.printStackTrace();
+        }
     }
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {
-       System.out.print("取消");
+      this.setVisible(false);
+      this.dispose();
     }
     
     /**
@@ -360,7 +553,7 @@ public class ModifyTemplate extends javax.swing.JDialog {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ModifyTemplate dialog = new ModifyTemplate(new javax.swing.JFrame(), true);
+                ModifyTemplate dialog = new ModifyTemplate(new javax.swing.JFrame(), true,"123");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
@@ -371,6 +564,7 @@ public class ModifyTemplate extends javax.swing.JDialog {
         });
     }
     
+   
     // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

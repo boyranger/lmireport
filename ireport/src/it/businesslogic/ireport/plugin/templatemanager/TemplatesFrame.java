@@ -35,11 +35,13 @@ public class TemplatesFrame extends javax.swing.JDialog {
     Rectangle minimizeBounds = null;
     boolean adjustingValueSlider = false;
     /** Creates new form TemplatesDialog */
-    public TemplatesFrame(java.awt.Frame parent, boolean modal) {
-        super(parent,modal);
+    public TemplatesFrame(java.awt.Component parent, boolean modal) {
+        //super(parent,modal);
+    	//this.
         setTitle("title...");
         initComponents();
-        com = parent;
+        com = this;
+       
         jListTemplateItems.setModel(new DefaultListModel());
         jListTemplateItems.setCellRenderer(new TemplateItemActionCellRenderer());
 
@@ -79,7 +81,7 @@ public class TemplatesFrame extends javax.swing.JDialog {
 
     }
 
-    private void loadItems() {
+    public void loadItems() {
 
         ((DefaultListModel)jListTemplateItems.getModel()).removeAllElements();
 
@@ -88,15 +90,13 @@ public class TemplatesFrame extends javax.swing.JDialog {
         actions.add(t);
         for (TemplateItemAction a : actions)
         {
-            ((DefaultListModel)jListTemplateItems.getModel()).addElement(a);
+        		System.out.println(a.getDisplayName());
+        	((DefaultListModel)jListTemplateItems.getModel()).addElement(a);
         }
     }
 
     private void storeWindowSize()
     {
-        Dimension d = getSize();
-        //IReportManager.getPreferences().putInt("templates_window_width",d.width);
-        //IReportManager.getPreferences().putInt("templates_window_height",d.height);
     }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -239,9 +239,9 @@ public class TemplatesFrame extends javax.swing.JDialog {
         editorJrxml.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-            	JDialog jd = new ModifyTemplate((Frame) com,true);
-            	it.businesslogic.ireport.util.Misc.centerFrame(jd);
-            	jd.setVisible(true);
+            	//JDialog jd = new ModifyTemplate((Frame) com,true);
+            	//it.businesslogic.ireport.util.Misc.centerFrame(jd);
+            	//jd.setVisible(true);
             }
         });
         
@@ -252,7 +252,7 @@ public class TemplatesFrame extends javax.swing.JDialog {
         modifyTemplate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-            	JDialog jd = new ModifyTemplate((Frame) com,true);
+            	JDialog jd = new ModifyTemplate( com,true,getSelectedTemplateDescriptor().getDisplayName());
             	it.businesslogic.ireport.util.Misc.centerFrame(jd);
             	jd.setVisible(true);
             }

@@ -101,6 +101,14 @@ public interface IreportRmiInterface extends Remote{
 	 * @throws RemoteException
 	 */
 	Object sendFileToClient(String serverFileNamePath)throws RemoteException;
+
+	/**
+	 * 保存模板文件，包括模板xml文件和模板预览图片
+	 * @param tf 模板文件对象
+	 * @return 
+	 * @throws RemoteException
+	 */
+	Object saveTemplatesFile(TemplateFiles tf,boolean editor)throws RemoteException;
 }
 
 //end IreportRmiInterface.java

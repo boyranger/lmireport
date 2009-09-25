@@ -108,7 +108,12 @@ public class TemplateDescriptor {
      * @param displayName the displayName to set
      */
     public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    	
+    	if(displayName!=null && displayName.indexOf(".")!=-1){
+    		this.displayName = displayName.substring(0,displayName.lastIndexOf("."));
+    	}else{
+    		this.displayName = displayName;
+        }
     }
 
 

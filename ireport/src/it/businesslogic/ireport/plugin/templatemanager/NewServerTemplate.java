@@ -12,11 +12,16 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
+import sun.awt.geom.AreaOp.AddOp;
+
+import com.chinacreator.ireport.AddedOperator;
 import com.chinacreator.ireport.IreportConstant;
 import com.chinacreator.ireport.IreportUtil;
 import com.chinacreator.ireport.component.DialogFactory;
 import com.chinacreator.ireport.component.FileSelectFilter;
 import com.chinacreator.ireport.component.ImageSelectPreview;
+import com.chinacreator.ireport.rmi.IreportRmiClient;
+import com.chinacreator.ireport.rmi.TemplateFiles;
 
 /**
  * 
@@ -351,7 +356,26 @@ public class NewServerTemplate extends javax.swing.JDialog {
     	   return;
        }
        
-       System.out.print("新建到服务器");
+       TemplateFiles tf = new TemplateFiles();
+       tf.setName(tname);
+       tf.setType(ttype);
+       tf.setXmlContent(IreportUtil.fileToBytes(tfile));
+       tf.setImgContent(IreportUtil.fileToBytes(imgFile));
+       IreportRmiClient.getInstance();
+       
+       try {
+    	   IreportRmiClient.getRmiRemoteInterface().saveTemplatesFile(tf, false);
+    	   if(!imgFile.toLowerCase().endsWith(".png")){
+    	    //AddedOperator.log("设置图片类型为非png类型，将修正为png类型图片", IreportConstant.WARN_);
+    	   }
+    	   //AddedOperator.log("新建模板["+tname+"]到服务器成功",IreportConstant.RIGHT_);
+    	   this.setVisible(false);
+    	   this.dispose();
+       } catch (Exception e) {
+    	   e.printStackTrace();
+    	  // AddedOperator.log("新建文件到服务器出错："+e.getMessage(), IreportConstant.ERROR_);
+    	   DialogFactory.showErrorMessageDialog(this, "新建模板文件到服务器出错："+e.getMessage(), "新建错误");
+       }
        
     }
 
