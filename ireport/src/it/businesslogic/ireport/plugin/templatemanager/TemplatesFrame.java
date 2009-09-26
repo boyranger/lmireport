@@ -12,6 +12,7 @@
 package it.businesslogic.ireport.plugin.templatemanager;
 
 
+import it.businesslogic.ireport.gui.JReportFrame;
 import it.businesslogic.ireport.gui.MainFrame;
 
 import java.awt.Color;
@@ -21,13 +22,19 @@ import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import com.chinacreator.ireport.IreportUtil;
+import com.chinacreator.ireport.component.DialogFactory;
 
 public class TemplatesFrame extends javax.swing.JDialog {
 
@@ -239,9 +246,25 @@ public class TemplatesFrame extends javax.swing.JDialog {
         editorJrxml.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-            	//JDialog jd = new ModifyTemplate((Frame) com,true);
-            	//it.businesslogic.ireport.util.Misc.centerFrame(jd);
-            	//jd.setVisible(true);
+            	try {
+            	File f = new File(MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator+ getSelectedTemplateDescriptor()+".xml");
+            	if(f==null || !f.exists()){
+            		DialogFactory.showErrorMessageDialog(com, "模板文件未找到", "错误");
+            		return;
+            	}
+            	
+            	String editorTempFile = MainFrame.IREPORT_TMP_DIR+File.separator+getSelectedTemplateDescriptor()+"_"+IreportUtil.dateFormat("MMddHHmmss", new Date())+".xml";
+            	//copy 一个模板文件副本到临时文件夹
+            	IreportUtil.bytesToFile(editorTempFile, IreportUtil.fileToBytes(f.getPath()));
+            	
+            	     setVisible(true);
+                     JReportFrame jrf = MainFrame.getMainInstance().openFile( editorTempFile );
+                     jrf.setSelected(true);
+                    
+                 } catch (Exception ex){
+                      ex.printStackTrace();
+                      DialogFactory.showErrorMessageDialog(com, "编辑模板文件错误"+ex.getMessage(), "错误");
+                 }
             }
         });
         
@@ -261,16 +284,28 @@ public class TemplatesFrame extends javax.swing.JDialog {
         jPanel1.add(deleteTemplate, new java.awt.GridBagConstraints());
 
         deleteTemplate.setFont(new java.awt.Font("宋体", 0, 12));
-        deleteTemplate.setText("删除"); // NOI18N
+        deleteTemplate.setText("删除"); 
         deleteTemplate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	System.out.println("bbbbbbbb");
+            	
+            	TemplateDescriptor st = getSelectedTemplateDescriptor();
+            	if(st==null ||  IreportUtil.isBlank(st.getDisplayName())){
+            		DialogFactory.showErrorMessageDialog(com, "你未选择需要删除的模板文件","删除错误");
+            		return;
+            	}
+            	int ok= JOptionPane.showConfirmDialog(com, "你确定要删除"+st.getDisplayName()+"模板文件吗?");
+            	if(ok==JOptionPane.NO_OPTION){
+            		return;
+            	}
+            	//删除服务器端文件
+            	IreportUtil.deleteTemplate(st.getDisplayName());
+            	
             }
         });
 
 
         jButton1.setFont(new java.awt.Font("宋体", 0, 12));
-        jButton1.setText( "关闭"); // NOI18N
+        jButton1.setText( "关闭"); 
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -284,8 +319,8 @@ public class TemplatesFrame extends javax.swing.JDialog {
         jPanel1.add(jButton1, gridBagConstraints);
 
         jLabelDescription.setBackground(new java.awt.Color(255, 255, 255));
-        jLabelDescription.setFont(new java.awt.Font("宋体", 0, 12)); // NOI18N
-        jLabelDescription.setText( "描述"); // NOI18N
+        jLabelDescription.setFont(new java.awt.Font("宋体", 0, 12)); 
+        jLabelDescription.setText( "描述"); 
         jLabelDescription.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabelDescription.setOpaque(true);
 

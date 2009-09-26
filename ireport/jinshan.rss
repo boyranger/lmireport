@@ -1,0 +1,5 @@
+#Eclipse RSS Reader v1.2.0
+#Sat Sep 26 17:06:06 CST 2009
+translatorId=com.pnehrer.rss.core.default
+url=http\://sl.iciba.com/dailysentence/dailysentence.xml
+updateInterval=30

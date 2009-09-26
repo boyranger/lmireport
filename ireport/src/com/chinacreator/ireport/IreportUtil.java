@@ -49,6 +49,13 @@ import com.chinacreator.ireport.rmi.TemplateFiles;
 public class IreportUtil {
 	private static Pattern  p = Pattern.compile("_\\d{20}");
 	private static Pattern  p1 = Pattern.compile("\\d{1}");
+	
+	/**
+	 * 将字节码转化为文件
+	 * @param filePath 文件全路径
+	 * @param content 文件内容字节码
+	 * @return
+	 */
 	public static File bytesToFile(String filePath,byte[] content){
 		try {
 			if(isBlank(filePath)){
@@ -59,7 +66,6 @@ public class IreportUtil {
 	         if(!file.exists()){
 	             file.createNewFile();
 	         }
-	         //save the content to the file
 	         output = new BufferedOutputStream(new FileOutputStream(file));
 	         output.write(content);
 	         if(output != null ){
@@ -78,6 +84,11 @@ public class IreportUtil {
 
 	}
 
+	/**
+	 * 将文件内容转化为字节码
+	 * @param filePath 文件位置全路径
+	 * @return
+	 */
 	public static byte[] fileToBytes(String filePath){
 		try {
 			 File f = new File(filePath);
@@ -102,14 +113,32 @@ public class IreportUtil {
 
 
 	}
+	
+	/**
+	 * 判断字符串是否为空串或null
+	 * @param str
+	 * @return
+	 */
 	public static boolean isBlank(String str){
 		return str==null?true:str.trim().equals("");
 	}
 
+	/**
+	 * 判断对象是否为null
+	 * @param obj
+	 * @return
+	 */
 	public static boolean isNull(Object obj){
 		return obj==null;
 	}
 
+	/**
+	 * 判断对象是否为远程文件类型，满足远程文件类型为以_开始再加20位数字、或者
+	 * MyReportProperties.getStringProperties(fileName+IreportConstant.LOCAL_TO_SERVER) 不为空
+	 * @see MyReportProperties#getStringProperties(String)
+	 * @param fileName
+	 * @return
+	 */
 	public static boolean isRemoteFile(String fileName){
 
 
@@ -437,6 +466,32 @@ public class IreportUtil {
 		return null;
 	}
 	
+	public static void throwRuntimeException(String msg){
+		throw new RuntimeException(msg);
+	}
+	
+	public static void deleteFileIfExsit(File f){
+		if(f==null){
+			return;
+		}
+		if(f.exists()){
+			f.delete();
+		}
+	}
+	public static void deleteTemplate(String templateName){
+		if(IreportUtil.isBlank(templateName)){
+			throwRuntimeException("模板文件名为空");
+		}
+		
+		String tpath =  MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator;
+		File xmlFileC = new File(tpath+templateName+"C.xml");
+		File xmlFileT = new File(tpath+templateName+"T.xml");
+		File imgFile = new File(tpath+templateName+".png");
+		deleteFileIfExsit(xmlFileC);
+		deleteFileIfExsit(xmlFileT);
+		deleteFileIfExsit(imgFile);
+		
+	}
 	public static void main(String[] args) {
 		System.out.println(isAllowedNewReport("_12345678901234567890"));
 	}
