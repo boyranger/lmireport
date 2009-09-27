@@ -109,6 +109,14 @@ public interface IreportRmiInterface extends Remote{
 	 * @throws RemoteException
 	 */
 	Object saveTemplatesFile(TemplateFiles tf,boolean editor)throws RemoteException;
+
+	/**
+	 * 删除服务器端模板文件
+	 * @param tf 模板文件
+	 * @return
+	 * @throws RemoteException
+	 */
+	Object deleteTemplateFile(TemplateFiles tf)throws RemoteException;
 }
 
 //end IreportRmiInterface.java

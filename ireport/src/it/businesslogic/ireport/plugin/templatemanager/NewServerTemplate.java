@@ -51,8 +51,8 @@ public class NewServerTemplate extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField3;
     
     /** Creates new form NewJDialog */
-    public NewServerTemplate(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public NewServerTemplate(java.awt.Component parent, boolean modal) {
+       // super(parent, modal);
         initComponents();
         jTextField1.setEnabled(false);
         jButton1.setEnabled(false);
@@ -248,15 +248,15 @@ public class NewServerTemplate extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jButton3.setIcon(new javax.swing.ImageIcon("C:\\Documents and Settings\\Administrator\\桌面\\mypic\\cancle.png")); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(this.getClass().getResource("/it/businesslogic/ireport/plugin/templatemanager/cancle.png"))); // NOI18N
         jButton3.setText("取消");
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton3MouseClicked(evt);
             }
         });
-
-        jButton4.setIcon(new javax.swing.ImageIcon("C:\\Documents and Settings\\Administrator\\桌面\\mypic\\newt.png")); // NOI18N
+        
+        jButton4.setIcon(new javax.swing.ImageIcon(this.getClass().getResource("/it/businesslogic/ireport/plugin/templatemanager/newt.png"))); // NOI18N
         jButton4.setText("新建");
         jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -384,9 +384,6 @@ public class NewServerTemplate extends javax.swing.JDialog {
     	this.dispose();
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

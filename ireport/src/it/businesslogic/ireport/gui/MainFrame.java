@@ -143,7 +143,6 @@ import com.chinacreator.ireport.component.DialogFactory;
  * This class is the core of the GUI of iReport. From this class we control all
  * events related to the open and close files, handling of properties files,
  * handling JMDIDestopPane, Menus....
- *
  * @author  Administrator
  */
 public class MainFrame extends javax.swing.JFrame

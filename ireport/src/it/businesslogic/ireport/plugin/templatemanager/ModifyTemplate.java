@@ -31,15 +31,17 @@ import com.chinacreator.ireport.rmi.TemplateFiles;
 
 /**
  *
- * @author  Administrator
+ * @author  李茂
  */
 public class ModifyTemplate extends javax.swing.JDialog {
     public String mName = null;
     public JDialog fatherFrame = null;
+    public TemplatesPanel tpp = null;
     /** Creates new form ModifyTemplate */
-    public ModifyTemplate(java.awt.Component parent, boolean modal,String tname) {
+    public ModifyTemplate(java.awt.Component parent, boolean modal,String tname,TemplatesPanel tp) {
         //super(parent, modal);
     	fatherFrame = (JDialog) parent;
+    	tpp = tp;
         mName = tname;
         initComponents();
         jButton4.setEnabled(false);
@@ -405,7 +407,7 @@ public class ModifyTemplate extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Documents and Settings\\Administrator\\桌面\\mypic\\cancle.png")); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(this.getClass().getResource("/it/businesslogic/ireport/plugin/templatemanager/cancle.png"))); // NOI18N
         jButton2.setText("取消");
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -413,7 +415,7 @@ public class ModifyTemplate extends javax.swing.JDialog {
             }
         });
 
-        jButton3.setIcon(new javax.swing.ImageIcon("C:\\Documents and Settings\\Administrator\\桌面\\mypic\\modify.png")); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(this.getClass().getResource("/it/businesslogic/ireport/plugin/templatemanager/modify.png"))); // NOI18N
         jButton3.setText("确定");
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -490,6 +492,12 @@ public class ModifyTemplate extends javax.swing.JDialog {
         	tf.setName(mName);
         	tf.setOldName(mName);
         }else{
+        	//重新命名了，需要判断文件是否合法
+        	if((!name.endsWith("C")) && (!name.endsWith("T"))){
+        		DialogFactory.showErrorMessageDialog(this, "重命名的文件名必须以“C”或者“T”结束:\n C表示列模式模板  \n T表示表格模式模板", "错误");
+        		return;
+        	}
+        	
         	tf.setName(name);
         	tf.setOldName(mName);
         }
@@ -531,10 +539,17 @@ public class ModifyTemplate extends javax.swing.JDialog {
         	IreportRmiClient.getInstance().getRmiRemoteInterface().saveTemplatesFile(tf, true);
         	//AddedOperator.log("修改模板文件["+mName+"]信息成功", IreportConstant.RIGHT_);
         	IreportUtil.saveTemplatesFile(tf, true);
-        	((TemplatesFrame)fatherFrame).loadItems();
+        	/*tpp.updateCategories();
+        	tpp.updatePreviews();
+        	tpp.updateUI();*/
+
         	
         	this.setVisible(false);
         	this.dispose();
+        	fatherFrame.setVisible(false);
+        	fatherFrame.dispose();
+        	
+        	IreportUtil.reShowTemplateFrame();
         } catch (Exception e) {
         	//AddedOperator.log("修改模板文件失败:"+e.getMessage(), IreportConstant.ERROR_);
         	DialogFactory.showErrorMessageDialog(this,"修改模板文件失败:"+e.getMessage(), "修改错误");
@@ -547,24 +562,6 @@ public class ModifyTemplate extends javax.swing.JDialog {
       this.dispose();
     }
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ModifyTemplate dialog = new ModifyTemplate(new javax.swing.JFrame(), true,"123");
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-    
-   
     // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

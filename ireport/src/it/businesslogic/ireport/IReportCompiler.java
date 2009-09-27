@@ -314,6 +314,7 @@ public class IReportCompiler implements Runnable, JRExportProgressMonitor
       }
 
 
+      System.out.println("fff:"+jrf.getReport().getFilename());
        String reportDirectory = new File(jrf.getReport().getFilename()).getParent();
        //String classpath = System.getProperty("jasper.reports.compile.class.path");
        String classpath = net.sf.jasperreports.engine.util.JRProperties.getProperty(net.sf.jasperreports.engine.util.JRProperties.COMPILER_CLASSPATH);

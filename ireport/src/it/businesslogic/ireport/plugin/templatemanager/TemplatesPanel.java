@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -216,14 +217,14 @@ public class TemplatesPanel extends javax.swing.JPanel implements Runnable {
 
     public void updateCategories()
     {
-        /*
-        Object selectedCategory = jList2.getSelectedValue();
+        
+        Object selectedCategory = jList1.getSelectedValue();
 
         TemplateCategory[] catArray = categories.toArray(new TemplateCategory[categories.size()]);
         Arrays.sort(catArray);
         categories = new ArrayList( Arrays.asList(catArray));
 
-        DefaultListModel model = (DefaultListModel)jList2.getModel();
+        DefaultListModel model = (DefaultListModel)jList1.getModel();
         model.removeAllElements();
         String lastCategory = TemplateCategory.CATEGORY_ALL_REPORTS;
         model.addElement(lastCategory);
@@ -241,8 +242,8 @@ public class TemplatesPanel extends javax.swing.JPanel implements Runnable {
             }
         }
 
-        jList2.setSelectedValue(selectedCategory, true);
-        */
+        jList1.setSelectedValue(selectedCategory, true);
+        
     }
 
     /** This method is called from within the constructor to
@@ -405,7 +406,8 @@ public class TemplatesPanel extends javax.swing.JPanel implements Runnable {
             File[] files = folder.listFiles(new FileFilter() {
 
                 public boolean accept(File pathname) {
-                    return pathname.getName().toLowerCase().endsWith(".png");
+                	String filename = pathname.getName().toLowerCase();
+                	return (filename.endsWith("c.xml") || filename.endsWith("t.xml"));
                 }
             });
 

@@ -34,7 +34,7 @@ public class Start {
 	public static void main(String[] args) {
 
 		if(args == null || args.length==0){
-			 args = new String[]{"192.168.11.110","10086","20090820160844234589","系统管理员","192.168.11.110"};
+			 args = new String[]{"192.168.11.110","10086","","系统管理员","192.168.11.110"};
 		}
 		AddedOperator.getInstance().beforeIreportLoadCheck();
 		AddedOperator.getInstance().initRemoteArgs(args);

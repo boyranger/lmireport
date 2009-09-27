@@ -134,6 +134,7 @@ public class ReportWriter {
                 getReport().setEncoding("UTF-8"); // Default XML encoding
             }
 
+            System.out.println("Ãû×Ö£º"+aFilename);
             writeToOutputStream(new java.io.FileOutputStream( aFilename ), fileencoding); //Changed by Felix Firgau
 
             //getReport().setCursor(Cursor.DEFAULT);

@@ -1,14 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * TemplatesDialog.java
- *
- * Created on 19-giu-2009, 14.02.35
- */
-
 package it.businesslogic.ireport.plugin.templatemanager;
 
 
@@ -18,7 +7,6 @@ import it.businesslogic.ireport.gui.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -35,6 +23,14 @@ import javax.swing.event.ChangeListener;
 
 import com.chinacreator.ireport.IreportUtil;
 import com.chinacreator.ireport.component.DialogFactory;
+import com.chinacreator.ireport.rmi.IreportRmiClient;
+import com.chinacreator.ireport.rmi.TemplateFiles;
+
+/**
+ * @author 李茂
+ * @since 3.0
+ * @version TemplatesFrame.java 2009 Sep 27, 2009 2:25:46 PM
+ */
 
 public class TemplatesFrame extends javax.swing.JDialog {
 
@@ -97,8 +93,9 @@ public class TemplatesFrame extends javax.swing.JDialog {
         actions.add(t);
         for (TemplateItemAction a : actions)
         {
-        		System.out.println(a.getDisplayName());
         	((DefaultListModel)jListTemplateItems.getModel()).addElement(a);
+        	// LIMAO : 只加载一个左边大导航列表，以后添加需要修改 Sep 27, 2009 4:04:24 PM
+        	break;
         }
     }
 
@@ -222,7 +219,18 @@ public class TemplatesFrame extends javax.swing.JDialog {
         newWithTemplate.setText("从模板新建"); // NOI18N
         newWithTemplate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	
+            	String templateName = getSelectedTemplateDescriptor().getDisplayName();
+            	if(IreportUtil.isBlank(templateName)){
+            		DialogFactory.showErrorMessageDialog(com, "未选择模板", "错误");
+            		return;
+            	}
+            	boolean b = IreportUtil.runWizard("creatorepp", templateName);
+            	if(!b){
+            		com.setVisible(true);
+            	}else{
+            		com.setVisible(false);
+            		((JDialog)com).dispose();
+            	}
             }
         });
 
@@ -233,7 +241,7 @@ public class TemplatesFrame extends javax.swing.JDialog {
         addTemplate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-            	JDialog jd = new NewServerTemplate((Frame) com,true);
+            	JDialog jd = new NewServerTemplate(com,true);
             	it.businesslogic.ireport.util.Misc.centerFrame(jd);
             	jd.setVisible(true);
             }
@@ -247,13 +255,13 @@ public class TemplatesFrame extends javax.swing.JDialog {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
             	try {
-            	File f = new File(MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator+ getSelectedTemplateDescriptor()+".xml");
+            	File f = new File(MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator+ getSelectedTemplateDescriptor().getDisplayName()+".xml");
             	if(f==null || !f.exists()){
-            		DialogFactory.showErrorMessageDialog(com, "模板文件未找到", "错误");
+            		DialogFactory.showErrorMessageDialog(com, "模板文件"+f.getPath()+"未找到", "错误");
             		return;
             	}
             	
-            	String editorTempFile = MainFrame.IREPORT_TMP_DIR+File.separator+getSelectedTemplateDescriptor()+"_"+IreportUtil.dateFormat("MMddHHmmss", new Date())+".xml";
+            	String editorTempFile = MainFrame.IREPORT_TMP_DIR+File.separator+getSelectedTemplateDescriptor().getDisplayName()+"_"+IreportUtil.dateFormat("MMddHHmmss", new Date())+".xml";
             	//copy 一个模板文件副本到临时文件夹
             	IreportUtil.bytesToFile(editorTempFile, IreportUtil.fileToBytes(f.getPath()));
             	
@@ -275,9 +283,9 @@ public class TemplatesFrame extends javax.swing.JDialog {
         modifyTemplate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-            	JDialog jd = new ModifyTemplate( com,true,getSelectedTemplateDescriptor().getDisplayName());
+            	JDialog jd = new ModifyTemplate( com,true,getSelectedTemplateDescriptor().getDisplayName(),templatesPanel1);
             	it.businesslogic.ireport.util.Misc.centerFrame(jd);
-            	jd.setVisible(true);
+            	jd.setVisible(true); 
             }
         });
 
@@ -297,8 +305,18 @@ public class TemplatesFrame extends javax.swing.JDialog {
             	if(ok==JOptionPane.NO_OPTION){
             		return;
             	}
-            	//删除服务器端文件
-            	IreportUtil.deleteTemplate(st.getDisplayName());
+            	TemplateFiles tf = new TemplateFiles();
+            	tf.setName(st.getDisplayName());
+            	try {
+            		//删除服务器端文件
+            		IreportRmiClient.getInstance().getRmiRemoteInterface().deleteTemplateFile(tf);
+            		//删除本地文件
+            		IreportUtil.deleteTemplate(st.getDisplayName());
+				} catch (Exception e) {
+					e.printStackTrace();
+					DialogFactory.showErrorMessageDialog(com, e.getMessage(), "模板删除错误");
+					return;
+				}
             	
             }
         });

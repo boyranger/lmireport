@@ -17,8 +17,12 @@
  */
 package com.chinacreator.ireport;
 
+import it.businesslogic.ireport.Report;
 import it.businesslogic.ireport.gui.JReportFrame;
 import it.businesslogic.ireport.gui.MainFrame;
+import it.businesslogic.ireport.gui.TemplateWizardDialog;
+import it.businesslogic.ireport.plugin.templatemanager.TemplatesFrame;
+import it.businesslogic.ireport.util.PageSize;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -26,7 +30,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
-import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -345,18 +348,18 @@ public class IreportUtil {
 	
 	
 	public static String getTemplateType(String tName){
-		String tmpTemplate = MainFrame.IREPORT_TMP_TEMPLATE_DIR;
+		/*String tmpTemplate = MainFrame.IREPORT_TMP_TEMPLATE_DIR;
 		System.out.println(tmpTemplate + File.separator+tName+"C.xml");
 		File cf = new File(tmpTemplate + File.separator+tName+"C.xml");
-		File tf = new File(tmpTemplate + File.separator+tName+"T.xml");
-		if((!cf.exists()) && (!tf.exists())){
+		File tf = new File(tmpTemplate + File.separator+tName+"T.xml");*/
+		if(isBlank(tName)){
 			return null;
 		}
-		if(cf.exists()){
+		if(tName.endsWith("C")){
 			return IreportConstant.TEMPLATE_C;
 		}
 		
-		if(tf.exists()){
+		if(tName.endsWith("T")){
 			return IreportConstant.TEMPLATE_T;
 		}
 		return null;
@@ -365,15 +368,14 @@ public class IreportUtil {
 	public static Object saveTemplatesFile(TemplateFiles tf,boolean editor) {
 		File xf = null;
 		File mf = null;
-		String typeString = null;
+		
 		String tpath = MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator;
 		try {
 		if(tf==null){
 			throw new RuntimeException("上传模板信息文件为空");
 		}
-		typeString = tf.getType().equals(IreportConstant.TEMPLATE_C)?"C":"T";
 		
-		String xmlPath = tpath + tf.getName()+typeString+".xml";
+		String xmlPath = tpath + tf.getName()+ ".xml";
 		String imgPath = tpath+ tf.getName() + ".png";
 		
 		 xf = new File(xmlPath);
@@ -383,7 +385,7 @@ public class IreportUtil {
 			throw new RuntimeException("模板名已经存在");
 		}
 		if(editor){
-			String xp= tpath + tf.getOldName()+typeString+".xml";
+			String xp= tpath + tf.getOldName()+".xml";
 			
 			System.out.println(xp);
 			if(!new File(xp).exists()){
@@ -394,7 +396,7 @@ public class IreportUtil {
 				IreportUtil.bytesToFile(xmlPath, tf.getXmlContent());
 				
 				if(!tf.getName().equals(tf.getOldName())){
-					 String oldXml =  tpath + tf.getOldName()+typeString+".xml";
+					 String oldXml =  tpath + tf.getOldName()+".xml";
 					 File oldXmlFile = new File(oldXml);
 					 if(oldXmlFile!=null && oldXmlFile.exists()){
 						 oldXmlFile.delete();
@@ -421,13 +423,13 @@ public class IreportUtil {
 				//未改变名称
 			}else{
 				//改变了名称
-				 String oldXml =  tpath + tf.getOldName()+typeString+".xml";
+				 String oldXml =  tpath + tf.getOldName()+".xml";
 				 String imgP = tpath+ tf.getOldName() + ".png";
 				 File oldXmlFile = new File(oldXml);
 				 File oldImgFile = new File(imgP);
 				 
 				 if(oldXmlFile!=null && oldXmlFile.exists()){
-					 oldXmlFile.renameTo(new File( tpath + tf.getName()+typeString+".xml"));
+					 oldXmlFile.renameTo(new File( tpath + tf.getName()+".xml"));
 				 }
 				 
 				 if(oldImgFile!=null && oldImgFile.exists()){
@@ -478,20 +480,126 @@ public class IreportUtil {
 			f.delete();
 		}
 	}
+	/**
+	 * 删除模板文件
+	 * @param templateName
+	 */
 	public static void deleteTemplate(String templateName){
 		if(IreportUtil.isBlank(templateName)){
 			throwRuntimeException("模板文件名为空");
 		}
 		
 		String tpath =  MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator;
-		File xmlFileC = new File(tpath+templateName+"C.xml");
-		File xmlFileT = new File(tpath+templateName+"T.xml");
+		File xmlFile = new File(tpath+templateName+".xml");
 		File imgFile = new File(tpath+templateName+".png");
-		deleteFileIfExsit(xmlFileC);
-		deleteFileIfExsit(xmlFileT);
+		
+		deleteFileIfExsit(xmlFile);
 		deleteFileIfExsit(imgFile);
 		
 	}
+	
+
+	/**
+	 * 打开一个模板文件创建报表向导
+	 * @param destFile 文件名字
+	 * @param tmplateName 模板文件名
+	 * @return
+	 */
+	public static boolean runWizard(String destFile,String templateName)
+	  {
+	  	MainFrame mainFrame = MainFrame.getMainInstance();
+
+	  	if (mainFrame == null) return false;
+
+	        try {
+
+	                TemplateWizardDialog wd = new TemplateWizardDialog(mainFrame,true,templateName);
+	                wd.setVisible(true);
+	                wd.requestFocus();
+
+
+	                Report report = null;
+	                if (wd.getDialogResult() == javax.swing.JOptionPane.OK_OPTION) {
+	                    report = wd.getReport();
+	                    
+	                    System.out.println(report);
+	                    if (report == null)
+	                    {
+	                    	report = createBlankReport();
+	                    }
+	                }
+	                else
+	                {
+	                	return false;
+	                    //report = createBlankReport();
+	                }
+
+	                if (report != null)
+	                {
+	                        mainFrame.openNewReportWindow(report);
+	                        destFile = wd.getYouSetName();
+	                        report.setFilename(MainFrame.IREPORT_TMP_FILE_DIR+File.separator+destFile+".jrxml");
+	                        report.saveXMLFile();
+	                        setVisible(true);
+	                }
+	               AddedOperator.log("利用模板向导成功生成报表文件"+destFile+".jrxml", IreportConstant.RIGHT_);
+	        } catch (Exception ex)
+	        {
+	              System.out.println(ex.getMessage());
+	                ex.printStackTrace();
+	        }
+
+
+	      return true;
+	  }
+
+	  private static Report createBlankReport()
+	  {
+	      Report newReport = new Report();
+
+	        newReport.setName(it.businesslogic.ireport.util.I18n.getString("untitledReport", "untitled_report_")+"1");
+	        newReport.setUsingMultiLineExpressions(false); //this.isUsingMultiLineExpressions());
+	        newReport.setWidth(  PageSize.A4.x);
+	        newReport.setHeight( PageSize.A4.y);
+	        newReport.setTopMargin(20);
+	        newReport.setLeftMargin(30);
+	        newReport.setRightMargin(30);
+	        newReport.setBottomMargin(20);
+	        newReport.setColumnCount(1);
+	        newReport.setColumnWidth( newReport.getWidth() - newReport.getLeftMargin() - newReport.getRightMargin() );
+	        newReport.setColumnSpacing(0);
+
+	        return newReport;
+	  }
+	  
+	  private static boolean setVisible(boolean b)
+	  {
+	      MainFrame.getMainInstance().setVisible(b);
+	      if (MainFrame.getMainInstance().getState() == java.awt.Frame.ICONIFIED)
+	      {
+	            MainFrame.getMainInstance().setState( java.awt.Frame.NORMAL );
+	      }
+	      return MainFrame.getMainInstance().requestFocusInWindow();
+	  }
+	  
+	  
+	
+	 public static void reShowTemplateFrame(){
+		 java.awt.EventQueue.invokeLater(new Runnable() {
+	            public void run() {
+	            	   final TemplatesFrame dialog = new TemplatesFrame(MainFrame.getMainInstance(), true);
+	                   dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+	                       public void windowClosing(java.awt.event.WindowEvent e) {
+	                    	   dialog.setVisible(false);
+	                    	   dialog.dispose();
+	                       }
+	                   });
+	                   dialog.setVisible(true);
+	            	
+	            }
+			   
+	    	});
+	 } 
 	public static void main(String[] args) {
 		System.out.println(isAllowedNewReport("_12345678901234567890"));
 	}

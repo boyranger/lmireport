@@ -57,9 +57,6 @@ public interface GenericWizard {
      */
     public boolean previousStep(int previousStep);
     
-    /* finish now
-     *
-     */
     public void finish(int currentStep);
     
     public boolean canFinish(int currentStep);
