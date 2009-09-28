@@ -79,7 +79,6 @@ public class ElementPropertiesDialog extends javax.swing.JDialog {
     public ElementPropertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
         //System.out.println(">>> 1");
         
         jTabbedPane.removeAll();

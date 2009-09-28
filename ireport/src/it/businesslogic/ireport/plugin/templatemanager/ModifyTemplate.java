@@ -15,12 +15,15 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
+import com.chinacreator.ireport.AddedOperator;
+import com.chinacreator.ireport.ComboxObject;
 import com.chinacreator.ireport.IreportConstant;
 import com.chinacreator.ireport.IreportUtil;
 import com.chinacreator.ireport.component.DialogFactory;
@@ -39,7 +42,7 @@ public class ModifyTemplate extends javax.swing.JDialog {
     public TemplatesPanel tpp = null;
     /** Creates new form ModifyTemplate */
     public ModifyTemplate(java.awt.Component parent, boolean modal,String tname,TemplatesPanel tp) {
-        //super(parent, modal);
+    	super(MainFrame.getMainInstance(), modal);
     	fatherFrame = (JDialog) parent;
     	tpp = tp;
         mName = tname;
@@ -308,8 +311,15 @@ public class ModifyTemplate extends javax.swing.JDialog {
         jPanel7.setBackground(new java.awt.Color(204, 204, 204));
 
         jComboBox1.setBackground(new java.awt.Color(204, 204, 204));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        //jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        List<ComboxObject> list = IreportUtil.getAllOpenedTemplate();
+        if(list!=null && list.size()>0){
+        	for (int i = 0; i < list.size(); i++) {
+				jComboBox1.addItem(list.get(i));
+			}
+        }
+        
         jTextField5.setBackground(new java.awt.Color(204, 204, 204));
         jTextField5.setEditable(false);
 
@@ -506,8 +516,16 @@ public class ModifyTemplate extends javax.swing.JDialog {
         	tf.setXmlContent(null);
         }else if(jCheckBox1.isSelected()){
         	//从已经打开的文件
-        	tf.setXmlContent(null);
+           ComboxObject cb = ((ComboxObject)jComboBox1.getSelectedItem());
+      	   if(cb==null){
+      		   DialogFactory.showErrorMessageDialog(this, "你未选择模板文件", "新建错误");
+          	   return;
+      	   }
+      	   String selectFilePath = cb.getObj()==null?"":((File)cb.getObj()).getPath();
+      	   
+           tf.setXmlContent(IreportUtil.fileToBytes(selectFilePath));
         }else if(jCheckBox2.isSelected()){
+        	//从文件系统
         	String f = jTextField5.getText();
         	if(IreportUtil.isBlank(f)){
         		DialogFactory.showErrorMessageDialog(this, "你没有选择任何文件", "文件选择错误");
@@ -537,7 +555,7 @@ public class ModifyTemplate extends javax.swing.JDialog {
         try {
 			
         	IreportRmiClient.getInstance().getRmiRemoteInterface().saveTemplatesFile(tf, true);
-        	//AddedOperator.log("修改模板文件["+mName+"]信息成功", IreportConstant.RIGHT_);
+        	AddedOperator.log("修改模板文件["+mName+"]信息成功", IreportConstant.RIGHT_);
         	IreportUtil.saveTemplatesFile(tf, true);
         	/*tpp.updateCategories();
         	tpp.updatePreviews();
@@ -551,7 +569,7 @@ public class ModifyTemplate extends javax.swing.JDialog {
         	
         	IreportUtil.reShowTemplateFrame();
         } catch (Exception e) {
-        	//AddedOperator.log("修改模板文件失败:"+e.getMessage(), IreportConstant.ERROR_);
+        	AddedOperator.log("修改模板文件失败:"+e.getMessage(), IreportConstant.ERROR_);
         	DialogFactory.showErrorMessageDialog(this,"修改模板文件失败:"+e.getMessage(), "修改错误");
         	e.printStackTrace();
         }

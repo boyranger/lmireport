@@ -6,15 +6,19 @@
 
 package it.businesslogic.ireport.plugin.templatemanager;
 
+import it.businesslogic.ireport.gui.MainFrame;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 
 import sun.awt.geom.AreaOp.AddOp;
 
 import com.chinacreator.ireport.AddedOperator;
+import com.chinacreator.ireport.ComboxObject;
 import com.chinacreator.ireport.IreportConstant;
 import com.chinacreator.ireport.IreportUtil;
 import com.chinacreator.ireport.component.DialogFactory;
@@ -52,7 +56,7 @@ public class NewServerTemplate extends javax.swing.JDialog {
     
     /** Creates new form NewJDialog */
     public NewServerTemplate(java.awt.Component parent, boolean modal) {
-       // super(parent, modal);
+        super(MainFrame.getMainInstance(), modal);
         initComponents();
         jTextField1.setEnabled(false);
         jButton1.setEnabled(false);
@@ -111,8 +115,15 @@ public class NewServerTemplate extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("文件选择"));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        //jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        List<ComboxObject> list = IreportUtil.getAllOpenedTemplate();
+        if(list!=null && list.size()>0){
+        	for (int i = 0; i < list.size(); i++) {
+				jComboBox1.addItem(list.get(i));
+			}
+        }
+        
         jTextField1.setBackground(new java.awt.Color(255, 255, 255));
         jTextField1.setEditable(false);
 
@@ -335,7 +346,12 @@ public class NewServerTemplate extends javax.swing.JDialog {
     	String ttype = null;
     	String tname = null;
        if(jCheckBox1.isSelected()){
-    	   tfile = (String)jComboBox1.getSelectedItem();
+    	   ComboxObject cb = ((ComboxObject)jComboBox1.getSelectedItem());
+    	   if(cb==null){
+    		   DialogFactory.showErrorMessageDialog(this, "你未选择模板文件", "新建错误");
+        	   return;
+    	   }
+    	   tfile = cb.getObj()==null?"":((File)cb.getObj()).getPath();
        }else{
     	   tfile = jTextField1.getText();
        }
@@ -366,14 +382,14 @@ public class NewServerTemplate extends javax.swing.JDialog {
        try {
     	   IreportRmiClient.getRmiRemoteInterface().saveTemplatesFile(tf, false);
     	   if(!imgFile.toLowerCase().endsWith(".png")){
-    	    //AddedOperator.log("设置图片类型为非png类型，将修正为png类型图片", IreportConstant.WARN_);
+    	    AddedOperator.log("设置图片类型为非png类型，将修正为png类型图片", IreportConstant.WARN_);
     	   }
-    	   //AddedOperator.log("新建模板["+tname+"]到服务器成功",IreportConstant.RIGHT_);
+    	   AddedOperator.log("新建模板["+tname+"]到服务器成功",IreportConstant.RIGHT_);
     	   this.setVisible(false);
     	   this.dispose();
        } catch (Exception e) {
     	   e.printStackTrace();
-    	  // AddedOperator.log("新建文件到服务器出错："+e.getMessage(), IreportConstant.ERROR_);
+    	   AddedOperator.log("新建文件到服务器出错："+e.getMessage(), IreportConstant.ERROR_);
     	   DialogFactory.showErrorMessageDialog(this, "新建模板文件到服务器出错："+e.getMessage(), "新建错误");
        }
        

@@ -67,7 +67,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
     
     public void initAll()
     {
-        initComponents();
+    	initComponents();
         this.setSize(420, 250);
 
         jTableProperties.setColumnControl(new CustomColumnControlButton(jTableProperties, new ColumnControlIcon() ) );

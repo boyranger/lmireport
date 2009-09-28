@@ -30,9 +30,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -437,7 +441,61 @@ public class AddedOperator implements AddedOepretorInterface{
 
 
 	public Object linkCheck() {
-		// FIXME Auto-generated method stub
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+		
+		Thread checkThread = new Thread(new Runnable() {
+			
+			public void run() {
+				try {
+					IreportRmiClient.getInstance();
+					boolean b = IreportRmiClient.getRmiRemoteInterface().ping();
+					if(!b){
+						Object obj = MyReportProperties.getProperties(IreportConstant.LINK_CHECK_TIME_OUT);
+						//若为空，表示第一次失败
+						if(obj==null){
+						MyReportProperties.setProperties(IreportConstant.LINK_CHECK_TIME_OUT, new Date().getTime());
+						AddedOperator.log("与服务器断已经断开连接", IreportConstant.ERROR_);
+						}else{
+						//重复失败
+							long pre = Long.valueOf(obj+"");
+							//达到打印标准
+							if((System.currentTimeMillis()-pre)>IreportConstant.PTIME){
+								MyReportProperties.setProperties(IreportConstant.LINK_CHECK_TIME_OUT, new Date().getTime());
+								AddedOperator.log("与服务器断已经断开连接", IreportConstant.ERROR_);
+							}
+						
+						}
+						MyReportProperties.setProperties(IreportConstant.LINK_CHECK, b);
+					
+					}else{
+						MyReportProperties.setProperties(IreportConstant.LINK_CHECK, b);
+					}
+				} catch (Exception e) {
+					Object obj = MyReportProperties.getProperties(IreportConstant.LINK_CHECK_TIME_OUT);
+					//若为空，表示第一次失败
+					if(obj==null){
+						MyReportProperties.setProperties(IreportConstant.LINK_CHECK_TIME_OUT, System.currentTimeMillis());
+
+					AddedOperator.log("与服务器断已经断开连接", IreportConstant.ERROR_);
+					}else{
+					//重复失败
+						long pre = Long.valueOf(obj+"");
+						//达到打印标准
+						System.out.println(System.currentTimeMillis()-pre);
+						if((System.currentTimeMillis()-pre)>IreportConstant.PTIME){
+							MyReportProperties.setProperties(IreportConstant.LINK_CHECK_TIME_OUT,System.currentTimeMillis());
+							AddedOperator.log("与服务器断已经断开连接", IreportConstant.ERROR_);
+						}
+					
+					}
+					MyReportProperties.setProperties(IreportConstant.LINK_CHECK, false);
+				}
+			}
+		});
+		//checkThread.setPriority(Prio);
+		checkThread.setDaemon(true);
+		
+		scheduler.scheduleAtFixedRate(checkThread, 10, 5, TimeUnit.SECONDS);
 		return null;
 	}
 

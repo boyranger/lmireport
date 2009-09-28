@@ -32,5 +32,6 @@
 	<classpathentry exported="true" kind="lib" path="WebRoot/WEB-INF/lib/swingx-2007_05_13.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebRoot/WEB-INF/lib/xalan.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebRoot/WEB-INF/lib/xercesImpl.jar"/>
+	<classpathentry exported="true" kind="lib" path="WebRoot/WEB-INF/lib/iTextAsian.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

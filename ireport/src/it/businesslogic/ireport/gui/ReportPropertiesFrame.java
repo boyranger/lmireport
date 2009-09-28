@@ -93,7 +93,7 @@ public class ReportPropertiesFrame extends javax.swing.JDialog  {
 
     /** Creates new form ReportPropertiesFrame */
     public ReportPropertiesFrame(java.awt.Frame parent, boolean modal) {
-        super(parent,modal);
+    	super(parent,modal);
         initComponents();
 
         units = it.businesslogic.ireport.util.Unit.getStandardUnits();

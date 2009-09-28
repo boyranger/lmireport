@@ -4702,7 +4702,6 @@ public class MainFrame extends javax.swing.JFrame
     }//GEN-LAST:event_jMenuItemCloseFromListActionPerformed
 
     private void jMenuItemCloseAllExceptThisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCloseAllExceptThisActionPerformed
-    	System.out.println("kkkkkkkkkkkkkkkkkkkkk");
         if (this.getActiveReportFrame() == null) return;
         JInternalFrame activeF = this.getActiveReportFrame();
         JInternalFrame[] frames = this.jMDIDesktopPane.getAllFrames();
@@ -4716,7 +4715,6 @@ public class MainFrame extends javax.swing.JFrame
     }//GEN-LAST:event_jMenuItemCloseAllExceptThisActionPerformed
 
     private void jMenuItemCloseAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCloseAllActionPerformed
-    	System.out.println("MMMMMMMMMMMMMMMMMMMMM");
         JInternalFrame[] frames = jMDIDesktopPane.getAllFrames();
         for (int i=0; i<frames.length; ++i)
         {
@@ -4730,7 +4728,6 @@ public class MainFrame extends javax.swing.JFrame
     }//GEN-LAST:event_jMenuItemCloseAllActionPerformed
 
     private void jMenuItemCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCloseActionPerformed
-    	System.out.println("llllllllllllllllllllllll");
         jMDIMenuBar.closeFrame( this.getActiveReportFrame() );
 
     }//GEN-LAST:event_jMenuItemCloseActionPerformed
@@ -8009,7 +8006,8 @@ public class MainFrame extends javax.swing.JFrame
         AddedOperator.getInstance().initTemplate();
 
         AddedOperator.getInstance().initLibJarFiles();
-
+        
+        AddedOperator.getInstance().linkCheck();
     }
 
 

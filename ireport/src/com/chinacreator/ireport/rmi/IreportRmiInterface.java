@@ -94,7 +94,7 @@ public interface IreportRmiInterface extends Remote{
 	Object synchronizationLibJar()throws RemoteException;
 
 	/**
-	 *
+	 * 发送一个服务器端文件到客户端
 	 * @param ifi
 	 * @param cilentPath
 	 * @return
@@ -117,6 +117,13 @@ public interface IreportRmiInterface extends Remote{
 	 * @throws RemoteException
 	 */
 	Object deleteTemplateFile(TemplateFiles tf)throws RemoteException;
+	
+	/**
+	 * 链路检测
+	 * @return
+	 * @throws RemoteException
+	 */
+	boolean ping()throws RemoteException;
 }
 
 //end IreportRmiInterface.java

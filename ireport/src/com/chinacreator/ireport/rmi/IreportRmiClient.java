@@ -67,7 +67,8 @@ public class IreportRmiClient {
 		}
 		} catch (Exception e) {
 			//AddedOperator.log("创建于服务器的RMI连接[IP:"+ip+",PORT:"+port+"]失败，你的所有远程操作将不能进行,由于："+e.getMessage(), IreportConstant.ERROR_);
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.err.println(e.getMessage());
 			flag = true;
 		}
 		return client;

@@ -7,6 +7,7 @@ import it.businesslogic.ireport.gui.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -39,7 +40,7 @@ public class TemplatesFrame extends javax.swing.JDialog {
     boolean adjustingValueSlider = false;
     /** Creates new form TemplatesDialog */
     public TemplatesFrame(java.awt.Component parent, boolean modal) {
-        //super(parent,modal);
+        super(((Frame)parent),modal);
     	//this.
         setTitle("title...");
         initComponents();
@@ -134,7 +135,7 @@ public class TemplatesFrame extends javax.swing.JDialog {
         jListTemplateItems = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("frametitle"); // NOI18N
+        setTitle("模板管理界面"); // NOI18N
 
         templatesPanel1.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -253,7 +254,7 @@ public class TemplatesFrame extends javax.swing.JDialog {
         editorJrxml.setText("编辑该模板"); // NOI18N
         editorJrxml.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-
+            	
             	try {
             	File f = new File(MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator+ getSelectedTemplateDescriptor().getDisplayName()+".xml");
             	if(f==null || !f.exists()){
@@ -261,14 +262,16 @@ public class TemplatesFrame extends javax.swing.JDialog {
             		return;
             	}
             	
-            	String editorTempFile = MainFrame.IREPORT_TMP_DIR+File.separator+getSelectedTemplateDescriptor().getDisplayName()+"_"+IreportUtil.dateFormat("MMddHHmmss", new Date())+".xml";
+            	String editorTempFile = MainFrame.IREPORT_TMP_FILE_DIR+File.separator+getSelectedTemplateDescriptor().getDisplayName()+"_"+IreportUtil.dateFormat("MMddHHmmss", new Date())+".xml";
+            	
             	//copy 一个模板文件副本到临时文件夹
             	IreportUtil.bytesToFile(editorTempFile, IreportUtil.fileToBytes(f.getPath()));
             	
             	     setVisible(true);
                      JReportFrame jrf = MainFrame.getMainInstance().openFile( editorTempFile );
                      jrf.setSelected(true);
-                    
+                     com.setVisible(false);
+                     ((JDialog)com).dispose();
                  } catch (Exception ex){
                       ex.printStackTrace();
                       DialogFactory.showErrorMessageDialog(com, "编辑模板文件错误"+ex.getMessage(), "错误");
@@ -384,6 +387,8 @@ public class TemplatesFrame extends javax.swing.JDialog {
         );
 
         pack();
+        
+      
     }// </editor-fold>
 
     private void jButtonOpenTemplateActionPerformed(java.awt.event.ActionEvent evt) {
@@ -494,7 +499,8 @@ public class TemplatesFrame extends javax.swing.JDialog {
     {
         return templatesPanel1.getSelectedTamplate();
     }
-
+   
+    
     // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
 

@@ -74,6 +74,11 @@ public final class IreportConstant {
 	//模板类型
 	public final static String TEMPLATE_C = "列式";
 	public final static String TEMPLATE_T = "表格式";
+	
+	//链路检测
+	public final static String LINK_CHECK = "LINK_CHECK"; 
+	public final static String LINK_CHECK_TIME_OUT = "LINK_CHECK_TIME_OUT"; 
+	public static long PTIME = 30000; //提示执行周期
 }
 
 //end IreportConstant.java

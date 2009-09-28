@@ -31,11 +31,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
 
 import com.chinacreator.ireport.rmi.ReportLock;
@@ -583,7 +586,9 @@ public class IreportUtil {
 	  }
 	  
 	  
-	
+	/**
+	 * 打开“模板管理”界面
+	 */
 	 public static void reShowTemplateFrame(){
 		 java.awt.EventQueue.invokeLater(new Runnable() {
 	            public void run() {
@@ -600,12 +605,56 @@ public class IreportUtil {
 			   
 	    	});
 	 } 
-	public static void main(String[] args) {
-		System.out.println(isAllowedNewReport("_12345678901234567890"));
-	}
 
+	 /**
+	  * 获得已经打开的所有模板文件，特征为xml文件后缀
+	  * @return
+	  */
+  public static List<ComboxObject> getAllOpenedTemplate(){
+	  JComboBox j = null;
+	  JInternalFrame[] jif = MainFrame.getMainInstance().getJMDIDesktopPane().getAllFrames();
+      JReportFrame jf = null;
+      List<ComboxObject>  list = new ArrayList<ComboxObject>();
+   
+      for (int i = 0; i < jif.length; i++) {
+			if(jif[i]!=null && jif[i] instanceof JReportFrame){
+				jf = (JReportFrame) jif[i];
+				String path = jf.getReport().getFilename();
+				if(isBlank(path)){
+					continue;
+				}
+				File f = new File(path);
+				if(f!=null && f.getPath().toLowerCase().endsWith(".xml")){
+					list.add(new ComboxObject(f,delFileSuffix(f.getName())));
+				}
 
+			}
 
+		}
+	  
+	  return list;
+  }	 
+
+  /**
+   * 删除文件名后缀
+   * @param filename
+   * @return
+   */
+  public static String delFileSuffix(String filename){
+	  if(isBlank(filename)){
+		  return "";
+	  }
+	  
+	  if(filename.indexOf(".")==-1){
+		  return filename;
+	  }
+	  
+	  return filename.substring(0, filename.lastIndexOf("."));
+  }
+
+  public static void main(String[] args) {
+	System.out.println(delFileSuffix("xxmlx.xml"));
+}
 }
 
 //end IreportUtil.java
