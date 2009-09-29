@@ -362,7 +362,8 @@ public class AddedOperator implements AddedOepretorInterface{
 			  }
 	        } catch (Exception e) {
 	        	logger.error(e);
-	        	log("打开远程报表文件失败。", JOptionPane.ERROR_MESSAGE);
+	        	
+	        	log("打开远程报表文件失败:"+e.getMessage(), JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				//DialogFactory.showErrorMessageDialog(null, "打开远程报表文件失败！\n信息:"+e.getMessage() , "错误");
 	        }

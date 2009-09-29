@@ -15,8 +15,8 @@ public class PrinterCheck {
 		f.setVisible(true);
 		PrinterCheck pc = new PrinterCheck();
 		int hwnd = pc.getWindowHandle(f);
-		
 		pc.showInstall(hwnd);
+		
 		//System.out.println(System.getProperty("java.library.path"));
 		
 	}

@@ -52,9 +52,6 @@ public class ComboxObject {
 		return showName;
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(new ComboxObject(new File("D:/"),"mynamess"));
-	}
 }
 
 //end TemplateCombox.java

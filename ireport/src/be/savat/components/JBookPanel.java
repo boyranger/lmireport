@@ -70,11 +70,11 @@ public class JBookPanel extends JPanel
 	protected static final double PI_DIV_2 = Math.PI / 2.0;
 	//protected enum AutomatedAction {AUTO_TURN, AUTO_DROP_GO_BACK, AUTO_DROP_BUT_TURN}
 
-        protected static final int AUTO_TURN=0;
-        protected static final int AUTO_DROP_GO_BACK=1;
-        protected static final int AUTO_DROP_BUT_TURN=2;
+    protected static final int AUTO_TURN=0;
+    protected static final int AUTO_DROP_GO_BACK=1;
+    protected static final int AUTO_DROP_BUT_TURN=2;
 
-        protected int rotationX;
+    protected int rotationX;
 	protected double nextPageAngle;
 	protected double backPageAngle;
 

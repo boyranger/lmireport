@@ -79,6 +79,13 @@ public final class IreportConstant {
 	public final static String LINK_CHECK = "LINK_CHECK"; 
 	public final static String LINK_CHECK_TIME_OUT = "LINK_CHECK_TIME_OUT"; 
 	public static long PTIME = 30000; //提示执行周期
+	
+	//执行远程代码命令符
+	public final static int FIND_REPORT_LOCK_LIST = 2;	
+	
+	//分页
+	
+	public final static int DEFAULT_PAGE_SIZE= 10;
 }
 
 //end IreportConstant.java
