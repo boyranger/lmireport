@@ -57,7 +57,13 @@ public interface IreportRmiInterface extends Remote{
 	 * @return
 	 */
 	String unLockReport(String ip,String repId)throws RemoteException;
-
+	
+	/**
+	 * 解除所有锁定记录
+	 * @throws RemoteException 若删除信息出现异常
+	 */
+	void unLockAllReport()throws RemoteException;
+	
 	/**
 	 * 获取该报表对应的最新锁定记录
 	 * @param repid

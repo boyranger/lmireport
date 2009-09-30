@@ -29,6 +29,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
@@ -688,12 +689,16 @@ public class IreportUtil {
 					.getRmiRemoteInterface().invokeServerMethod(
 							IreportConstant.FIND_REPORT_LOCK_LIST, repid,
 							pageIndex, pageSize);
-		} catch (RemoteException e) {
+		} catch (RemoteException e){
 			e.printStackTrace();
 		}
 		return null;
 	}
-// "","报表ID", "报表文件名", "锁定者", "锁定者IP","锁定时间"};
+	/**
+	 * 将一个报表list填充为二维对象数组 
+	 * @param list
+	 * @return
+	 */
 	public static Object[][] ReportLockToObjectArray(List<ReportLock> list){
 		if(list!=null && list.size()>0){
 			Object[][] date = new Object[list.size()][6];
@@ -709,6 +714,46 @@ public class IreportUtil {
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * 执行dos命令
+	 * @param command
+	 */
+	public static void executeDosCommand(String command){
+		try {
+			Runtime.getRuntime().exec(command);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 删除文件加下全部文件
+	 * @return 失败文件对象
+	 */
+	public static List<File> deleteAllFileByFolder(String folderPath){
+		List<File> list = new ArrayList<File>();
+		File f = new File(folderPath);
+		if(f.exists() && f.isDirectory()){
+			File[] fs = f.listFiles();
+			for (int i = 0; i < fs.length; i++) {
+				try {
+					boolean b = fs[i].delete();
+					if(!b){
+						list.add(fs[i]);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					list.add(fs[i]);
+				}
+			}
+		}
+		return list;	
+	}
+	
+	
+	
 }
 
 // end IreportUtil.java
