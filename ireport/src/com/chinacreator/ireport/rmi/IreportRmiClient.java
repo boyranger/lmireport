@@ -58,7 +58,7 @@ public class IreportRmiClient {
 			rmiInterfactRemote = (IreportRmiInterface) Naming.lookup("rmi://"+ip+":"+port+"/ireportRmiServer");
 			client = new IreportRmiClient();
 			if(client!=null){
-				System.out.println("》》》》》》创建客户端RMI连接，IP："+ip+"端口："+port);
+				System.out.println("------> 创建客户端RMI连接，IP："+ip+"端口："+port);
 			}
 			if(flag){
 				//AddedOperator.log("创建于服务器的RMI连接[IP:"+ip+",PORT:"+port+"]成功", IreportConstant.RIGHT_);

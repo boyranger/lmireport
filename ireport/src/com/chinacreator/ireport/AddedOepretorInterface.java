@@ -147,6 +147,11 @@ public interface AddedOepretorInterface {
 	 */
 	Object initLibJarFiles();
 	
+	/**
+	 * 增量同步服务器文件到本地
+	 * @return
+	 */
+	Object incrementAddFile(int type);
 	
 }
 

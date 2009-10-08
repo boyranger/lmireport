@@ -784,6 +784,31 @@ public class AddedOperator implements AddedOepretorInterface{
 
 		return null;
 	}
+
+	public Object incrementAddFile(int type) {
+		try {
+			
+		
+		IreportRmiClient.getInstance();
+		String cilentDir = null;
+		if(1 == type){
+			//lib Ä¿Â¼Í¬²½
+			List<File> files = IreportRmiClient.rmiInterfactRemote.getServerFileList("/report/ireport/lib");
+			IreportUtil.increamentHelper(cilentDir, files);
+			
+		}else if(2==type){
+			
+		}else if(3==type){
+			
+		}else if(4==type){
+			
+		}
+		return null;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
 }
 
 //end AddedOperator.java

@@ -730,7 +730,7 @@ public class IreportUtil {
 	
 	/**
 	 * 删除文件加下全部文件
-	 * @return 失败文件对象
+	 * @return 失败文件对象集合
 	 */
 	public static List<File> deleteAllFileByFolder(String folderPath){
 		List<File> list = new ArrayList<File>();
@@ -752,7 +752,49 @@ public class IreportUtil {
 		return list;	
 	}
 	
-	
+	/**
+	 * 该方法只是在增量同步文件夹文件时用到
+	 * @param cilentDir
+	 * @param files
+	 * @throws Exception
+	 */
+	public static void increamentHelper(String cilentDir,List<File> files) throws Exception{
+		cilentDir = MainFrame.IREPORT_TMP_DIR+File.separator+"lib"+File.separator;
+		if(files!=null){
+			for (int i = 0; i < files.size(); i++) {
+				File thisFile = new File(cilentDir+files.get(i).getName());
+				if( !thisFile.exists() ){
+					//不存在需要同步
+					Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files.get(i).getPath());
+					//未完成
+					IreportUtil.bytesToFile(thisFile.getPath(), null);
+				}else{
+				    //若存在，但是时间戳不一样将同样同步
+					//1:服务器的时间戳晚于客户端
+					if(files.get(i).lastModified() > thisFile.lastModified()){
+						//需要同步
+						String savePath = thisFile.getPath();
+						Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files.get(i).getPath());
+						//未完成
+						thisFile.delete();
+						IreportUtil.bytesToFile(savePath, null);
+					}
+					
+					//2:你是否修改了？
+					if(files.get(i).lastModified() < thisFile.lastModified()){
+						//客户端做了自己修改?
+						//需要同步
+						Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files.get(i).getPath());
+						//若客户端自己做了修改，也许有他的原因，所以这里不直接删除而是备份
+						thisFile.renameTo(new File(thisFile.getPath()+".bak")); 
+						//未完成
+						IreportUtil.bytesToFile(thisFile.getPath(), null);
+					}
+					
+				}
+			}
+		}
+	}
 	
 }
 

@@ -17,6 +17,7 @@
  */
 package com.chinacreator.ireport.rmi;
 
+import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -32,15 +33,34 @@ public interface IreportRmiInterface extends Remote{
 	//测试方法
 	int add(int a,int b)throws RemoteException;
 
-	//保存过程
+	/**
+	 * 将一个报表文件保存到服务器
+	 * @param ireportFile
+	 * @throws RemoteException
+	 */
 	void save(IreportFile ireportFile)throws RemoteException;
 
-	//打开远程文件
+	/**
+	 * 打开服务器端报表文件
+	 * @param session
+	 * @param fileName
+	 * @return
+	 * @throws RemoteException
+	 */
 	IreportFile open(IreportSession session,String fileName)throws RemoteException;
 
-	//获取数据源列表
+	/**
+	 * 获得远程服务器数据源表达式的xml字符串
+	 * @return
+	 * @throws RemoteException
+	 */
 	String getDataSourceList()throws RemoteException;
 
+	/**
+	 * 获得服务器端得所有插件信息
+	 * @return
+	 * @throws RemoteException
+	 */
 	List<IreportFile> getAllPlugins() throws RemoteException;
 
 	/**
@@ -130,6 +150,15 @@ public interface IreportRmiInterface extends Remote{
 	 * @throws RemoteException
 	 */
 	boolean ping()throws RemoteException;
+	
+	/**
+	 * 获得服务器
+	 * @param path 该值为基于某服务器应用的文件夹 比如 /creatorepp/report/lib
+	 * 			   若需要取得lib目录下的文件列表，path的值应该等于/report/lib 或者 report/lib
+	 * @return
+	 * @throws RemoteException
+	 */
+	List<File> getServerFileList(String path)throws RemoteException;
 }
 
 //end IreportRmiInterface.java
