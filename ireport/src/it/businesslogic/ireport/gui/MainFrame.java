@@ -6071,7 +6071,9 @@ public class MainFrame extends javax.swing.JFrame
     }//GEN-LAST:event_jMenuItemAboutActionPerformed
 
     private void jButtonRun1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRun1ActionPerformed
-      compileAndRun1(evt != null && (evt.getModifiers() & evt.SHIFT_MASK) != 0);
+     
+    	
+    	compileAndRun1(evt != null && (evt.getModifiers() & evt.SHIFT_MASK) != 0);
     }//GEN-LAST:event_jButtonRun1ActionPerformed
 
     public IReportCompiler compileAndRun1() {

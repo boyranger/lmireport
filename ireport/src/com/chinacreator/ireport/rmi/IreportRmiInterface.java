@@ -153,12 +153,13 @@ public interface IreportRmiInterface extends Remote{
 	
 	/**
 	 * 获得服务器
-	 * @param path 该值为基于某服务器应用的文件夹 比如 /creatorepp/report/lib
-	 * 			   若需要取得lib目录下的文件列表，path的值应该等于/report/lib 或者 report/lib
+	 * @param path    该值为基于某服务器应用的文件夹 比如 /creatorepp/report/lib
+	 * 			      若需要取得lib目录下的文件列表，path的值应该等于/report/lib 或者 report/lib
+	 * @param allowed 允许通过的文件类型，其他的都过滤，若为空表示不做处理
 	 * @return
 	 * @throws RemoteException
 	 */
-	List<File> getServerFileList(String path)throws RemoteException;
+	File[] getServerFileList(String path,String[] allowed)throws RemoteException;
 }
 
 //end IreportRmiInterface.java

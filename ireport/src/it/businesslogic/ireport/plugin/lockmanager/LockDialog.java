@@ -516,8 +516,18 @@ public class LockDialog extends javax.swing.JDialog {
 			if(pageindex<=0){
 				pageindex = 1; 
 			}
-			PageInfo pg = IreportUtil.getReportLockList(searchStr, pageindex,
-					IreportConstant.DEFAULT_PAGE_SIZE);
+			PageInfo pg = null;
+			try {
+				 pg = IreportUtil.getReportLockList(searchStr, pageindex,
+						IreportConstant.DEFAULT_PAGE_SIZE);
+			} catch (Exception e) {
+				
+				DialogFactory.showErrorMessageDialog(null, "在获得服务器选定数据时出现错误，请检测连接是否正常", "错误");
+				AddedOperator.log("在获得服务器选定数据时出现错误，请检测连接是否正常", IreportConstant.ERROR_);
+				pg =null;
+				return;
+			}
+			
 			if (pg != null) {
 				java.util.List<ReportLock> list = pg.getIreports();
 				Object[][] mydata = IreportUtil.ReportLockToObjectArray(list);

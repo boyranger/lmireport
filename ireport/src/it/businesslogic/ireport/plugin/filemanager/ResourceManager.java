@@ -9,7 +9,10 @@ package it.businesslogic.ireport.plugin.filemanager;
 import it.businesslogic.ireport.gui.MainFrame;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import com.chinacreator.ireport.AddedOperator;
 import com.chinacreator.ireport.IreportConstant;
@@ -425,7 +428,7 @@ public class ResourceManager extends javax.swing.JDialog {
                     .add(jButton15))
                 .addContainerGap())
         );
-
+        this.setTitle("文件夹资源管理");
         pack();
     }// </editor-fold>
 
@@ -465,7 +468,7 @@ public class ResourceManager extends javax.swing.JDialog {
         // TODO add your handling code here:22
     	List<File> list = IreportUtil.deleteAllFileByFolder(jTextField3.getText());
     	if(list!=null && list.size()!=0){
-    		String message = "以下文件删除失败\n";
+    		String message = "以下文件删除失败,其他文件删除成功\n";
     		for (int i = 0; i < list.size(); i++) {
     			message +=list.get(i).getName()+"\n";
 			}
@@ -477,6 +480,7 @@ public class ResourceManager extends javax.swing.JDialog {
 
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:31
+    	AddedOperator.getInstance().incrementAddFile(3);
     	
     }
 
@@ -489,7 +493,7 @@ public class ResourceManager extends javax.swing.JDialog {
         // TODO add your handling code here:33
     	List<File> list = IreportUtil.deleteAllFileByFolder(jTextField2.getText());
     	if(list!=null && list.size()!=0){
-    		String message = "以下文件删除失败\n";
+    		String message = "以下文件删除失败,其他文件删除成功\n";
     		for (int i = 0; i < list.size(); i++) {
     			message +=list.get(i).getName()+"\n";
 			}
@@ -501,6 +505,7 @@ public class ResourceManager extends javax.swing.JDialog {
 
     private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:41
+    	AddedOperator.getInstance().incrementAddFile(1);
     }
 
     private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {
@@ -513,7 +518,7 @@ public class ResourceManager extends javax.swing.JDialog {
         // TODO add your handling code here:43
     	List<File> list = IreportUtil.deleteAllFileByFolder(jTextField4.getText());
     	if(list!=null && list.size()!=0){
-    		String message = "以下文件删除失败\n";
+    		String message = "以下文件删除失败,其他文件删除成功\n";
     		for (int i = 0; i < list.size(); i++) {
     			message +=list.get(i).getName()+"\n";
 			}
@@ -525,6 +530,7 @@ public class ResourceManager extends javax.swing.JDialog {
 
     private void jButton12MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:51
+    	AddedOperator.getInstance().incrementAddFile(2);
     }
 
     private void jButton10MouseClicked(java.awt.event.MouseEvent evt) {
@@ -536,7 +542,7 @@ public class ResourceManager extends javax.swing.JDialog {
         // TODO add your handling code here:53
     	List<File> list = IreportUtil.deleteAllFileByFolder(jTextField5.getText());
     	if(list!=null && list.size()!=0){
-    		String message = "以下文件删除失败\n";
+    		String message = "以下文件删除失败,其他文件删除成功\n";
     		for (int i = 0; i < list.size(); i++) {
     			message +=list.get(i).getName()+"\n";
 			}
@@ -548,10 +554,37 @@ public class ResourceManager extends javax.swing.JDialog {
 
     private void jButton13MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:61
+    	AddedOperator.getInstance().incrementAddFile(1);
+    	AddedOperator.getInstance().incrementAddFile(2);
+    	AddedOperator.getInstance().incrementAddFile(3);
     }
 
     private void jButton14MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:62
+    	
+    	int op = JOptionPane.showConfirmDialog(this, "你确定需要清理所有文件夹吗？");
+    	if(op != JOptionPane.OK_OPTION){
+    		return;
+    	}
+    	List<File> list = new ArrayList<File>();
+     	List<File> list1 = IreportUtil.deleteAllFileByFolder(jTextField3.getText());
+    	List<File> list2 = IreportUtil.deleteAllFileByFolder(jTextField2.getText());
+    	List<File> list3 = IreportUtil.deleteAllFileByFolder(jTextField4.getText());
+    	List<File> list4 = IreportUtil.deleteAllFileByFolder(jTextField5.getText());
+    	list.addAll(list1);
+    	list.addAll(list2);
+    	list.addAll(list3);
+    	list.addAll(list4);
+    	if(list!=null && list.size()!=0){
+    		String message = "以下文件删除失败,其他文件删除成功\n";
+    		for (int i = 0; i < list.size(); i++) {
+    			message +=list.get(i).getPath()+"\n";
+			}
+    		DialogFactory.showErrorMessageDialog(this, message, "文件删除失败");
+    	}else{
+    		AddedOperator.log("成功清理所有文件夹",IreportConstant.RIGHT_);
+    	}
+    	
     }
 
     private void jButton15MouseClicked(java.awt.event.MouseEvent evt) {

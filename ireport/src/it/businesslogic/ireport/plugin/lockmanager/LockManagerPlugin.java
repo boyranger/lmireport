@@ -1,5 +1,7 @@
 package it.businesslogic.ireport.plugin.lockmanager;
 
+import com.chinacreator.ireport.component.DialogFactory;
+
 import it.businesslogic.ireport.gui.MainFrame;
 import it.businesslogic.ireport.plugin.IReportPlugin;
 
@@ -14,20 +16,25 @@ public class LockManagerPlugin extends IReportPlugin {
 
 	@Override
 	public void call() {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				final LockDialog dialog = new LockDialog(MainFrame.getMainInstance(),
-						true);
-				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-					public void windowClosing(java.awt.event.WindowEvent e) {
-						dialog.setVisible(false);
-						dialog.dispose();
-					}
-				});
-				it.businesslogic.ireport.util.Misc.centerFrame(dialog);	
-				dialog.setVisible(true);
-			}
-		});
+		try {
+			// TODO: handle exception
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					final LockDialog dialog = new LockDialog(MainFrame.getMainInstance(),
+							true);
+					dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+						public void windowClosing(java.awt.event.WindowEvent e) {
+							dialog.setVisible(false);
+							dialog.dispose();
+						}
+					});
+					it.businesslogic.ireport.util.Misc.centerFrame(dialog);	
+					dialog.setVisible(true);
+				}
+			});
+		} catch (Exception e) {
+			DialogFactory.showErrorMessageDialog(null, "初始化界面出错："+e.getMessage(), "错误");
+		}
 
 	}
 

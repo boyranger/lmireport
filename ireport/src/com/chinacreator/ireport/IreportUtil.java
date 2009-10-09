@@ -758,37 +758,51 @@ public class IreportUtil {
 	 * @param files
 	 * @throws Exception
 	 */
-	public static void increamentHelper(String cilentDir,List<File> files) throws Exception{
-		cilentDir = MainFrame.IREPORT_TMP_DIR+File.separator+"lib"+File.separator;
+	public static void increamentHelper(String cilentDir,File[] files) throws Exception{
+		
 		if(files!=null){
-			for (int i = 0; i < files.size(); i++) {
-				File thisFile = new File(cilentDir+files.get(i).getName());
+			
+			for (int i = 0; i < files.length; i++) {
+				File thisFile = new File(cilentDir+files[i].getName());
 				if( !thisFile.exists() ){
 					//不存在需要同步
-					Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files.get(i).getPath());
-					//未完成
-					IreportUtil.bytesToFile(thisFile.getPath(), null);
+					Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files[i].getPath());
+					byte[] bytes = (byte[])fileObj;
+					if(bytes == null){
+						continue;
+					}
+					
+					IreportUtil.bytesToFile(thisFile.getPath(), bytes);
+					AddedOperator.log("--->同步:"+thisFile.getPath(), IreportConstant.RIGHT_);
 				}else{
 				    //若存在，但是时间戳不一样将同样同步
 					//1:服务器的时间戳晚于客户端
-					if(files.get(i).lastModified() > thisFile.lastModified()){
+					if(files[i].lastModified() > thisFile.lastModified()){
 						//需要同步
 						String savePath = thisFile.getPath();
-						Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files.get(i).getPath());
-						//未完成
+						Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files[i].getPath());
+						byte[] bytes = (byte[])fileObj;
+						if(bytes == null){
+							continue;
+						}
 						thisFile.delete();
-						IreportUtil.bytesToFile(savePath, null);
+						IreportUtil.bytesToFile(savePath, bytes);
+						AddedOperator.log("--->同步:"+thisFile.getPath(), IreportConstant.RIGHT_);
 					}
 					
 					//2:你是否修改了？
-					if(files.get(i).lastModified() < thisFile.lastModified()){
+					if(files[i].lastModified() < thisFile.lastModified()){
 						//客户端做了自己修改?
 						//需要同步
-						Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files.get(i).getPath());
+						Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files[i].getPath());
 						//若客户端自己做了修改，也许有他的原因，所以这里不直接删除而是备份
 						thisFile.renameTo(new File(thisFile.getPath()+".bak")); 
-						//未完成
-						IreportUtil.bytesToFile(thisFile.getPath(), null);
+						byte[] bytes = (byte[])fileObj;
+						if(bytes == null){
+							continue;
+						}
+						IreportUtil.bytesToFile(thisFile.getPath(), bytes);
+						AddedOperator.log("--->同步[备份]:"+thisFile.getPath()+" 备份:"+thisFile.getPath()+".bak", IreportConstant.RIGHT_);
 					}
 					
 				}
