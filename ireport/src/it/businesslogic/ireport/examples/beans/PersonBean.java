@@ -48,11 +48,12 @@ public class PersonBean {
     
     /** Creates a new instance of PersonBean */
     public PersonBean() {
-	this(null);
+	this(null,null);
     }
     
-    public PersonBean(String name) {
-    	this.setFirstName( name );
+    public PersonBean(String name,String lastName) {
+    	this.setFirstName( lastName );
+    	this.setLastName( name );
         hobbies = new HobbyBean[0];
     }
     

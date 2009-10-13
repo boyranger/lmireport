@@ -18,6 +18,5 @@ public class PrinterCheck {
 		pc.showInstall(hwnd);
 		
 		//System.out.println(System.getProperty("java.library.path"));
-		
 	}
 }

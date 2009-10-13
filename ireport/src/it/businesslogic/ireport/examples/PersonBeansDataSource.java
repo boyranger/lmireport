@@ -44,6 +44,7 @@ public class PersonBeansDataSource extends JRAbstractBeanDataSourceProvider {
         
         public JRField[] getFields(JasperReport report) throws JRException
         {
+        	System.out.println("-----------------1111");
             
             if (report != null)
             {
@@ -66,14 +67,12 @@ public class PersonBeansDataSource extends JRAbstractBeanDataSourceProvider {
         
         
   	public JRDataSource create(JasperReport report) throws JRException {
-  		
+  		System.out.println("222222--sdasdasdasdasdasdasdasd---------");
   		ArrayList list = new ArrayList();
-  		list.add(new PersonBean("Aldo"));
-  		list.add(new PersonBean("Giovanni"));
-  		list.add(new PersonBean("Giacomo"));
-                
-               return new JRBeanCollectionDataSource(list);
-  	
+  		list.add(new PersonBean("Aldo","dasdasdas"));
+  		list.add(new PersonBean("Giovanni","hrthrthrt"));
+  		//list.add(new PersonBean("Giacomo","ghjfghjghj"));
+        return new JRBeanCollectionDataSource(list);
   	}
  	
   	public void dispose(JRDataSource dataSource) throws JRException {

@@ -1,49 +1,15 @@
-/*
- * Copyright (C) 2005 - 2008 JasperSoft Corporation.  All rights reserved. 
- * http://www.jaspersoft.com.
- *
- * Unless you have purchased a commercial license agreement from JasperSoft,
- * the following license terms apply:
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as published by
- * the Free Software Foundation.
- *
- * This program is distributed WITHOUT ANY WARRANTY; and without the
- * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see http://www.gnu.org/licenses/gpl.txt
- * or write to:
- *
- * Free Software Foundation, Inc.,
- * 59 Temple Place - Suite 330,
- * Boston, MA  USA  02111-1307
- *
- *
- *
- *
- * JavaBeanDataSourceConnection.java
- * 
- * Created on 4 giugno 2003, 18.15
- *
- */
-
-package it.businesslogic.ireport.connection;
-import it.businesslogic.ireport.*;
+package com.chinacreator.ireport.javabeandatasource;
 import it.businesslogic.ireport.IReportConnectionEditor;
-import it.businesslogic.ireport.connection.gui.JavaBeanDataSourceConnectionEditor;
 import it.businesslogic.ireport.gui.MainFrame;
-import it.businesslogic.ireport.util.*;
-import java.sql.*;
-import javax.swing.*;
-import net.sf.jasperreports.engine.data.JRAbstractBeanDataSource;
+import it.businesslogic.ireport.util.I18n;
+import it.businesslogic.ireport.util.Misc;
+
+import javax.swing.JOptionPane;
 /**
  *
  * @author  Administrator
  */
-public class JavaBeanDataSourceConnection extends it.businesslogic.ireport.IReportConnection {
+public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport.IReportConnection {
     
     public static String BEAN_ARRAY = "BEAN_ARRAY";
     public static String BEAN_COLLECTION = "BEAN_COLLECTION";
@@ -61,7 +27,7 @@ public class JavaBeanDataSourceConnection extends it.businesslogic.ireport.IRepo
     /** Creates a new instance of JDBCConnection */
     
     
-    public JavaBeanDataSourceConnection() {
+    public JavaBeanRemoteDataSourceConnection() {
     }
     
     /**  This method return an instanced connection to the database.
@@ -194,11 +160,11 @@ public class JavaBeanDataSourceConnection extends it.businesslogic.ireport.IRepo
         this.useFieldDescription = useFieldDescription;
     }
     
-    public String getDescription(){ return I18n.getString("connectionType.javabeans", "JavaBeans set datasource"); }
+    public String getDescription(){ return "服务器 JavaBean 数据源"; }
     
     public IReportConnectionEditor getIReportConnectionEditor()
     {
-        return new JavaBeanDataSourceConnectionEditor();
+        return new JavaBeanRemoteDataSourceConnectionEditor();
     }
     
     public void test() throws Exception 
