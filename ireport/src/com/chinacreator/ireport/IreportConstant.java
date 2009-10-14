@@ -59,7 +59,8 @@ public final class IreportConstant {
 	public final static int DEFAULT_LOCK_LIMIT_HOURE=1;
 
 	public final static String EFORM_TREE_SELECT = "EFORM_TREE_SELECT";
-
+	public final static String EFORM_TREE_SELECT_PATH = "EFORM_TREE_SELECT_PATH";
+	
 	public final static String LOCAL_TO_SERVER = "LOCAL_TO_SERVER";
 
 	public final static String NAME_SUFFIX = "_";

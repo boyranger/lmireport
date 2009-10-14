@@ -48,7 +48,7 @@ public class NewServerFileOptionsPlugin extends it.businesslogic.ireport.plugin.
     }
 
     public void call() {
-        java.awt.EventQueue.invokeLater(new Runnable() {
+       /* java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
             	JFrame frame = null;
             	frame = new JFrame("新建本地文件到服务器");
@@ -67,8 +67,22 @@ public class NewServerFileOptionsPlugin extends it.businesslogic.ireport.plugin.
         		frame.setVisible(true);
             }
         });
+    }*/
+    	
+    	 java.awt.EventQueue.invokeLater(new Runnable() {
+             public void run() {
+                 final JFrame dialog = new NewServrtFile();
+                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                     public void windowClosing(java.awt.event.WindowEvent e) {
+                    	 dialog.dispose();
+                     }
+                 });
+                 it.businesslogic.ireport.util.Misc.centerFrame(dialog);
+                 dialog.setTitle("新建本地文件到服务器");
+                 dialog.setVisible(true);
+             }
+         });
     }
-
     public void configure() {
 
     }

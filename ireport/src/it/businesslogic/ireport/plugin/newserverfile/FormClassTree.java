@@ -60,11 +60,11 @@ public class FormClassTree extends JPanel implements TreeSelectionListener {
 	private static boolean playWithLineStyle = false;
 	private static String lineStyle = "Horizontal";
 
-	private static NewServerFileOptions nfo=null;
+	private static NewServrtFile nfo=null;
 	// Optionally set the look and feel.
 
 
-	public FormClassTree(NewServerFileOptions f) {
+	public FormClassTree(NewServrtFile f) {
 		super(new BorderLayout());
 
 		nfo = f;
@@ -104,10 +104,22 @@ public class FormClassTree extends JPanel implements TreeSelectionListener {
 				if(IreportConstant.EFORM_TREE_SELECT.equals(MyReportProperties.getStringProperties(IreportConstant.EFORM_TREE_SELECT))){
 					DialogFactory.showWarnMessageDialog(frame, "你未选择业务类别", "错误");
 				}else{
-					nfo.ectext.setText(MyReportProperties.getStringProperties(IreportConstant.EFORM_TREE_SELECT).split("#")[1]);
+					//System.out.println(tree.getSelectionPath());
+					TreePath tp = tree.getSelectionPath();
+					Object[] obj = tp.getPath();
+					
+					String path = "";
+					for (int i = 0; i < obj.length; i++) {
+						if(i==0){
+							continue;
+						}
+						path = path+obj[i]+"/";
+					}
+					path = path ==null?"":path.substring(0, path.length()-1);
+					//nfo.jTextField3.setText(MyReportProperties.getStringProperties(IreportConstant.EFORM_TREE_SELECT).split("#")[1]);
+					nfo.jTextField3.setText(path);
 					nfo.setVisible(true);
 					frame.dispose();
-
 				}
 			}
 		});
@@ -177,7 +189,7 @@ public class FormClassTree extends JPanel implements TreeSelectionListener {
 		// 根据ID查询
 	}
 
-	public static void getFrame(NewServerFileOptions f){
+	public static void getFrame(NewServrtFile f){
 		frame = new JFrame("业务类别树");
 
 		// Add content to the window.
@@ -234,7 +246,9 @@ public class FormClassTree extends JPanel implements TreeSelectionListener {
 
 		ReportFormClass nodeInfo = (ReportFormClass) node.getUserObject();
 		MyReportProperties.setProperties(IreportConstant.EFORM_TREE_SELECT, nodeInfo.getEc_id()+"#"+nodeInfo.getEc_name());
-
+		
+		//MyReportProperties.setProperties(IreportConstant.EFORM_TREE_SELECT_PATH, path );
+		
 	}
 
 }

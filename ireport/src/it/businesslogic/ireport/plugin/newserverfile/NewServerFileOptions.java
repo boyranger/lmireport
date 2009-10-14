@@ -205,7 +205,7 @@ public class NewServerFileOptions extends javax.swing.JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 				 ns.setVisible(false);
-				 FormClassTree.getFrame(ns);
+				// FormClassTree.getFrame(ns);
 
 			}
 
