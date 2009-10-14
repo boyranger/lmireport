@@ -28,9 +28,6 @@ public class Printer {
 	    } 
 	}
 	
-	public static void main(String[] args) {
-		findPrinter("ddd");
-	}
 }
 
 //end Printer.java

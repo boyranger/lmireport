@@ -6,15 +6,22 @@
 
 package a.b.c;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
+import com.chinacreator.ireport.AddedOperator;
 import com.chinacreator.ireport.IreportConstant;
 import com.chinacreator.ireport.IreportUtil;
+import com.chinacreator.ireport.component.DialogFactory;
+import com.chinacreator.ireport.rmi.IreportRmiClient;
 import com.chinacreator.ireport.rmi.PageInfo;
 import com.chinacreator.ireport.rmi.ReportLock;
 
@@ -25,16 +32,19 @@ import com.chinacreator.ireport.rmi.ReportLock;
 public class LockDialog extends javax.swing.JDialog {
 
 	/** Creates new form LockDialog */
+	
+	private int currentPage = 1;
+	private int maxPage = 1;
+	
 	public LockDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+        this.setTitle("报表锁定记录管理");
         jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
         jTable1.getColumnModel().getColumn(0).setMinWidth(30);
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
         jTable1.getColumnModel().getColumn(0).setResizable(false);
         jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
        
         jTable1.addMouseListener(
         new MouseAdapter(){
@@ -49,7 +59,8 @@ public class LockDialog extends javax.swing.JDialog {
         		jTable1.getModel().setValueAt(!b, i, 0);
         	}
         }		
-        );
+        );	
+       
     }
 
 	/**
@@ -334,48 +345,123 @@ public class LockDialog extends javax.swing.JDialog {
 	}
 
 	private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {
-		System.out.print("首页");
+		String searchStr = jTextField1.getText();
+		jTable1.setModel(new MyTableModel(searchStr,1));
+		
+		resetColumn();
 	}
 
 	private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {
-		// TODO add your handling code here:
-		System.out.print("上一页");
+		if(maxPage<=0 || currentPage<=1){
+			return;
+		}
+		
+		String searchStr = jTextField1.getText();
+		jTable1.setModel(new MyTableModel(searchStr,currentPage-1));
+		
+		resetColumn();
+		
+		
 	}
 
 	private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {
-		// TODO add your handling code here:
-		System.out.print("下一页");
+		if(maxPage<=0 || currentPage<=1){
+			return;
+		}
+		
+		if(currentPage == maxPage){
+			return;
+		}
+		
+		
+		String searchStr = jTextField1.getText();
+		jTable1.setModel(new MyTableModel(searchStr,currentPage+1));
+		
+		resetColumn();
 	}
 
 	private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {
 		// TODO add your handling code here:
-		System.out.print("尾页");
+		if(currentPage == maxPage){
+			return;
+		}
+		String searchStr = jTextField1.getText();
+		jTable1.setModel(new MyTableModel(searchStr,maxPage));
+		
+		resetColumn();
 	}
 
 	private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {
 		// TODO add your handling code here:
-		System.out.print("刷新");
+		//System.out.print("刷新");
+		String searchStr = jTextField1.getText();
+		jTable1.setModel(new MyTableModel(searchStr,currentPage));
+		
+		resetColumn();
+		
 	}
 
 	private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {
-		System.out.print("搜索");
+		//System.out.print("搜索");
 		String searchStr = jTextField1.getText();
 		jTable1.setModel(new MyTableModel(searchStr,1));
+		resetColumn();
 		
 	}
 
 	private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {
-		System.out.print("解除锁定");
+		
+		//System.out.print("解除锁定");
+		TableModel model = jTable1.getModel();
+		int c = model.getColumnCount();
+		int r = model.getRowCount();
+		
+		IreportRmiClient.getInstance();
+		int check_1 = 0;
+		int check_2 = 0;
+		for (int i = 0; i < r; i++) {
+			if(Boolean.valueOf(model.getValueAt(i, 0)+"")){
+				check_1++;
+				try {
+					IreportRmiClient.rmiInterfactRemote.unLockReport(null, model.getValueAt(i, 1)+"");
+					check_2++;
+				} catch (Exception e) {
+					System.err.println(e.getMessage());
+				}
+			}
+		}
+		
+		if(check_1 == 0 ){
+			DialogFactory.alert("你未选择任何记录进行解锁");
+			return;
+		}
+		
+		if(check_1==check_2){
+			AddedOperator.log("成功对"+check_2+"条记录解锁", IreportConstant.RIGHT_);
+			DialogFactory.showMessageDialog(this, "成功对"+check_2+"条记录解锁", "成功", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		
+		if(check_1!=check_2){
+			AddedOperator.log("在解除锁定时出现错误，有"+(check_1-check_2)+"条解锁失败", IreportConstant.ERROR_);
+			DialogFactory.showErrorMessageDialog(this, "在解除锁定时出现错误，有"+(check_1-check_2)+"条解锁失败", "解锁失败");
+			return;
+		}
+		
 	}
 
 	private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {
-		System.out.print("解除所有锁定");
+		//System.out.print("解除所有锁定");
+		try {
+			IreportRmiClient.getInstance();
+			IreportRmiClient.rmiInterfactRemote.unLockAllReport();
+			AddedOperator.log("解除所有锁定成功", IreportConstant.RIGHT_);
+		} catch (Exception e) {
+			AddedOperator.log("删除所有锁定记录错误", IreportConstant.ERROR_);
+			DialogFactory.showErrorMessageDialog(this, "删除所有锁定记录错误", "解锁失败");
+		}
 	}
 
-	/**
-	 * @param args
-	 *            the command line arguments
-	 */
 	public static void main(String args[]) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -440,13 +526,6 @@ public class LockDialog extends javax.swing.JDialog {
 				
 			}*/
 			
-		/*	if(jTable1.getColumnModel().getColumnCount()>0){
-			    jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
-		        jTable1.getColumnModel().getColumn(0).setMinWidth(30);
-		        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-		        jTable1.getColumnModel().getColumn(0).setResizable(false);
-		        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			}*/
 			}
 
 		private String[] columnNames = { "", "报表ID", "报表文件名", "锁定者", "锁定者IP",
@@ -504,16 +583,30 @@ public class LockDialog extends javax.swing.JDialog {
 	}
 
 	private String pageInfoLable(int arg1, int arg2) {
-		int pages = (int) Math.ceil(new Double(arg2)
-				/ new Double(IreportConstant.DEFAULT_PAGE_SIZE));
 		if (arg2 <= 0) {
+			maxPage = 0;
+			currentPage = 1;
 			return "未找到记录";
 		}
+		int pages = (int) Math.ceil(new Double(arg2)
+				/ new Double(IreportConstant.DEFAULT_PAGE_SIZE));
+		
+		currentPage = arg1;
+		maxPage = pages;
+		
 		return "显示第" + arg1 + "页，共" + pages + "页，" + arg2 + "条记录";
 	}
 
 	
-
+	private void resetColumn(){
+		if(jTable1.getColumnModel().getColumnCount()>0){
+		    jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
+	        jTable1.getColumnModel().getColumn(0).setMinWidth(30);
+	        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
+	        jTable1.getColumnModel().getColumn(0).setResizable(false);
+	        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			}
+	}
 	}
 
 
