@@ -6,6 +6,7 @@
 
 package it.businesslogic.ireport.plugin.newserverfile;
 
+import java.awt.Font;
 import java.io.File;
 
 import javax.swing.event.DocumentEvent;
@@ -84,6 +85,8 @@ public class JavaBeanDatasourceSet extends javax.swing.JDialog {
                 jList1ValueChanged(evt);
             }
         });
+        
+        jList1.setFont(new Font("Dialog", Font.PLAIN, 12));
         jScrollPane1.setViewportView(jList1);
 
         jScrollPane2.setBorder(null);
@@ -220,6 +223,10 @@ public class JavaBeanDatasourceSet extends javax.swing.JDialog {
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {
         // TODO add your handling code here:类值变化
+    	String classname = (String)jList1.getSelectedValue();
+    	if(classname!=null && classname.indexOf("-")!=-1){
+    	jTextField2.setText(classname.split("\\s\\-\\s")[1]);
+    	}
     }
 
     private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -232,16 +239,23 @@ public class JavaBeanDatasourceSet extends javax.swing.JDialog {
 
     private void jTextField1TextChanged(DocumentEvent e) {
         // TODO add your handling code here:搜索框值变化
-    	 String search = jTextField1.getText();
+    	String search = jTextField1.getText();
     	if(IreportUtil.isBlank(search)){
-    		jList1.removeAll();
+    		 jList1.setModel(new javax.swing.AbstractListModel() {
+                 public int getSize() { return 0; }
+                 public Object getElementAt(int i) { return null; }
+             });
     		return;
     	}
+    	
     	final String[] lists;
     	try {
-    		lists = Searcher.searchToArray(new File("G:/index"), search);
+    		lists = Searcher.searchToArray(new File("F:/index"), search);
     		if(lists==null || lists.length==0){
-    			jList1.removeAll();
+    			 jList1.setModel(new javax.swing.AbstractListModel() {
+                     public int getSize() { return 0; }
+                     public Object getElementAt(int i) { return null; }
+                 });
     			return;
     		}
 		} catch (Exception e1) {
