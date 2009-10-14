@@ -22,8 +22,8 @@ import org.apache.lucene.index.IndexWriter;
 public class Indexer {
 	public static void main(String[] args) throws Exception {
 		
-		File indexDir = new File("G:/index");
-		File dataDir = new File("D:\\workspace-bak\\app\\creatorepp\\WEB-INF\\classes");
+		File indexDir = new File("f:/index");
+		File dataDir = new File("D:\\workspace\\ireport\\WebRoot\\WEB-INF\\classes");
 		long start = new Date().getTime();
 		int numIndexed = index(indexDir, dataDir);
 		long end = new Date().getTime();
@@ -69,11 +69,17 @@ public class Indexer {
 		String filepath = f.getCanonicalPath();
 		String filename = getClassFullName(filepath);
 		System.out.println("Indexing["+filename+"]" + filepath);
+		
+		String realfilename = f.getName().substring(0, f.getName().length()-6);
+		String searchfilename = f.getName().substring(0, f.getName().length()-6).toLowerCase();
 		Document doc = new Document();
 		//doc.add(Field.Text("contents", f.getName()));
 		doc.add(Field.Keyword("allfilename", filename));
-		doc.add(Field.Keyword("filename", f.getName().substring(0, f.getName().length()-6)));
+		doc.add(Field.Keyword("realfilename", realfilename));
+		doc.add(Field.Keyword("filename", searchfilename));
 		writer.addDocument(doc);
+		
+		
 	}
 	
 	private static String getClassFullName(String path){

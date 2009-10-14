@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.util.BitSet;
 import java.util.Date;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
@@ -27,7 +27,7 @@ import org.apache.lucene.store.FSDirectory;
 // begin Searcher.java
 public class Searcher {
 	public static void main(String[] args) throws Exception {
-		File indexDir = new File("G://index");
+		File indexDir = new File("F://index");
 		String q = "RTXSvrApi.class";
 		if (!indexDir.exists() || !indexDir.isDirectory()) {
 			throw new Exception(indexDir
@@ -44,7 +44,7 @@ public class Searcher {
 		
 		//Query query = QueryParser.parse(q, "contents", new StandardAnalyzer());
 
-
+		
 		long start = new Date().getTime();
 		Hits hits = is.search(query,new Filter(){
 
@@ -54,6 +54,8 @@ public class Searcher {
 			}
 			
 		});
+		
+		
 		
 		long end = new Date().getTime();
 		System.err.println("Found " + hits.length() + " document(s) (in "
@@ -69,21 +71,16 @@ public class Searcher {
 	public static String[] searchToArray(File indexDir, String q) throws Exception {
 		Directory fsDir = FSDirectory.getDirectory(indexDir, false);
 		IndexSearcher is = new IndexSearcher(fsDir);
-		q = "*"+q+"*";
-		Query query = new WildcardQuery(new Term("filename", q));
-		
+		//q = "*"+q+"*";
+		//Query query = new WildcardQuery(new Term("filename", q));
+		Query query = new PrefixQuery(new Term("filename", q.toLowerCase()));
+		//Query query = new FuzzyQuery(new Term("filename", q.toLowerCase()));
 		//Query query = QueryParser.parse(q, "contents", new StandardAnalyzer());
-
-
+		
+		 BooleanQuery.setMaxClauseCount(4000);
+		
 		long start = new Date().getTime();
-		Hits hits = is.search(query,new Filter(){
-
-			@Override
-			public BitSet bits(IndexReader arg0) throws IOException {
-				return null;
-			}
-			
-		});
+		Hits hits = is.search(query);
 		
 		long end = new Date().getTime();
 		System.err.println("Found " + hits.length() + " document(s) (in "
@@ -93,9 +90,15 @@ public class Searcher {
 		if(hits.length()>0){
 			model = new String[hits.length()];
 		}
+		int k = 0;
 		for (int i = 0; i < hits.length(); i++) {
+			
 			Document doc = hits.doc(i);
-			model[i]= doc.get("filename")+"-"+doc.get("allfilename");
+			if(doc.get("realfilename").indexOf("$")!=-1){
+				continue;
+			}
+			model[k]= doc.get("realfilename")+" - "+doc.get("allfilename");
+			k++;
 			
 		}
 		return model;
