@@ -2,14 +2,17 @@ package a.b.c;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixQuery;
@@ -68,16 +71,26 @@ public class Searcher {
 		}
 	}
 	
-	public static String[] searchToArray(File indexDir, String q) throws Exception {
+	public static List<String> searchToArray(File indexDir, String q) throws Exception {
 		Directory fsDir = FSDirectory.getDirectory(indexDir, false);
 		IndexSearcher is = new IndexSearcher(fsDir);
-		//q = "*"+q+"*";
-		//Query query = new WildcardQuery(new Term("filename", q));
-		Query query = new PrefixQuery(new Term("filename", q.toLowerCase()));
+	
+		Query query = null;
+		if(q.indexOf("?")!=-1 || q.indexOf("*")!=-1){
+			//Í¨Åä·û²éÑ¯
+			query = new WildcardQuery(new Term("filename", q.toLowerCase()));	
+		
+		}else if(q.startsWith("#")){
+			//ÏñËÆ²éÑ¯
+			query = new FuzzyQuery(new Term("filename", q.toLowerCase().substring(1)));
+		}else{
+			//Âú×ãÇ°×º²éÑ¯
+		    query = new PrefixQuery(new Term("filename", q.toLowerCase()));
+		}
 		//Query query = new FuzzyQuery(new Term("filename", q.toLowerCase()));
 		//Query query = QueryParser.parse(q, "contents", new StandardAnalyzer());
 		
-		 BooleanQuery.setMaxClauseCount(4000);
+		BooleanQuery.setMaxClauseCount(4000);
 		
 		long start = new Date().getTime();
 		Hits hits = is.search(query);
@@ -87,21 +100,22 @@ public class Searcher {
 				+ (end - start) + " milliseconds) that matched query ¡®" + q
 				+ "¡¯:");
 		String[] model = null;
-		if(hits.length()>0){
-			model = new String[hits.length()];
-		}
-		int k = 0;
+		ArrayList<String> list = new ArrayList<String>();
 		for (int i = 0; i < hits.length(); i++) {
 			
 			Document doc = hits.doc(i);
 			if(doc.get("realfilename").indexOf("$")!=-1){
 				continue;
 			}
-			model[k]= doc.get("realfilename")+" - "+doc.get("allfilename");
-			k++;
+			list.add(doc.get("realfilename")+" - "+doc.get("allfilename"));
+			//model[k]= doc.get("realfilename")+" - "+doc.get("allfilename");
+			//k++;
 			
 		}
-		return model;
+		//System.out.println();
+		//System.out.println("I="+hits.length());
+		//System.out.println("K="+k);
+		return list;
 	}
 }
 
