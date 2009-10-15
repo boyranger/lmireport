@@ -30,11 +30,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -810,6 +812,32 @@ public class IreportUtil {
 		}
 	}
 	
+	public static String[] getClassMethodInfo(String classFullName){
+		try {
+			if(isBlank(classFullName)){
+				return null;
+			}
+			Class clazz = Class.forName(classFullName);
+			
+			Method[] ms = clazz.getDeclaredMethods();
+			String[] methods = new String[ms.length];
+			for (int i = 0; i < ms.length; i++) {
+				methods[i] = ms[i].getName();
+			}
+			return methods;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public Collection mytest(){
+		return null;
+	}
+	public static void main(String[] args) {
+		System.out.println(getClassMethodInfo("com.chinacreator.ireport.IreportUtil"));
+	}
 }
 
 // end IreportUtil.java

@@ -110,10 +110,14 @@ public class NewServrtFile extends javax.swing.JFrame {
         ItemListener itl = new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
 				String select = (String) jComboBox2.getSelectedItem();
+				
+				if("javabean数据源报表".equals(select)){
+					new JavaBeanDatasourceSet(MainFrame.getMainInstance(),true).setVisible(true);
+				}
 				System.out.println(select);
 			}
         };
-        
+        jComboBox2.addItemListener(itl);
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -310,7 +314,6 @@ public class NewServrtFile extends javax.swing.JFrame {
 		    		father.setVisible(true);
 		    		return;
 		    	}
-		    	System.out.println(ifi.getContent().length+username+note+reportname);
 		    	ecid = ecid.split("#")[0];
 		    	ifi.setEc_id(ecid);
 

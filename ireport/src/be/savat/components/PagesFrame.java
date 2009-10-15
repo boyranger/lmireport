@@ -174,7 +174,9 @@ public class PagesFrame extends javax.swing.JFrame {
         updateViewerSize();
     }//GEN-LAST:event_formComponentResized
 
-    
+    public static void main(String[] args) {
+		//new PagesFrame(jrPrint).setVisible(true);
+	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     

@@ -87,6 +87,11 @@ public final class IreportConstant {
 	//分页
 	
 	public final static int DEFAULT_PAGE_SIZE= 10;
+	
+	//javabean数据源
+	public final static String CLASS_NAME="CLASS_NAME";
+	public final static String METHOD_NAME = "METHOD_NAME";
+	
 }
 
 //end IreportConstant.java
