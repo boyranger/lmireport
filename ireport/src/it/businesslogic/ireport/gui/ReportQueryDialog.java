@@ -75,6 +75,7 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -980,7 +981,7 @@ public class ReportQueryDialog extends javax.swing.JDialog implements ClipboardO
             }
         });
         jPanel15.add(jButton3);
-
+       
         jTabbedPane1.addTab("CSV Datasource", jPanel15);
 
         jPanel1.add(jTabbedPane1, java.awt.BorderLayout.CENTER);

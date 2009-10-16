@@ -44,11 +44,9 @@ public class PersonBeansDataSource extends JRAbstractBeanDataSourceProvider {
         
         public JRField[] getFields(JasperReport report) throws JRException
         {
-        	System.out.println("-----------------1111");
             
             if (report != null)
             {
-                System.out.println(report);
                 JRParameter[] params = report.getParameters();
                 for (int i=0; i<params.length; ++i)
                 {

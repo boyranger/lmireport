@@ -160,6 +160,51 @@ public interface IreportRmiInterface extends Remote{
 	 * @throws RemoteException
 	 */
 	File[] getServerFileList(String path,String[] allowed)throws RemoteException;
+
+	/**
+	 * 获得服务器端索引信息
+	 * @return
+	 * @throws RemoteException
+	 */
+	IndexInfo indexInfo() throws RemoteException;
+	
+	/**
+	 * 生成该引用下的classes目录文件索引
+	 * @return 
+	 * @throws RemoteException
+	 */
+	boolean generateIndex() throws RemoteException;
+	
+	/**
+	 * 查询索引数据
+	 * @param condition 查询条件
+	 * @return
+	 * @throws RemoteException
+	 */
+	 List<String>  searchIndex(String condition) throws RemoteException;
+	
+	/**
+	 * 获得服务器端索引进度
+	 * @return 整数数组，第一个为总共需要的统计数，第二个为现已索引完毕的数目
+	 * @throws RemoteException
+	 */
+	int[] indexProgress() throws RemoteException;
+	
+	/**
+	 * 查询该类的所有方法
+	 * @return
+	 * @throws RemoteException
+	 */
+	String[] searchClassMethods(String fullClassName) throws RemoteException;
+	
+	/**
+	 * 执行javabean数据源中的方法，默认情况下是要求该方法是静态方法
+	 * @param fullClassName
+	 * @param methodName
+	 * @return
+	 */
+	Object invokeJavaBeanMehtoed(String fullClassName,String methodName,Object[] obj) throws RemoteException;
+
 }
 
 //end IreportRmiInterface.java

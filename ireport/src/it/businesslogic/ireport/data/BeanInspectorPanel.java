@@ -329,13 +329,18 @@ public class BeanInspectorPanel extends javax.swing.JPanel implements FieldsProv
     public void exploreBean(DefaultMutableTreeNode root, String classname, String parentPath)
     {
         try {
-
+        	//LIMAO : È¡µÃÊôÐÔ
+        	System.out.println("========================");
+        	System.out.println("CLASSNAME:"+classname);
+        	System.out.println("PARENTPATH:"+parentPath);
+        	System.out.println("========================");
+        	
             root.removeAllChildren();
             if (parentPath.length() > 0) parentPath += ".";
 
             MainFrame.reportClassLoader.rescanLibDirectory();
             Class clazz = Class.forName(classname,true,MainFrame.reportClassLoader);
-
+            
             java.beans.PropertyDescriptor[] pd = org.apache.commons.beanutils.PropertyUtils.getPropertyDescriptors(clazz);
             for (int nd =0; nd < pd.length; ++nd)
             {

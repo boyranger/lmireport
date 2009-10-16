@@ -15,6 +15,7 @@ import it.businesslogic.ireport.gui.JReportFrame;
 import it.businesslogic.ireport.gui.MainFrame;
 
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 
@@ -32,8 +33,11 @@ import com.chinacreator.ireport.rmi.IreportRmiClient;
  */
 public class NewServrtFile extends javax.swing.JFrame {
 	private String myReportName = "";
+	
+	public NewServrtFile nf= null;
     /** Creates new form NewServrtFile */
     public NewServrtFile() {
+    	nf = this;
         initComponents();
         if(!IreportUtil.isBlank(myReportName)){
         	jTextField1.setText(myReportName);
@@ -110,13 +114,15 @@ public class NewServrtFile extends javax.swing.JFrame {
         ItemListener itl = new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
 				String select = (String) jComboBox2.getSelectedItem();
-				
+				if(e.getStateChange() == ItemEvent.SELECTED){ 
 				if("javabean数据源报表".equals(select)){
-					new JavaBeanDatasourceSet(MainFrame.getMainInstance(),true).setVisible(true);
+					nf.showClassSetDialog();
 				}
-				System.out.println(select);
+				}
 			}
         };
+        
+     
         jComboBox2.addItemListener(itl);
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -347,10 +353,17 @@ public class NewServrtFile extends javax.swing.JFrame {
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:取消
-    	this.setVisible(true);
+    	this.setVisible(false);
     	this.dispose();
+    
     }
     
+    private void showClassSetDialog(){
+    	System.out.println("show....");
+    	JDialog jd = new JavaBeanDatasourceSet(this,true);
+    	it.businesslogic.ireport.util.Misc.centerFrame(jd);
+    	jd.setVisible(true);
+    }
     /**
      * @param args the command line arguments
      */

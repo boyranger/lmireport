@@ -18,8 +18,8 @@
 package com.chinacreator.ireport.rmi;
 
 import java.rmi.Naming;
+import java.rmi.RMISecurityManager;
 
-import com.chinacreator.ireport.AddedOperator;
 import com.chinacreator.ireport.IreportConstant;
 import com.chinacreator.ireport.IreportUtil;
 import com.chinacreator.ireport.MyReportProperties;
@@ -41,7 +41,11 @@ public class IreportRmiClient {
 
 	public static synchronized IreportRmiClient getInstance (){
 		try {
-		if(
+			//System.setSecurityManager(new RMISecurityManager());
+			//System.setProperty("java.security.policy", "D:\\workspace\\creator_report\\src\\com\\chinacreator\\ireport\\rmi\\java.policy"); // should be no problem
+			System.setSecurityManager(new MySecurityManager());
+			
+			if(
 				//true ||
 			 client == null){ //永远执行
 			 ip = MyReportProperties.getStringProperties(IreportConstant.RMI_IP);//由外部传入

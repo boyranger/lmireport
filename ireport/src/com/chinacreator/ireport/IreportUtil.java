@@ -221,7 +221,6 @@ public class IreportUtil {
 		if (r == null) {
 			return false;
 		}
-		System.out.println("RIP:" + r.getOpen_user_ip());
 		if (getLocalIp().equals(r.getOpen_user_ip())
 				&& r.getStatues().equals("Y")) {
 			return true;
