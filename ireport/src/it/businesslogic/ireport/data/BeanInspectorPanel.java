@@ -51,6 +51,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import com.chinacreator.ireport.IreportUtil;
+import com.chinacreator.ireport.rmi.RemoteBeanPropertyDescriptor;
+
 /**
  *
  * @author  gtoffoli
@@ -329,7 +332,7 @@ public class BeanInspectorPanel extends javax.swing.JPanel implements FieldsProv
     public void exploreBean(DefaultMutableTreeNode root, String classname, String parentPath)
     {
         try {
-        	//LIMAO : 取得属性
+        	//LIMAO : javabean查询中取得类的方法属性
         	System.out.println("========================");
         	System.out.println("CLASSNAME:"+classname);
         	System.out.println("PARENTPATH:"+parentPath);
@@ -337,7 +340,42 @@ public class BeanInspectorPanel extends javax.swing.JPanel implements FieldsProv
         	
             root.removeAllChildren();
             if (parentPath.length() > 0) parentPath += ".";
+            
+            if(classname.startsWith("#")){//LIMAO : 10.18我们设定若类名以#开始我们认为是远程javabean
+            	
+            	List<RemoteBeanPropertyDescriptor> remoteBeanPropertyDescriptor = IreportUtil.showClassProperty(classname);//需要通过远程获得
+            	
+            	for (int i = 0; i < remoteBeanPropertyDescriptor.size(); i++) {
+            		RemoteBeanPropertyDescriptor rbpd = remoteBeanPropertyDescriptor.get(i);
+            		 String returnType =  rbpd.getReturnType();
+            		 String fieldName = rbpd.getFieldName();
+                     it.businesslogic.ireport.JRField field = new it.businesslogic.ireport.JRField( Misc.getJRFieldType( fieldName ), returnType);
+                     if (isPathOnDescription())
+                     {
+                          field.setDescription(parentPath + fieldName);
+                     }
+                     else
+                     {
+                         field.setName(parentPath + fieldName);
+                     }
 
+                     TreeJRField jtf = new TreeJRField();
+
+                     jtf.setField( field );
+                     jtf.setObj( rbpd.getPropertyType() );
+
+                     boolean bChildrens = true;
+                     if (rbpd.isBChildrens() || returnType.startsWith("java.lang."))
+                     {
+                         bChildrens = false;
+                     }
+                     root.add(new DefaultMutableTreeNode(jtf, bChildrens));
+            		
+				}
+            	
+            	
+            }else{
+            //默认模式	
             MainFrame.reportClassLoader.rescanLibDirectory();
             Class clazz = Class.forName(classname,true,MainFrame.reportClassLoader);
             
@@ -371,7 +409,7 @@ public class BeanInspectorPanel extends javax.swing.JPanel implements FieldsProv
                        root.add(new DefaultMutableTreeNode(jtf, bChildrens));
                    }
             }
-
+            }
             jTree1.expandPath( new TreePath(root.getPath()) );
             jTree1.updateUI();
 

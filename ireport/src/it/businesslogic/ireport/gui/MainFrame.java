@@ -5260,7 +5260,7 @@ public class MainFrame extends javax.swing.JFrame
         return openFile(new File(filename));
     }
 
-    // FIXME ： OPEN....
+    // FIXME  OPEN....
     public JReportFrame openFile(File file){
 
         JReportFrame reportFrame;
@@ -5927,7 +5927,8 @@ public class MainFrame extends javax.swing.JFrame
 
     public IReportCompiler compileAndRun2()
     {
-        // 1. Get active report...
+    	//LIMAO 10.18 有数据源的编译运行
+    	// 1. Get active report...
         if (jMDIDesktopPane.getSelectedFrame() != null &&
         jMDIDesktopPane.getSelectedFrame() instanceof JReportFrame) {
             JReportFrame jrf = (JReportFrame)jMDIDesktopPane.getSelectedFrame();
@@ -5979,6 +5980,7 @@ public class MainFrame extends javax.swing.JFrame
             IReportConnection connection = (IReportConnection)this.getProperties().get("DefaultConnection");
 
 
+            //LIMAO FIX 这里需要判断是否是远程数据源
             //if (connection instanceof  it.businesslogic.ireport.connection.JDBCConnection)
             //{
             //    javax.swing.JOptionPane.showMessageDialog(null, ((it.businesslogic.ireport.connection.JDBCConnection)connection).getJDBCDriver());

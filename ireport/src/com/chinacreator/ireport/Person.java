@@ -1,5 +1,9 @@
 package com.chinacreator.ireport;
 
+import java.util.Date;
+
+import java.sql.Timestamp;
+
 /**
  *@author ¿Ó√Ø
  *@since  3.0
@@ -10,7 +14,19 @@ package com.chinacreator.ireport;
 public class Person {
 	private String name;
 	private int sex;
+	private Date d;
+	boolean isDade;
+	private Timestamp stamp;
 	
+	public Timestamp getStamp() {
+		return stamp;
+	}
+	public void setStamp(Timestamp stamp) {
+		this.stamp = stamp;
+	}
+	public Person(){
+		
+	}
 	public Person(String name,int sex){
 		this.name = name;
 		this.sex = sex;
@@ -26,6 +42,18 @@ public class Person {
 	}
 	public void setSex(int sex) {
 		this.sex = sex;
+	}
+	public Date getD() {
+		return d;
+	}
+	public void setD(Date d) {
+		this.d = d;
+	}
+	public boolean isDade() {
+		return isDade;
+	}
+	public void setDade(boolean isDade) {
+		this.isDade = isDade;
 	}
 	
 	

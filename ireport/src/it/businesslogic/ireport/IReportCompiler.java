@@ -204,6 +204,7 @@ public class IReportCompiler implements Runnable, JRExportProgressMonitor
    public void run()
    {
 
+	  //LIMAO  10.18启动该线程执行编译
       if (threadList != null)
         synchronized(threadList)
       {
@@ -1008,8 +1009,10 @@ public class IReportCompiler implements Runnable, JRExportProgressMonitor
                         }
                    }
                    else
+                	   
                    {
-                       ds = (JRDataSource)connection.getJRDataSource();
+                       //LIMAO 10.18 填充javabean数据源
+                	   ds = (JRDataSource)connection.getJRDataSource();
                        print = JasperFillManager.fillReport(fileName,hm,ds);
                    }
                }

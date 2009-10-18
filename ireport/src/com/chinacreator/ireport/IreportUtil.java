@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
@@ -38,15 +39,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.MethodUtils;
+
 import com.chinacreator.ireport.rmi.IreportRmiClient;
 import com.chinacreator.ireport.rmi.PageInfo;
+import com.chinacreator.ireport.rmi.RemoteBeanPropertyDescriptor;
 import com.chinacreator.ireport.rmi.ReportLock;
 import com.chinacreator.ireport.rmi.TemplateFiles;
 
@@ -682,66 +690,69 @@ public class IreportUtil {
 		return filename.substring(0, filename.lastIndexOf("."));
 	}
 
-	public static PageInfo getReportLockList(String repid,
-			int pageIndex, int pageSize) {
+	public static PageInfo getReportLockList(String repid, int pageIndex,
+			int pageSize) {
 
 		try {
 			return (PageInfo) IreportRmiClient.getInstance()
 					.getRmiRemoteInterface().invokeServerMethod(
 							IreportConstant.FIND_REPORT_LOCK_LIST, repid,
 							pageIndex, pageSize);
-		} catch (RemoteException e){
+		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
+
 	/**
-	 * 将一个报表list填充为二维对象数组 
+	 * 将一个报表list填充为二维对象数组
+	 * 
 	 * @param list
 	 * @return
 	 */
-	public static Object[][] ReportLockToObjectArray(List<ReportLock> list){
-		if(list!=null && list.size()>0){
+	public static Object[][] ReportLockToObjectArray(List<ReportLock> list) {
+		if (list != null && list.size() > 0) {
 			Object[][] date = new Object[list.size()][6];
 			for (int i = 0; i < list.size(); i++) {
-				date[i][0] =  false;
-				date[i][1] =  list.get(i).getRep_id();
-				date[i][2] =  list.get(i).getRep_name();
-				date[i][3] =  list.get(i).getOpen_user();
-				date[i][4] =  list.get(i).getOpen_user_ip();
-				date[i][5] =  defaultDateFormat(list.get(i).getOpen_time());			
-				}
+				date[i][0] = false;
+				date[i][1] = list.get(i).getRep_id();
+				date[i][2] = list.get(i).getRep_name();
+				date[i][3] = list.get(i).getOpen_user();
+				date[i][4] = list.get(i).getOpen_user_ip();
+				date[i][5] = defaultDateFormat(list.get(i).getOpen_time());
+			}
 			return date;
 		}
 		return null;
 	}
-	
-	
+
 	/**
 	 * 执行dos命令
+	 * 
 	 * @param command
 	 */
-	public static void executeDosCommand(String command){
+	public static void executeDosCommand(String command) {
 		try {
 			Runtime.getRuntime().exec(command);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 删除文件加下全部文件
+	 * 
 	 * @return 失败文件对象集合
 	 */
-	public static List<File> deleteAllFileByFolder(String folderPath){
+	public static List<File> deleteAllFileByFolder(String folderPath) {
 		List<File> list = new ArrayList<File>();
 		File f = new File(folderPath);
-		if(f.exists() && f.isDirectory()){
+		if (f.exists() && f.isDirectory()) {
 			File[] fs = f.listFiles();
 			for (int i = 0; i < fs.length; i++) {
 				try {
 					boolean b = fs[i].delete();
-					if(!b){
+					if (!b) {
 						list.add(fs[i]);
 					}
 				} catch (Exception e) {
@@ -750,74 +761,84 @@ public class IreportUtil {
 				}
 			}
 		}
-		return list;	
+		return list;
 	}
-	
+
 	/**
 	 * 该方法只是在增量同步文件夹文件时用到
+	 * 
 	 * @param cilentDir
 	 * @param files
 	 * @throws Exception
 	 */
-	public static void increamentHelper(String cilentDir,File[] files) throws Exception{
-		
-		if(files!=null){
-			
+	public static void increamentHelper(String cilentDir, File[] files)
+			throws Exception {
+
+		if (files != null) {
+
 			for (int i = 0; i < files.length; i++) {
-				File thisFile = new File(cilentDir+files[i].getName());
-				if( !thisFile.exists() ){
-					//不存在需要同步
-					Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files[i].getPath());
-					byte[] bytes = (byte[])fileObj;
-					if(bytes == null){
+				File thisFile = new File(cilentDir + files[i].getName());
+				if (!thisFile.exists()) {
+					// 不存在需要同步
+					Object fileObj = IreportRmiClient.rmiInterfactRemote
+							.sendFileToClient(files[i].getPath());
+					byte[] bytes = (byte[]) fileObj;
+					if (bytes == null) {
 						continue;
 					}
-					
+
 					IreportUtil.bytesToFile(thisFile.getPath(), bytes);
-					AddedOperator.log("--->同步:"+thisFile.getPath(), IreportConstant.RIGHT_);
-				}else{
-				    //若存在，但是时间戳不一样将同样同步
-					//1:服务器的时间戳晚于客户端
-					if(files[i].lastModified() > thisFile.lastModified()){
-						//需要同步
+					AddedOperator.log("--->同步:" + thisFile.getPath(),
+							IreportConstant.RIGHT_);
+				} else {
+					// 若存在，但是时间戳不一样将同样同步
+					// 1:服务器的时间戳晚于客户端
+					if (files[i].lastModified() > thisFile.lastModified()) {
+						// 需要同步
 						String savePath = thisFile.getPath();
-						Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files[i].getPath());
-						byte[] bytes = (byte[])fileObj;
-						if(bytes == null){
+						Object fileObj = IreportRmiClient.rmiInterfactRemote
+								.sendFileToClient(files[i].getPath());
+						byte[] bytes = (byte[]) fileObj;
+						if (bytes == null) {
 							continue;
 						}
 						thisFile.delete();
 						IreportUtil.bytesToFile(savePath, bytes);
-						AddedOperator.log("--->同步:"+thisFile.getPath(), IreportConstant.RIGHT_);
+						AddedOperator.log("--->同步:" + thisFile.getPath(),
+								IreportConstant.RIGHT_);
 					}
-					
-					//2:你是否修改了？
-					if(files[i].lastModified() < thisFile.lastModified()){
-						//客户端做了自己修改?
-						//需要同步
-						Object fileObj = IreportRmiClient.rmiInterfactRemote.sendFileToClient(files[i].getPath());
-						//若客户端自己做了修改，也许有他的原因，所以这里不直接删除而是备份
-						thisFile.renameTo(new File(thisFile.getPath()+".bak")); 
-						byte[] bytes = (byte[])fileObj;
-						if(bytes == null){
+
+					// 2:你是否修改了？
+					if (files[i].lastModified() < thisFile.lastModified()) {
+						// 客户端做了自己修改?
+						// 需要同步
+						Object fileObj = IreportRmiClient.rmiInterfactRemote
+								.sendFileToClient(files[i].getPath());
+						// 若客户端自己做了修改，也许有他的原因，所以这里不直接删除而是备份
+						thisFile
+								.renameTo(new File(thisFile.getPath() + ".bak"));
+						byte[] bytes = (byte[]) fileObj;
+						if (bytes == null) {
 							continue;
 						}
 						IreportUtil.bytesToFile(thisFile.getPath(), bytes);
-						AddedOperator.log("--->同步[备份]:"+thisFile.getPath()+" 备份:"+thisFile.getPath()+".bak", IreportConstant.RIGHT_);
+						AddedOperator.log("--->同步[备份]:" + thisFile.getPath()
+								+ " 备份:" + thisFile.getPath() + ".bak",
+								IreportConstant.RIGHT_);
 					}
-					
+
 				}
 			}
 		}
 	}
-	
-	public static String[] getClassMethodInfo(String classFullName){
+
+	public static String[] getClassMethodInfo(String classFullName) {
 		try {
-			if(isBlank(classFullName)){
+			if (isBlank(classFullName)) {
 				return null;
 			}
 			Class clazz = Class.forName(classFullName);
-			
+
 			Method[] ms = clazz.getDeclaredMethods();
 			String[] methods = new String[ms.length];
 			for (int i = 0; i < ms.length; i++) {
@@ -827,15 +848,134 @@ public class IreportUtil {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
-	public Collection mytest(){
+
+	public Collection mytest() {
 		return null;
 	}
-	public static void main(String[] args) {
-		System.out.println(getClassMethodInfo("com.chinacreator.ireport.IreportUtil"));
+
+	// -----
+	public static List<RemoteBeanPropertyDescriptor> showClassProperty(
+			String className) {
+		Class clazz = null;
+		List<RemoteBeanPropertyDescriptor> list = new ArrayList<RemoteBeanPropertyDescriptor>();
+		java.beans.PropertyDescriptor[] pd = org.apache.commons.beanutils.PropertyUtils
+				.getPropertyDescriptors(clazz);
+		for (int nd = 0; nd < pd.length; ++nd) {
+			String fieldName = pd[nd].getName();
+			if (pd[nd].getPropertyType() != null
+					&& pd[nd].getReadMethod() != null) {
+
+				RemoteBeanPropertyDescriptor rb = new RemoteBeanPropertyDescriptor();
+				String returnType = pd[nd].getPropertyType().getName();
+				rb.setReturnType(returnType);
+				rb.setFieldName(fieldName);
+				rb.setPropertyType(pd[nd].getPropertyType());
+				rb.setBChildrens(pd[nd].getPropertyType().isPrimitive());
+
+				list.add(rb);
+
+			}
+		}
+
+		return list;
+	}
+
+	// --------
+
+	public static Collection makeMapCollectionDataSource(Collection<Object> data) {
+		Iterator<Object> it = data.iterator();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+		while (it.hasNext()) {
+			Object bean = it.next();
+			Map<String, Object> map = beanToMap(bean);
+			if (map != null) {
+				list.add(map);
+			}
+		}
+
+		return list;
+	}
+
+	public static Map<String, Object> beanToMap(Object bean) {
+		if (bean == null) {
+			return null;
+		}
+		Class clazz = bean.getClass();
+		java.beans.PropertyDescriptor[] pd = org.apache.commons.beanutils.PropertyUtils
+				.getPropertyDescriptors(clazz);
+		Map<String, Object> map = new HashMap<String, Object>();
+		for (int nd = 0; nd < pd.length; ++nd) {
+			String fieldName = pd[nd].getName();
+			if (pd[nd].getPropertyType() != null
+					&& pd[nd].getReadMethod() != null) {
+				String returnType = pd[nd].getPropertyType().getName();
+				map
+						.put(fieldName, invokeGetMethod(bean, fieldName,
+								returnType));
+
+			}
+		}
+		return map;
+	}
+
+	public static Object invokeGetMethod(Object obj, String fieldName,
+			String returnType) {
+		if (obj == null) {
+			return null;
+		}
+		if (fieldName == null || "".equals(fieldName.trim())) {
+			return null;
+		}
+
+		String methodName = null;
+
+		if ("boolean".equals(returnType)) {
+			methodName = "is" + fieldName.substring(0, 1).toUpperCase()
+					+ fieldName.substring(1);
+		} else {
+			methodName = "get" + fieldName.substring(0, 1).toUpperCase()
+					+ fieldName.substring(1);
+		}
+		try {
+			Object returnValue = MethodUtils
+					.invokeMethod(obj, methodName, null);
+
+			return returnValue;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		/*
+		 * Map m = new HashMap(); // m.put("name", "maodie"); Person p = new
+		 * Person(); p.setName("aaaa"); p.setSex(1); p.setD(new Date());
+		 * 
+		 * p.setStamp(new java.sql.Timestamp(new Date().getTime()));
+		 * 
+		 * 
+		 * java.beans.PropertyDescriptor[] pd =
+		 * org.apache.commons.beanutils.PropertyUtils
+		 * .getPropertyDescriptors(p.getClass()); for (int nd = 0; nd <
+		 * pd.length; ++nd) {
+		 * 
+		 * String fieldName = pd[nd].getName(); System.out.println(fieldName);
+		 * if (pd[nd].getPropertyType() != null && pd[nd].getReadMethod() !=
+		 * null) { String returnType = pd[nd].getPropertyType().getName();
+		 * 
+		 * invokeGetMethod(p, fieldName, returnType); } }
+		 */
+
+		List list = new ArrayList();
+		list.add(null);
+		System.out.println(list.size());
+
 	}
 }
 

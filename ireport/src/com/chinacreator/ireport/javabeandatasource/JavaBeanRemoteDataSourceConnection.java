@@ -4,6 +4,9 @@ import it.businesslogic.ireport.gui.MainFrame;
 import it.businesslogic.ireport.util.I18n;
 import it.businesslogic.ireport.util.Misc;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.swing.JOptionPane;
 /**
  *
@@ -128,7 +131,7 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
     { 
         try {
             
-            Class clazz = Thread.currentThread().getContextClassLoader().loadClass(factoryClass);
+           /* Class clazz = Thread.currentThread().getContextClassLoader().loadClass(factoryClass);
 	        Object obj = clazz.newInstance();
        		Object return_obj = obj.getClass().getMethod( methodToCall, new Class[0]).invoke(null,new Object[0]);   
        		
@@ -142,8 +145,15 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
        			{
        				return new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource((java.util.Collection) return_obj, isUseFieldDescription());	
        			}
-       		}
-       		return new net.sf.jasperreports.engine.JREmptyDataSource();
+       		}*/
+        	
+        	
+        	//数据集通过远程获得
+        	List<Map<String,Object>> list = null;//远程获得
+        	
+        	return new net.sf.jasperreports.engine.data.JRMapCollectionDataSource(list);
+        	
+       		//return new net.sf.jasperreports.engine.JREmptyDataSource();
        		             
         } catch (Exception ex)
         {
