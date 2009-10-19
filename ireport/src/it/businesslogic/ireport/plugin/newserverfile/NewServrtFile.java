@@ -42,6 +42,9 @@ public class NewServrtFile extends javax.swing.JFrame {
         if(!IreportUtil.isBlank(myReportName)){
         	jTextField1.setText(myReportName);
         }
+        
+        jTextField4.setText(MyReportProperties.getStringProperties(IreportConstant.USERNAME));
+        jTextField4.setEditable(false);
     }
     
     /** This method is called from within the constructor to

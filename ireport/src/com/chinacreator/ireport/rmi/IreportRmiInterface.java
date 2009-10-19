@@ -21,6 +21,7 @@ import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 李茂
@@ -203,8 +204,28 @@ public interface IreportRmiInterface extends Remote{
 	 * @param methodName
 	 * @return
 	 */
-	Object invokeJavaBeanMehtoed(String fullClassName,String methodName,Object[] obj) throws RemoteException;
+	Object invokeJavaBeanMethod(String fullClassName,String methodName,Object[] obj) throws RemoteException;
 
+	/**
+	 * 获得服务器端某类的属性描述集
+	 * @param classname
+	 * @return
+	 * @throws RemoteException
+	 */
+	List<RemoteBeanPropertyDescriptor> getRemoteBeanProperty(String classname)throws RemoteException;
+	
+	/**
+	 * 执行服务端的某个类的某个方法获得一个数据集，该数据集满足ireportjavabean数据集的要求，要么是collection要么是object数组
+	 * 但是返回值需要进行处理，因为原生的返回值是服务器端某javabean的集合，而这个javabean是存在于服务器端的，在ireport客户端是
+	 * 不存在的，所以需要将javabean转换为普通的map集合，在默认情况下我们保存对应javabean中的值与map中的值相等，但是请注意，javabean
+	 * 中某属性的值也是也是一个不存在与ireport设计器客户端的javabean对象，所以这里我们将默认返回服务器端该对象toString方法返回的对象
+	 * 字符串。
+	 * @param className
+	 * @param methodName
+	 * @return
+	 * @throws RemoteException
+	 */
+	List<Map<String,Object>> removeBeanCollectionDataset(String className,String methodName,int collectionType)throws RemoteException;
 }
 
 //end IreportRmiInterface.java

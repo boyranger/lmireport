@@ -373,10 +373,19 @@ public class NewServerTemplate extends javax.swing.JDialog {
        }
        
        TemplateFiles tf = new TemplateFiles();
-       tf.setName(tname);
+       
+       if(IreportConstant.TEMPLATE_C.equals(ttype)){
+    	    tf.setName(tname+"C");
+       }
+       if(IreportConstant.TEMPLATE_T.equals(ttype)){
+    	    tf.setName(tname+"T");
+       }
+   
        tf.setType(ttype);
-       tf.setXmlContent(IreportUtil.fileToBytes(tfile));
-       tf.setImgContent(IreportUtil.fileToBytes(imgFile));
+       byte[] xmlc = IreportUtil.fileToBytes(tfile);
+       byte[] imgc = IreportUtil.fileToBytes(imgFile);
+       tf.setXmlContent(xmlc);
+       tf.setImgContent(imgc);
        IreportRmiClient.getInstance();
        
        try {
@@ -384,9 +393,17 @@ public class NewServerTemplate extends javax.swing.JDialog {
     	   if(!imgFile.toLowerCase().endsWith(".png")){
     	    AddedOperator.log("设置图片类型为非png类型，将修正为png类型图片", IreportConstant.WARN_);
     	   }
+    	   
+    	   //还需要的保存到本地
+    	   
+    	   IreportUtil.bytesToFile(MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator+tf.getName()+".xml", xmlc);
+    	   IreportUtil.bytesToFile(MainFrame.IREPORT_TMP_TEMPLATE_DIR+File.separator+tf.getName()+".png", imgc);
+    	   
     	   AddedOperator.log("新建模板["+tname+"]到服务器成功",IreportConstant.RIGHT_);
     	   this.setVisible(false);
     	   this.dispose();
+    	   
+    	   IreportUtil.reShowTemplateFrame();
        } catch (Exception e) {
     	   e.printStackTrace();
     	   AddedOperator.log("新建文件到服务器出错："+e.getMessage(), IreportConstant.ERROR_);

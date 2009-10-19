@@ -722,7 +722,7 @@ public class JavaBeanDatasourceSet extends javax.swing.JDialog {
 			AddedOperator.log("执行" + classname + "的" + methodname + "方法，参数为"
 					+ p, IreportConstant.INFO_);
 			IreportRmiClient.getInstance();
-			Object object = IreportRmiClient.rmiInterfactRemote.invokeJavaBeanMehtoed(
+			Object object = IreportRmiClient.rmiInterfactRemote.invokeJavaBeanMethod(
 					classname, methodname, paramObj);
 			
 			DialogFactory.showInfoMessageDialog(this, "测试成功\n获得返回值："+object, "成功");

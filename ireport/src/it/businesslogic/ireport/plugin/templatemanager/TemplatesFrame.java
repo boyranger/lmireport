@@ -305,7 +305,7 @@ public class TemplatesFrame extends javax.swing.JDialog {
             		return;
             	}
             	int ok= JOptionPane.showConfirmDialog(com, "你确定要删除"+st.getDisplayName()+"模板文件吗?");
-            	if(ok==JOptionPane.NO_OPTION){
+            	if(ok!=JOptionPane.OK_OPTION){
             		return;
             	}
             	TemplateFiles tf = new TemplateFiles();
@@ -315,6 +315,10 @@ public class TemplatesFrame extends javax.swing.JDialog {
             		IreportRmiClient.getInstance().getRmiRemoteInterface().deleteTemplateFile(tf);
             		//删除本地文件
             		IreportUtil.deleteTemplate(st.getDisplayName());
+            		
+            		//刷新
+            		reShow();
+            		
 				} catch (Exception e) {
 					e.printStackTrace();
 					DialogFactory.showErrorMessageDialog(com, e.getMessage(), "模板删除错误");
@@ -500,7 +504,12 @@ public class TemplatesFrame extends javax.swing.JDialog {
         return templatesPanel1.getSelectedTamplate();
     }
    
-    
+    private void reShow(){
+    	this.setVisible(false);
+    	this.dispose();
+    	
+    	IreportUtil.reShowTemplateFrame();
+    }
     // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
 

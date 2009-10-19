@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 /**
  *
- * @author  Administrator
+ * @author  李茂
  */
 public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport.IReportConnection {
     
@@ -25,7 +25,7 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
     
     private boolean useFieldDescription;
     
-    private String type = "BEAN_COLLECTION";
+    private static String type = "REMOTE_BEAN_COLLECTION";
     
     /** Creates a new instance of JDBCConnection */
     
@@ -55,7 +55,7 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
         map.put("MethodToCall", Misc.nvl(this.getMethodToCall(),""));
         map.put("Type", Misc.nvl(this.getType(),""));
         map.put("UseFieldDescription", ""+this.isUseFieldDescription());
-       
+       // map.put("Remotebean", value)
         return map;
     }
     
@@ -112,7 +112,7 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
      * @return Value of property type.
      */
     public java.lang.String getType() {
-        return type;
+        return "REMOTE_BEAN_COLLECTION"; //修改为该值
     }    
    
     /**

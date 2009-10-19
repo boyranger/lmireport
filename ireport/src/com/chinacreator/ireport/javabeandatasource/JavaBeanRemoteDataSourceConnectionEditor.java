@@ -21,6 +21,7 @@ public class JavaBeanRemoteDataSourceConnectionEditor extends javax.swing.JPanel
     
     /** Creates new form EJBQLConnectionEditor */
     public JavaBeanRemoteDataSourceConnectionEditor() {
+    	System.out.println("---------!!!!!!!!!!!!!-------");
         initComponents();
         applyI18n();
     }
@@ -56,7 +57,7 @@ public class JavaBeanRemoteDataSourceConnectionEditor extends javax.swing.JPanel
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
         jPanelBeansSet.add(jLabel12, gridBagConstraints);
 
-        jTextFieldJBSetFactoryClass.setText("it.businesslogic.ireport.connection.SampleJRDataSourceFactory");
+        jTextFieldJBSetFactoryClass.setText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -97,7 +98,7 @@ public class JavaBeanRemoteDataSourceConnectionEditor extends javax.swing.JPanel
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
         jPanelBeansSet.add(jLabel13, gridBagConstraints);
 
-        jTextFieldJBSetMethodToCall.setText("createBeanCollection");
+        jTextFieldJBSetMethodToCall.setText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
