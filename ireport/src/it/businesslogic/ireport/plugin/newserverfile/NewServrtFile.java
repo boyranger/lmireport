@@ -45,6 +45,10 @@ public class NewServrtFile extends javax.swing.JFrame {
         
         jTextField4.setText(MyReportProperties.getStringProperties(IreportConstant.USERNAME));
         jTextField4.setEditable(false);
+        
+        //------远程数据源还未开放
+        jLabel8.setVisible(false);
+        jComboBox2.setVisible(false);
     }
     
     /** This method is called from within the constructor to

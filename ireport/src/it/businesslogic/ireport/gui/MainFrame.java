@@ -10330,7 +10330,6 @@ public class MainFrame extends javax.swing.JFrame
 
 	        for (int i=0; i<plugins_files.length; ++i)
 	        {
-	            System.out.println("KKKKK:"+plugins_files[i].getPath());
 	        	if (!plugins_files[i].getName().endsWith(".xml")) continue;
 	            plugin_files_v.add(plugins_files[i]);
 	        }
@@ -11397,7 +11396,8 @@ public class MainFrame extends javax.swing.JFrame
         addConnectionImplementation("it.businesslogic.ireport.connection.JDBCConnection");
         //addConnectionImplementation("it.businesslogic.ireport.connection.JRXMLDataSourceConnection");
         addConnectionImplementation("it.businesslogic.ireport.connection.JavaBeanDataSourceConnection");
-        addConnectionImplementation("com.chinacreator.ireport.javabeandatasource.JavaBeanRemoteDataSourceConnection");
+        
+        // addConnectionImplementation("com.chinacreator.ireport.javabeandatasource.JavaBeanRemoteDataSourceConnection");
         //addConnectionImplementation("it.businesslogic.ireport.connection.JRCSVDataSourceConnection");
         // addConnectionImplementation("it.businesslogic.ireport.connection.JRDataSourceProviderConnection");
         // addConnectionImplementation("it.businesslogic.ireport.connection.JRCustomDataSourceConnection");

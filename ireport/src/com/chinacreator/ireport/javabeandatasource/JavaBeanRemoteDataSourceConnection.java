@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+
+import com.chinacreator.ireport.AddedOperator;
+import com.chinacreator.ireport.IreportConstant;
+import com.chinacreator.ireport.IreportUtil;
+import com.chinacreator.ireport.rmi.IreportRmiClient;
 /**
  *
  * @author  李茂
@@ -149,11 +154,12 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
         	
         	
         	//数据集通过远程获得
-        	List<Map<String,Object>> list = null;//远程获得
-        	
+        	System.out.println("-------------------------");
+        	List<Map<String,Object>> list = IreportRmiClient.getInstance().rmiInterfactRemote.remoteBeanCollectionDataset(this.getFactoryClass(), this.getMethodToCall(), 1);//远程获得
+        	System.out.println("执行远程数据集调用,获得数据长度为:"+(list==null?0:list.size()));
+        	AddedOperator.log("执行远程数据集调用,获得数据长度为:"+(list==null?0:list.size()), IreportConstant.INFO_);
         	return new net.sf.jasperreports.engine.data.JRMapCollectionDataSource(list);
-        	
-       		//return new net.sf.jasperreports.engine.JREmptyDataSource();
+       		
        		             
         } catch (Exception ex)
         {

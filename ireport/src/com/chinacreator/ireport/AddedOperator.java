@@ -532,7 +532,9 @@ public class AddedOperator implements AddedOepretorInterface{
 						AddedOperator.log("加载模板结束.", IreportConstant.INFO_);
 						}
 					}else{
-						System.out.println("探测到本地已经存在模板文件，若需要同步服务器模板信息，需要手动操作！");
+						//增量更新
+						AddedOperator.getInstance().incrementAddFile(3);
+						
 					}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -608,6 +610,10 @@ public class AddedOperator implements AddedOepretorInterface{
 					System.out.println("成功加载配置插件文件:"+f.getPath());
 		        }
 		        log("成功加载配置插件文件"+fs.size()+"个", IreportConstant.INFO_);
+			}else{
+				//增量更新
+				AddedOperator.getInstance().incrementAddFile(2);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -759,7 +765,8 @@ public class AddedOperator implements AddedOepretorInterface{
 						libDir.mkdirs();
 					}
 					if(libDir!=null && libDir.isDirectory() && libDir.listFiles().length!=0){
-						AddedOperator.log("探测到本地已经存在jar文件，不进行jar包服务器端同步", IreportConstant.INFO_);
+						//增量更新
+					    AddedOperator.getInstance().incrementAddFile(1);
 						return;
 					}
 					IreportRmiClient.getInstance();

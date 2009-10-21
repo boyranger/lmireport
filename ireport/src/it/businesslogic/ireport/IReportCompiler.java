@@ -100,6 +100,9 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import org.xml.sax.SAXException;
 
+import com.chinacreator.ireport.javabeandatasource.JavaBeanRemoteDataSourceConnection;
+import com.chinacreator.ireport.rmi.IreportRmiClient;
+
 import be.savat.components.PagesFrame;
 
 /**
@@ -1012,8 +1015,11 @@ public class IReportCompiler implements Runnable, JRExportProgressMonitor
                 	   
                    {
                        //LIMAO 10.18 Ìî³äjavabeanÊý¾ÝÔ´
+                
                 	   ds = (JRDataSource)connection.getJRDataSource();
+                	   
                        print = JasperFillManager.fillReport(fileName,hm,ds);
+                       
                    }
                }
                else

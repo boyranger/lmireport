@@ -73,6 +73,8 @@ public class NewServerFileOptions extends javax.swing.JPanel {
         applyI18n();
        // pack();
         ns = this;
+        
+        
     }
 
     private void initComponents() {
@@ -332,7 +334,6 @@ public class NewServerFileOptions extends javax.swing.JPanel {
     		    		father.setVisible(true);
     		    		return;
     		    	}
-    		    	System.out.println(ifi.getContent().length+username+note+reportname);
     		    	ecid = ecid.split("#")[0];
     		    	ifi.setEc_id(ecid);
 

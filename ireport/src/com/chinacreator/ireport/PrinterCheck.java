@@ -10,7 +10,7 @@ package com.chinacreator.ireport;
 public class PrinterCheck {
 
 	static {
-		System.loadLibrary("PRINTS");
+		System./*author ¿Ó√Ø*/loadLibrary/*author ¿Ó√Ø*/("PRINTS")/*author ¿Ó√Ø*/;
 	}
 	
 	public native int chekcInstall();

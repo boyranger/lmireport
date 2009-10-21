@@ -1477,7 +1477,12 @@ private void jTableFieldsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_exportQueryButtonActionPerformed
 
     private void jButtonReadBeanAttributes3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadBeanAttributes3ActionPerformed
-
+    	
+    	System.out.println(bip1);
+    	
+    	System.out.println("------");
+    	
+    	System.out.println(jTextFieldBeanClass1);
         bip1.setClassName(jTextFieldBeanClass1.getText().trim());
     }//GEN-LAST:event_jButtonReadBeanAttributes3ActionPerformed
 

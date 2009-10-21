@@ -52,6 +52,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import com.chinacreator.ireport.IreportUtil;
+import com.chinacreator.ireport.rmi.IreportRmiClient;
 import com.chinacreator.ireport.rmi.RemoteBeanPropertyDescriptor;
 
 /**
@@ -342,9 +343,9 @@ public class BeanInspectorPanel extends javax.swing.JPanel implements FieldsProv
             if (parentPath.length() > 0) parentPath += ".";
             
             if(classname.startsWith("#")){//LIMAO : 10.18我们设定若类名以#开始我们认为是远程javabean
-            	
-            	List<RemoteBeanPropertyDescriptor> remoteBeanPropertyDescriptor = IreportUtil.showClassProperty(classname);//需要通过远程获得
-            	
+            	classname = classname.substring(1);
+            	//List<RemoteBeanPropertyDescriptor> remoteBeanPropertyDescriptor = IreportUtil.showClassProperty(classname);//需要通过远程获得
+            	List<RemoteBeanPropertyDescriptor> remoteBeanPropertyDescriptor = IreportRmiClient.getInstance().getRmiRemoteInterface().getRemoteBeanProperty(classname);
             	for (int i = 0; i < remoteBeanPropertyDescriptor.size(); i++) {
             		RemoteBeanPropertyDescriptor rbpd = remoteBeanPropertyDescriptor.get(i);
             		 String returnType =  rbpd.getReturnType();
@@ -422,7 +423,8 @@ public class BeanInspectorPanel extends javax.swing.JPanel implements FieldsProv
             return;
         } catch (Exception ex)
         {
-            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage() ,I18n.getString("message.title.error","Error"),javax.swing.JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        	javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage() ,I18n.getString("message.title.error","Error"),javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
     }

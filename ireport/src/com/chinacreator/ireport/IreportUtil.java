@@ -790,10 +790,10 @@ public class IreportUtil {
 					IreportUtil.bytesToFile(thisFile.getPath(), bytes);
 					AddedOperator.log("--->同步:" + thisFile.getPath(),
 							IreportConstant.RIGHT_);
-				} else {
+				} /*else {
 					// 若存在，但是时间戳不一样将同样同步
 					// 1:服务器的时间戳晚于客户端
-					if (files[i].lastModified() > thisFile.lastModified()) {
+				
 						// 需要同步
 						String savePath = thisFile.getPath();
 						Object fileObj = IreportRmiClient.rmiInterfactRemote
@@ -806,9 +806,12 @@ public class IreportUtil {
 						IreportUtil.bytesToFile(savePath, bytes);
 						AddedOperator.log("--->同步:" + thisFile.getPath(),
 								IreportConstant.RIGHT_);
-					}
+					
 
 					// 2:你是否修改了？
+					
+					System.out.println("last:"+files[i].lastModified());
+					System.out.println("this:"+thisFile.lastModified());
 					if (files[i].lastModified() < thisFile.lastModified()) {
 						// 客户端做了自己修改?
 						// 需要同步
@@ -827,7 +830,7 @@ public class IreportUtil {
 								IreportConstant.RIGHT_);
 					}
 
-				}
+				}*/
 			}
 		}
 	}

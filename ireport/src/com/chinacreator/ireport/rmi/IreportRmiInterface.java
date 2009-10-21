@@ -225,7 +225,7 @@ public interface IreportRmiInterface extends Remote{
 	 * @return
 	 * @throws RemoteException
 	 */
-	List<Map<String,Object>> removeBeanCollectionDataset(String className,String methodName,int collectionType)throws RemoteException;
+	List<Map<String,Object>> remoteBeanCollectionDataset(String className,String methodName,int collectionType)throws RemoteException;
 }
 
 //end IreportRmiInterface.java
