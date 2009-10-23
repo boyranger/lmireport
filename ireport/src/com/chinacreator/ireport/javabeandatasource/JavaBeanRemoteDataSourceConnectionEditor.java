@@ -6,22 +6,39 @@
 
 package com.chinacreator.ireport.javabeandatasource;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+
 import it.businesslogic.ireport.IReportConnection;
 import it.businesslogic.ireport.IReportConnectionEditor;
 import it.businesslogic.ireport.util.I18n;
+import it.businesslogic.ireport.util.Misc;
 
 /**
  *
- * @author  gtoffoli
+ * @author  limao
  */
 public class JavaBeanRemoteDataSourceConnectionEditor extends javax.swing.JPanel implements IReportConnectionEditor {
     
     private IReportConnection iReportConnection = null;
     private boolean init = false;
-    
-    /** Creates new form EJBQLConnectionEditor */
+    private JDialog father = null;
+    public JDialog getFather() {
+		return father;
+	}
+
+	public void setFather(JDialog father) {
+		this.father = father;
+	}
+
+	/** Creates new form EJBQLConnectionEditor */
     public JavaBeanRemoteDataSourceConnectionEditor() {
-    	System.out.println("---------!!!!!!!!!!!!!-------");
         initComponents();
         applyI18n();
     }
@@ -58,12 +75,23 @@ public class JavaBeanRemoteDataSourceConnectionEditor extends javax.swing.JPanel
         jPanelBeansSet.add(jLabel12, gridBagConstraints);
 
         jTextFieldJBSetFactoryClass.setText("");
+        
+        JPanel jp = new JPanel(new BorderLayout());
+        JButton jb = new JButton("查看");
+        
+        jb.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            	showClasses(evt);
+            }
+        });
+        jp.add(jb,BorderLayout.EAST);
+        jp.add(jTextFieldJBSetFactoryClass,BorderLayout.CENTER);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 4, 4);
-        jPanelBeansSet.add(jTextFieldJBSetFactoryClass, gridBagConstraints);
+        jPanelBeansSet.add(jp, gridBagConstraints);
 
         buttonGroup1.add(jRadioButtonJBSetCollection);
         jRadioButtonJBSetCollection.setSelected(true);
@@ -99,12 +127,24 @@ public class JavaBeanRemoteDataSourceConnectionEditor extends javax.swing.JPanel
         jPanelBeansSet.add(jLabel13, gridBagConstraints);
 
         jTextFieldJBSetMethodToCall.setText("");
+        
+        JPanel jp1 = new JPanel(new BorderLayout());
+        JButton jb1 = new JButton("查看");
+        jb1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            	showMethod(evt);
+            }
+        });
+        
+        jp1.add(jb1,BorderLayout.EAST);
+        jp1.add(jTextFieldJBSetMethodToCall,BorderLayout.CENTER);
+        
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 4, 4);
-        jPanelBeansSet.add(jTextFieldJBSetMethodToCall, gridBagConstraints);
+        jPanelBeansSet.add(jp1, gridBagConstraints);
 
         jCheckBoxisUseFieldDescription.setText("Use field description");
         jCheckBoxisUseFieldDescription.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -123,6 +163,17 @@ public class JavaBeanRemoteDataSourceConnectionEditor extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
     
     
+    private void showClasses(java.awt.event.MouseEvent evt){
+    	JDialog jd = new ServerClassesView(this,father,true);
+    	Misc.centerFrame(jd);
+    	jd.setVisible(true);
+    }
+    
+    private void showMethod(java.awt.event.MouseEvent evt){
+    	JDialog jd = new ClassMethodDialog(this,father,true);
+    	Misc.centerFrame(jd);
+    	jd.setVisible(true);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox jCheckBoxisUseFieldDescription;
@@ -131,8 +182,8 @@ public class JavaBeanRemoteDataSourceConnectionEditor extends javax.swing.JPanel
     private javax.swing.JPanel jPanelBeansSet;
     private javax.swing.JRadioButton jRadioButtonJBSetArray;
     private javax.swing.JRadioButton jRadioButtonJBSetCollection;
-    private javax.swing.JTextField jTextFieldJBSetFactoryClass;
-    private javax.swing.JTextField jTextFieldJBSetMethodToCall;
+    public javax.swing.JTextField jTextFieldJBSetFactoryClass;
+    public javax.swing.JTextField jTextFieldJBSetMethodToCall;
     // End of variables declaration//GEN-END:variables
     
     

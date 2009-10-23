@@ -17,6 +17,7 @@
  */
 package com.chinacreator.ireport;
 
+import it.businesslogic.ireport.IReportConnection;
 import it.businesslogic.ireport.Report;
 import it.businesslogic.ireport.gui.JReportFrame;
 import it.businesslogic.ireport.gui.MainFrame;
@@ -30,7 +31,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
@@ -43,18 +43,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
 
+import com.chinacreator.ireport.javabeandatasource.JavaBeanRemoteDataSourceConnection;
 import com.chinacreator.ireport.rmi.IreportRmiClient;
 import com.chinacreator.ireport.rmi.PageInfo;
 import com.chinacreator.ireport.rmi.RemoteBeanPropertyDescriptor;
+import com.chinacreator.ireport.rmi.ReportDatasourceBean;
 import com.chinacreator.ireport.rmi.ReportLock;
 import com.chinacreator.ireport.rmi.TemplateFiles;
 
@@ -703,6 +705,21 @@ public class IreportUtil {
 		}
 		return null;
 	}
+	
+	public static PageInfo getCollectionsList(String repid, int pageIndex,
+			int pageSize) {
+
+		try {
+			return (PageInfo) IreportRmiClient.getInstance()
+					.getRmiRemoteInterface().invokeServerMethod(
+							IreportConstant.FIND_JAVABEAN_COLLECTION_SOURCE, repid,
+							pageIndex, pageSize);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 
 	/**
 	 * 将一个报表list填充为二维对象数组
@@ -725,6 +742,28 @@ public class IreportUtil {
 		}
 		return null;
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public static Object[][] CollectionFactoryToObjectArray(List<ReportDatasourceBean> list) {
+		if (list != null && list.size() > 0) {
+			Object[][] date = new Object[list.size()][6];
+			for (int i = 0; i < list.size(); i++) {
+				date[i][0] = false;
+				date[i][1] = list.get(i).getBean_report_id();
+				date[i][2] = list.get(i).getClass_name();
+				date[i][3] = list.get(i).getMethod_name();
+				date[i][4] = defaultDateFormat(list.get(i).getAdd_time());
+			}
+			return date;
+		}
+		return null;
+	}
+	
 
 	/**
 	 * 执行dos命令
@@ -955,6 +994,37 @@ public class IreportUtil {
 		}
 	}
 
+	public static void removeConection(String name){
+		
+		 Vector v = MainFrame.getMainInstance().getConnections();
+         for (int i=0; i<v.size(); ++i)
+         {
+             IReportConnection irc = (IReportConnection)v.get(i);
+             if (irc.getName().equals(name))
+             {
+            	 MainFrame.getMainInstance().getConnections().removeElement(irc);
+            	 break;
+             }
+         }
+         
+         MainFrame.getMainInstance().saveiReportConfiguration();
+	}
+	
+	public static void addJavaBeanRemoteConnection(com.chinacreator.ireport.rmi.RemoteBeanConnectionProperties rb){
+		  if(rb == null){
+			  return;
+		  }
+		  JavaBeanRemoteDataSourceConnection jb = new JavaBeanRemoteDataSourceConnection();
+		  jb.setName(rb.getName());
+		  jb.setMethodToCall(rb.getMethodToCall());
+		  jb.setType(JavaBeanRemoteDataSourceConnection.type);
+		  jb.setUseFieldDescription(rb.isUseFieldDescription());
+		  jb.setFactoryClass(rb.getFactoryClass());
+		  
+		  MainFrame.getMainInstance().getConnections().addElement(jb);
+          MainFrame.getMainInstance().setActiveConnection(jb);
+          MainFrame.getMainInstance().saveiReportConfiguration();
+	}
 	public static void main(String[] args) throws Exception {
 		/*
 		 * Map m = new HashMap(); // m.put("name", "maodie"); Person p = new

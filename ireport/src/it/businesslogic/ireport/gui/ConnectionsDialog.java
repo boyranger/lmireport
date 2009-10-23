@@ -492,6 +492,7 @@ public class ConnectionsDialog extends javax.swing.JDialog {
                 if ( MainFrame.getMainInstance().getProperties().get( "DefaultConnection") == irc)
                 {
                     MainFrame.getMainInstance().getProperties().remove("DefaultConnection");
+                   
                 }
 
                 MainFrame.getMainInstance().getConnections().removeElement(irc);

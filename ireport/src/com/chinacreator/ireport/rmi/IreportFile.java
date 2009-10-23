@@ -32,8 +32,17 @@ public class IreportFile implements Serializable {
 	private String creator;
 	private String note;
 	private String ec_id;
+	private String reportType;
+	
+	private String class_name;
+	private String method_name;
 
-
+	public String getReportType() {
+		return reportType;
+	}
+	public void setReportType(String reportType) {
+		this.reportType = reportType;
+	}
 	public String getEc_id() {
 		return ec_id;
 	}
@@ -63,6 +72,18 @@ public class IreportFile implements Serializable {
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public String getClass_name() {
+		return class_name;
+	}
+	public void setClass_name(String class_name) {
+		this.class_name = class_name;
+	}
+	public String getMethod_name() {
+		return method_name;
+	}
+	public void setMethod_name(String method_name) {
+		this.method_name = method_name;
 	}
 
 

@@ -11397,7 +11397,7 @@ public class MainFrame extends javax.swing.JFrame
         //addConnectionImplementation("it.businesslogic.ireport.connection.JRXMLDataSourceConnection");
         addConnectionImplementation("it.businesslogic.ireport.connection.JavaBeanDataSourceConnection");
         
-        // addConnectionImplementation("com.chinacreator.ireport.javabeandatasource.JavaBeanRemoteDataSourceConnection");
+        addConnectionImplementation("com.chinacreator.ireport.javabeandatasource.JavaBeanRemoteDataSourceConnection");
         //addConnectionImplementation("it.businesslogic.ireport.connection.JRCSVDataSourceConnection");
         // addConnectionImplementation("it.businesslogic.ireport.connection.JRDataSourceProviderConnection");
         // addConnectionImplementation("it.businesslogic.ireport.connection.JRCustomDataSourceConnection");

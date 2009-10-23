@@ -12,10 +12,14 @@ import it.businesslogic.ireport.gui.MainFrame;
 import it.businesslogic.ireport.gui.sheet.Tag;
 import it.businesslogic.ireport.util.I18n;
 import it.businesslogic.ireport.util.Misc;
+
 import java.util.List;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
+import com.chinacreator.ireport.javabeandatasource.JavaBeanRemoteDataSourceConnectionEditor;
 
 /**
  *
@@ -117,6 +121,12 @@ public class ConnectionDialog extends javax.swing.JDialog {
         jPanelRoot.removeAll();
         
         iReportConnectionEditor = iReportConnection.getIReportConnectionEditor();
+        //LIMAO add
+        if(iReportConnectionEditor instanceof JavaBeanRemoteDataSourceConnectionEditor){
+        	//ªÒ»°∏∏¥∞ÃÂ
+        	((JavaBeanRemoteDataSourceConnectionEditor)iReportConnectionEditor).setFather(this);
+        }
+        //------
         if (!isNew)
         {
             iReportConnectionEditor.setIReportConnection( iReportConnection );

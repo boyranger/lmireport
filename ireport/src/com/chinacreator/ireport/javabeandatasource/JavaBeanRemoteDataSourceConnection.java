@@ -1,17 +1,20 @@
 package com.chinacreator.ireport.javabeandatasource;
 import it.businesslogic.ireport.IReportConnectionEditor;
 import it.businesslogic.ireport.gui.MainFrame;
+import it.businesslogic.ireport.plugin.newserverfile.Params;
 import it.businesslogic.ireport.util.I18n;
 import it.businesslogic.ireport.util.Misc;
 
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import com.chinacreator.ireport.AddedOperator;
 import com.chinacreator.ireport.IreportConstant;
 import com.chinacreator.ireport.IreportUtil;
+import com.chinacreator.ireport.component.DialogFactory;
 import com.chinacreator.ireport.rmi.IreportRmiClient;
 /**
  *
@@ -30,7 +33,7 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
     
     private boolean useFieldDescription;
     
-    private static String type = "REMOTE_BEAN_COLLECTION";
+    public static String type = "REMOTE_BEAN_COLLECTION";
     
     /** Creates a new instance of JDBCConnection */
     
@@ -135,24 +138,6 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
     public net.sf.jasperreports.engine.JRDataSource getJRDataSource()
     { 
         try {
-            
-           /* Class clazz = Thread.currentThread().getContextClassLoader().loadClass(factoryClass);
-	        Object obj = clazz.newInstance();
-       		Object return_obj = obj.getClass().getMethod( methodToCall, new Class[0]).invoke(null,new Object[0]);   
-       		
-       		if (return_obj != null) 
-       		{
-	       		if (Misc.nvl(this.getType(),"").equals(BEAN_ARRAY) )
-	       		{			
-       				return new net.sf.jasperreports.engine.data.JRBeanArrayDataSource((Object[]) return_obj, isUseFieldDescription());
-                        }
-       			else if (Misc.nvl(this.getType(),"").equals(BEAN_COLLECTION) )
-       			{
-       				return new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource((java.util.Collection) return_obj, isUseFieldDescription());	
-       			}
-       		}*/
-        	
-        	
         	//数据集通过远程获得
         	System.out.println("-------------------------");
         	List<Map<String,Object>> list = IreportRmiClient.getInstance().rmiInterfactRemote.remoteBeanCollectionDataset(this.getFactoryClass(), this.getMethodToCall(), 1);//远程获得
@@ -185,52 +170,31 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
     
     public void test() throws Exception 
     {
-            try {
-                Object obj = Class.forName(getFactoryClass(), true, MainFrame.getMainInstance().getReportClassLoader()).newInstance();
-                Object ret_obj = obj.getClass().getMethod( getMethodToCall(), new Class[0]).invoke(null,new Object[0]);                
-            
-                if (ret_obj != null && getType() == BEAN_COLLECTION && (ret_obj instanceof  java.util.Collection))
-                {
-                    JOptionPane.showMessageDialog(MainFrame.getMainInstance(),I18n.getString("messages.connectionDialog.connectionTestSuccessful","Connection test successful!"),"",JOptionPane.INFORMATION_MESSAGE);
-                }
-                else if (ret_obj != null  && getType() == BEAN_ARRAY && (ret_obj instanceof  Object[]))
-                {
-                    JOptionPane.showMessageDialog(MainFrame.getMainInstance(),I18n.getString("messages.connectionDialog.connectionTestSuccessful","Connection test successful!"),"",JOptionPane.INFORMATION_MESSAGE);
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(MainFrame.getMainInstance(),I18n.getString("messages.connectionDialog.notValidValueReturned",
-                            "The method don't return a valid Array or java.util.Collection!\n"),I18n.getString("message.title.error","Error"),JOptionPane.ERROR_MESSAGE);
-                }
-                
-            }catch (NoClassDefFoundError ex)
-            {
-                    JOptionPane.showMessageDialog(MainFrame.getMainInstance(),
-                            I18n.getFormattedString("messages.connection.noClassDefFoundError",
-                            "{0}\nNoClassDefFoundError!!\nCheck your classpath!\n{1}",
-                            new Object[]{"", ""+ex.getMessage()}),
-                            I18n.getString("message.title.exception","Exception"),JOptionPane.ERROR_MESSAGE);
-                    throw ex;					
-            } 
-            catch (ClassNotFoundException ex)
-            {
-                    JOptionPane.showMessageDialog(MainFrame.getMainInstance(),
-                            I18n.getFormattedString("messages.connection.classNotFoundError",
-                            "{0}\nClassNotFoundError!\nMsg: {1}\nPossible not found class: {2}\nCheck your classpath!",
-                            new Object[]{"", ""+ex.getMessage(), "" + getFactoryClass()}),
-                            I18n.getString("message.title.exception","Exception"),JOptionPane.ERROR_MESSAGE);
-                    throw ex;				
-            } 
-            catch (Exception ex)
-            {
-            	ex.printStackTrace();
-            	
-                    JOptionPane.showMessageDialog(MainFrame.getMainInstance(),
-                I18n.getFormattedString("messages.connection.generalError2",
-                "{0}\nGeneral problem:\n {1}",
-                new Object[]{"", ""+ex.getMessage()}),
-                I18n.getString("message.title.exception","Exception"),JOptionPane.ERROR_MESSAGE);
-                throw ex;									
-            }
+    	String classname =this.factoryClass;
+		String methodname = this.methodToCall;
+		JDialog jda = ((JavaBeanRemoteDataSourceConnectionEditor)this.getIReportConnectionEditor()).getFather();
+		if (IreportUtil.isBlank(classname)) {
+			DialogFactory.showErrorMessageDialog(jda, "类名必须填写", "错误");
+			return;
+		}
+
+		if (IreportUtil.isBlank(methodname)) {
+			DialogFactory.showErrorMessageDialog(jda, "方法名必须填写", "错误");
+			return;
+		}
+
+	
+		try {
+			IreportRmiClient.getInstance();
+			Object object = IreportRmiClient.rmiInterfactRemote.invokeJavaBeanMethod(
+					classname, methodname, null);
+			
+			DialogFactory.showInfoMessageDialog(jda, "测试成功\n获得返回值："+object, "成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			DialogFactory.showErrorMessageDialog(jda, "测试失败\n"
+					+ e.getMessage(), "测试失败");
+		}
+
     }
 }

@@ -52,6 +52,7 @@ public final class IreportConstant {
 	public final static String SESSION_SUFFIX="session_";
 
 	public final static String REPORT_TYPE_JASPERREPORT = "6";
+	public static final String REPORT_TYPE_JASPERREPORT_COLLECTION = "7";
 
 	public final static String LOCK = "Y";
 	public final static String UN_LOCK = "N";
@@ -66,7 +67,7 @@ public final class IreportConstant {
 	public final static String NAME_SUFFIX = "_";
 
 	public final static String NEW_FILE_LIMIT="NEW_FILE_LIMIT";
-	//LOG
+	//LOG+
 	public final static int ERROR_ = -50;
 	public final static int RIGHT_ = -49;
 	public final static int INFO_ = -48;
@@ -83,6 +84,7 @@ public final class IreportConstant {
 	
 	//执行远程代码命令符
 	public final static int FIND_REPORT_LOCK_LIST = 2;	
+	public final static int FIND_JAVABEAN_COLLECTION_SOURCE =3;
 	
 	//分页
 	

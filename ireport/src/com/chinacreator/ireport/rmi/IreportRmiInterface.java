@@ -204,7 +204,7 @@ public interface IreportRmiInterface extends Remote{
 	 * @param methodName
 	 * @return
 	 */
-	Object invokeJavaBeanMethod(String fullClassName,String methodName,Object[] obj) throws RemoteException;
+	boolean invokeJavaBeanMethod(String fullClassName,String methodName,Object[] obj) throws RemoteException;
 
 	/**
 	 * 获得服务器端某类的属性描述集

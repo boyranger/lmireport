@@ -4,7 +4,7 @@
  * Created on 2009年10月14日, 下午3:22
  */
 
-package it.businesslogic.ireport.plugin.newserverfile;
+package it.businesslogic.ireport.plugin.collectionfactory;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -31,18 +31,18 @@ import com.chinacreator.ireport.rmi.IreportRmiClient;
  * 
  * @author Administrator
  */
-public class JavaBeanDatasourceSet extends javax.swing.JDialog {
+public class ServerJavaBeanDatasourceSet extends javax.swing.JDialog {
 
 	/** Creates new form JavaBeanDatasourceSet */
 	public Object[] paramObj = null;
 
-	public JavaBeanDatasourceSet jb = null;
-	public NewServrtFile nsf = null;
+	public ServerJavaBeanDatasourceSet jb = null;
+	public CollectionFactoryDialog cfd = null;
 	
-	public JavaBeanDatasourceSet(java.awt.Frame parent, boolean modal) {
+	public ServerJavaBeanDatasourceSet(java.awt.Dialog parent, boolean modal) {
 		super(parent, modal);
 		jb = this;
-		nsf = (NewServrtFile) parent;
+		cfd = (CollectionFactoryDialog) parent;
 		initComponents();
 		removeDate();
 		
@@ -748,7 +748,7 @@ public class JavaBeanDatasourceSet extends javax.swing.JDialog {
 	public static void main(String args[]) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				JavaBeanDatasourceSet dialog = new JavaBeanDatasourceSet(
+				ServerJavaBeanDatasourceSet dialog = new ServerJavaBeanDatasourceSet(
 						new javax.swing.JFrame(), true);
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 					public void windowClosing(java.awt.event.WindowEvent e) {
