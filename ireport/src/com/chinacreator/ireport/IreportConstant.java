@@ -85,7 +85,7 @@ public final class IreportConstant {
 	//执行远程代码命令符
 	public final static int FIND_REPORT_LOCK_LIST = 2;	
 	public final static int FIND_JAVABEAN_COLLECTION_SOURCE =3;
-	
+	public final static int GET_REPORT_INFO =4;
 	//分页
 	
 	public final static int DEFAULT_PAGE_SIZE= 10;

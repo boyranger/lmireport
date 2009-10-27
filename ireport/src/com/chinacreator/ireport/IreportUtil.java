@@ -751,13 +751,12 @@ public class IreportUtil {
 	 */
 	public static Object[][] CollectionFactoryToObjectArray(List<ReportDatasourceBean> list) {
 		if (list != null && list.size() > 0) {
-			Object[][] date = new Object[list.size()][6];
+			Object[][] date = new Object[list.size()][4];
 			for (int i = 0; i < list.size(); i++) {
-				date[i][0] = false;
-				date[i][1] = list.get(i).getBean_report_id();
-				date[i][2] = list.get(i).getClass_name();
-				date[i][3] = list.get(i).getMethod_name();
-				date[i][4] = defaultDateFormat(list.get(i).getAdd_time());
+				date[i][0] = list.get(i).getBean_report_id();
+				date[i][1] = list.get(i).getClass_name();
+				date[i][2] = list.get(i).getMethod_name();
+				date[i][3] = defaultDateFormat(list.get(i).getAdd_time());
 			}
 			return date;
 		}

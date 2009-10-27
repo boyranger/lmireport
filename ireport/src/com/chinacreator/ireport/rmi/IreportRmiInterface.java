@@ -226,6 +226,26 @@ public interface IreportRmiInterface extends Remote{
 	 * @throws RemoteException
 	 */
 	List<Map<String,Object>> remoteBeanCollectionDataset(String className,String methodName,int collectionType)throws RemoteException;
+
+	/**
+	 * 添加一条javabean数据源记录
+	 * @param rdb
+	 * @throws RemoteException
+	 */
+	void addJavaBeanDataSourceRecord(ReportDatasourceBean rdb) throws RemoteException;
+
+	/**
+	 * 删除一条javabean数据源记录
+	 * @param repid
+	 */
+	void deleteJavaBeanDataSourceRecord(String repid)throws RemoteException;
+	
+	/**
+	 * 修改一条javabean数据源记录
+	 * @param rdb
+	 * @throws RemoteException
+	 */
+	void updateJavaBeanDataSourceRecord(ReportDatasourceBean rdb)throws RemoteException;
 }
 
 //end IreportRmiInterface.java

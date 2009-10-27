@@ -26,6 +26,7 @@ import com.chinacreator.ireport.MyReportProperties;
 import com.chinacreator.ireport.component.DialogFactory;
 import com.chinacreator.ireport.rmi.IndexInfo;
 import com.chinacreator.ireport.rmi.IreportRmiClient;
+import com.chinacreator.ireport.rmi.ReportDatasourceBean;
 
 /**
  * 
@@ -35,15 +36,19 @@ public class ServerJavaBeanDatasourceSet extends javax.swing.JDialog {
 
 	/** Creates new form JavaBeanDatasourceSet */
 	public Object[] paramObj = null;
-
+	
 	public ServerJavaBeanDatasourceSet jb = null;
 	public CollectionFactoryDialog cfd = null;
 	
 	public ServerJavaBeanDatasourceSet(java.awt.Dialog parent, boolean modal) {
-		super(parent, modal);
+		super(parent, true);
 		jb = this;
 		cfd = (CollectionFactoryDialog) parent;
 		initComponents();
+		jTextField2.setText(cfd.getCurrendSelectClassName());
+		jTextField3.setText(cfd.getCurrendSelectMethod());
+		
+		this.setTitle((this.getTitle()==null?"修改javabean数据源类和方法":this.getTitle())+"(ID:"+cfd.getCurrendSelectID()+")");
 		removeDate();
 		
 	}
@@ -672,11 +677,7 @@ public class ServerJavaBeanDatasourceSet extends javax.swing.JDialog {
 	}
 
 	private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {
-		// TODO add your handling code here:帮助
-		JFrame helpFrame = new Help();
-		helpFrame.setTitle("帮助");
-		it.businesslogic.ireport.util.Misc.centerFrame(helpFrame);
-		helpFrame.setVisible(true);
+		
 	}
 
 	private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {
@@ -693,33 +694,9 @@ public class ServerJavaBeanDatasourceSet extends javax.swing.JDialog {
 			return;
 		}
 
-		JDialog paramDialog = new Params(this, this,
-				true);
-		it.businesslogic.ireport.util.Misc.centerFrame(paramDialog);
-		paramDialog.setVisible(true);
-		if (paramObj != null && paramObj.length == 0) {
-			paramObj = null;
-		}
-		String p = "";
-		if (paramObj != null && paramObj.length > 0) {
-			for (int i = 0; i < paramObj.length; i++) {
-				String thisp = null;
-				if (paramObj[i] == null) {
-					thisp = "null";
-				} else {
-					thisp = (String) paramObj[i];
-				}
-				p = p + thisp;
-				if (i != paramObj.length - 1) {
-					p = p + ",";
-				}
-			}
-		} else {
-			p = null;
-		}
 		try {
-			AddedOperator.log("执行" + classname + "的" + methodname + "方法，参数为"
-					+ p, IreportConstant.INFO_);
+			AddedOperator.log("执行" + classname + "的" + methodname + "方法，参数为null"
+					, IreportConstant.INFO_);
 			IreportRmiClient.getInstance();
 			boolean object = IreportRmiClient.rmiInterfactRemote.invokeJavaBeanMethod(
 					classname, methodname, paramObj);
@@ -739,25 +716,6 @@ public class ServerJavaBeanDatasourceSet extends javax.swing.JDialog {
 
 	private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {
 		this.dispose();
-	}
-
-	/**
-	 * @param args
-	 *            the command line arguments
-	 */
-	public static void main(String args[]) {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				ServerJavaBeanDatasourceSet dialog = new ServerJavaBeanDatasourceSet(
-						new javax.swing.JFrame(), true);
-				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-					public void windowClosing(java.awt.event.WindowEvent e) {
-						System.exit(0);
-					}
-				});
-				dialog.setVisible(true);
-			}
-		});
 	}
 
 	// Variables declaration - do not modify
@@ -787,24 +745,62 @@ public class ServerJavaBeanDatasourceSet extends javax.swing.JDialog {
 	}
 
 	private void addDate() {
-		String classname = jTextField2.getText();
-		String methodname = jTextField3.getText();
-		if (IreportUtil.isBlank(classname)) {
-			DialogFactory.showErrorMessageDialog(this, "类名必须填写", "错误");
-			return;
-		}
+		try {
+			String classname = jTextField2.getText();
+			String methodname = jTextField3.getText();
+			
+			String oldClassName = cfd.getCurrendSelectClassName();
+			String oldMethodName = cfd.getCurrendSelectMethod();
+			if (IreportUtil.isBlank(classname)) {
+				DialogFactory.showErrorMessageDialog(this, "类名必须填写", "错误");
+				return;
+			}
 
-		if (IreportUtil.isBlank(methodname)) {
-			DialogFactory.showErrorMessageDialog(this, "方法名必须填写", "错误");
-			return;
+			if (IreportUtil.isBlank(methodname)) {
+				DialogFactory.showErrorMessageDialog(this, "方法名必须填写", "错误");
+				return;
+			}
+			//修该数据库、刷新table
+			String repid = cfd.getCurrendSelectID();
+			ReportDatasourceBean rb = new ReportDatasourceBean();
+			rb.setBean_report_id(repid);
+			rb.setClass_name(classname);
+			rb.setMethod_name(methodname);
+			int i = -9;
+			if(oldClassName.equals(classname) && oldMethodName.equals(methodname)){
+				DialogFactory.showMessageDialog(this, "未做任何修改", "信息", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}else if(oldClassName.equals(classname)){
+				i = JOptionPane.showConfirmDialog(this, "你确定将报表ID为:"+cfd.getCurrendSelectID()+"的javabean数据源信息进行如下修改？\n"
+						//+cfd.getCurrendSelectClassName()+" 修改为 "+classname +"\n"
+						+cfd.getCurrendSelectMethod()+" 修改为 "+methodname +"\n"
+				);
+			}else if(oldMethodName.equals(methodname)){
+				//类名不相同
+				i = JOptionPane.showConfirmDialog(this, "你确定将报表ID为:"+cfd.getCurrendSelectID()+"的javabean数据源信息进行如下修改？\n"
+						+cfd.getCurrendSelectClassName()+" 修改为 "+classname +"\n"
+						//+cfd.getCurrendSelectMethod()+" 修改为 "+methodname +"\n"
+				);
+			}else{
+				i = JOptionPane.showConfirmDialog(this, "你确定将报表ID为:"+cfd.getCurrendSelectID()+"的javabean数据源信息进行如下修改？\n"
+						+cfd.getCurrendSelectClassName()+" 修改为 "+classname +"\n"
+						+cfd.getCurrendSelectMethod()+" 修改为 "+methodname +"\n"
+				);
+			}
+			
+			if(i!=JOptionPane.OK_OPTION){
+				return;
+			}
+			IreportRmiClient.getInstance().getRmiRemoteInterface().updateJavaBeanDataSourceRecord(rb);
+			cfd.doRefresh();
+			AddedOperator.log("javabean服务器端数据源信息修改成功", IreportConstant.RIGHT_);
+			this.setVisible(false);
+			this.dispose();
+		} catch (Exception e) {
+			e.printStackTrace();
+			DialogFactory.showErrorMessageDialog(this, "错误:"+e.getMessage(), "错误");
 		}
-		MyReportProperties.setProperties(IreportConstant.CLASS_NAME, classname);
-		MyReportProperties.setProperties(IreportConstant.METHOD_NAME,
-				methodname);
-		this.nsf.jLabel11.setText(classname);
-		this.nsf.jLabel12.setText(methodname);
-		this.setVisible(false);
-		this.dispose();
+		
 	}
 
 	class MylistModel extends AbstractListModel {

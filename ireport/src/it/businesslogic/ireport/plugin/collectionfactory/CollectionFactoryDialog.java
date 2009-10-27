@@ -6,10 +6,15 @@
 
 package it.businesslogic.ireport.plugin.collectionfactory;
 
+import it.businesslogic.ireport.util.Misc;
+
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JTable;
+import javax.swing.JToolTip;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
@@ -20,6 +25,7 @@ import com.chinacreator.ireport.component.DialogFactory;
 import com.chinacreator.ireport.rmi.IreportRmiClient;
 import com.chinacreator.ireport.rmi.PageInfo;
 import com.chinacreator.ireport.rmi.ReportDatasourceBean;
+import com.tip.MultiLineToolTip;
 
 /**
  * 
@@ -32,21 +38,23 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 	private int currentPage = 1;
 	private int maxPage = 1;
 	
+	private int row;
+    private int column;
+
+	
 	public static CollectionFactoryDialog cfd = null;
 	public CollectionFactoryDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         cfd = this;
         initComponents();
         this.setTitle("服务器端javabean数据源配置");
-        jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
-        jTable1.getColumnModel().getColumn(0).setMinWidth(30);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-        jTable1.getColumnModel().getColumn(0).setResizable(false);
-        
-        //jTable1.getColumnModel().getColumn(2).setMaxWidth(100);
+        //不能重新排序各列
+        jTable1.getTableHeader().setReorderingAllowed(false);
+
+        jTable1.getColumnModel().getColumn(1).setMaxWidth(600);
         //jTable1.getColumnModel().getColumn(2).setMinWidth(100);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(250);
-        jTable1.getColumnModel().getColumn(2).setResizable(false);
+        
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
         
         jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
        
@@ -54,17 +62,46 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
         new MouseAdapter(){
         	
         	public void mouseClicked(MouseEvent e) {
-        		int i =((JTable)e.getSource()).getSelectedRow();
-        		int c =((JTable)e.getSource()).getSelectedColumn();
-        		if(c==0){
-        			return;
+        		if(e.getClickCount() == 2){
+        			doShowClassM();
         		}
-        		boolean b = Boolean.valueOf(jTable1.getModel().getValueAt(i, 0)+"");
-        		jTable1.getModel().setValueAt(!b, i, 0);
         	}
         }		
         );	
-       
+        
+        
+        jTable1.addMouseMotionListener(new MouseMotionListener() {
+
+            public void mouseDragged(MouseEvent e) {
+
+            }
+
+            public void mouseMoved(MouseEvent e) {
+
+                Point point = e.getPoint();
+
+                int x = jTable1.rowAtPoint(point);
+
+                int y = jTable1.columnAtPoint(point);
+
+                if (x != row || y != column) {
+
+                    row = x;
+
+                    column = y;
+
+                }
+               
+                Object tip = jTable1.getValueAt(row, 1);
+                Object tip1 = jTable1.getValueAt(row, 2);
+                if (tip != null) {
+                    jTable1.setToolTipText("类名:"+tip.toString()+"\n"+"方法名:"+tip1);
+                }
+
+            }
+
+        });
+
     }
 
 	/**
@@ -89,9 +126,16 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 	        jButton8 = new javax.swing.JButton();
 	        jLabel2 = new javax.swing.JLabel();
 	        jPanel5 = new javax.swing.JPanel();
+	        jButton2 = new javax.swing.JButton();
 	        jPanel4 = new javax.swing.JPanel();
 	        jScrollPane1 = new javax.swing.JScrollPane();
-	        jTable1 = new javax.swing.JTable();
+	        jTable1 = new javax.swing.JTable(){
+	        	public JToolTip createToolTip() {
+					MultiLineToolTip tip = new MultiLineToolTip();
+					tip.setComponent(this);
+					return tip;
+				}
+	        };
 
 	        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -114,7 +158,14 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 	                jButton1MouseClicked(evt);
 	            }
 	        });
-
+	        
+	        jButton2.setText("添加");
+	        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+	            public void mouseClicked(java.awt.event.MouseEvent evt) {
+	                jButton2MouseClicked(evt);
+	            }
+	        });
+	        
 	        jButton3.setText("修改");
 	        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
 	            public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -207,12 +258,15 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 
 	        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
 	        jPanel3.setLayout(jPanel3Layout);
+	        jPanel3.setLayout(jPanel3Layout);
 	        jPanel3Layout.setHorizontalGroup(
 	            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
 	            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3Layout.createSequentialGroup()
 	                .addContainerGap()
 	                .add(jLabel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 322, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-	                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 164, Short.MAX_VALUE)
+	                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 71, Short.MAX_VALUE)
+	                .add(jButton2)
+	                .add(36, 36, 36)
 	                .add(jButton4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
 	                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
 	                .add(jButton5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -228,23 +282,25 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 	        );
 	        jPanel3Layout.setVerticalGroup(
 	            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-	            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3Layout.createSequentialGroup()
-	                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-	                    .add(jPanel3Layout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .add(jLabel2))
-	                    .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-	                        .add(jTextField2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-	                        .add(jButton6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-	                        .add(jButton7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+	            .add(jPanel3Layout.createSequentialGroup()
+	                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+	                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
 	                        .add(jPanel3Layout.createSequentialGroup()
-	                            .add(1, 1, 1)
-	                            .add(jButton8))
-	                        .add(jButton5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-	                        .add(jButton4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)))
+	                            .addContainerGap()
+	                            .add(jLabel2))
+	                        .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+	                            .add(jTextField2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+	                            .add(jButton6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+	                            .add(jButton7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+	                            .add(jPanel3Layout.createSequentialGroup()
+	                                .add(1, 1, 1)
+	                                .add(jButton8))
+	                            .add(jButton5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+	                            .add(jButton4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)))
+	                    .add(jButton2))
 	                .addContainerGap())
 	        );
-
+	        
 	        jPanel1.add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
 	        jPanel5.setPreferredSize(new java.awt.Dimension(0, 100));
@@ -292,6 +348,15 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 
 	        pack();
 	    }// </editor-fold>
+	
+	  
+	public void jButton2MouseClicked(MouseEvent evt) {
+		//直接添加
+		AddCollection dialog = new AddCollection(this, true);
+		Misc.centerFrame(dialog);
+		dialog.setTitle("为报表添加javabean数据源");
+		dialog.setVisible(true);
+	}
 
 	private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {
 		// TODO add your handling code here:
@@ -351,13 +416,42 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 	private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {
 		// TODO add your handling code here:
 		//System.out.print("刷新");
-		String searchStr = jTextField1.getText();
-		jTable1.setModel(new MyTableModel(searchStr,currentPage));
-		
-		resetColumn();
+		doRefresh();
 		
 	}
 
+	public void doRefresh(){
+		String searchStr = jTextField1.getText();
+		jTable1.setModel(new MyTableModel(searchStr,currentPage));
+		resetColumn();
+	}
+	
+	public String getCurrendSelectID(){
+		int selectRow = jTable1.getSelectedRow();
+		if(selectRow==-1){
+			return null;
+		}
+		
+		return (String) jTable1.getModel().getValueAt(selectRow,0);
+	}
+	
+	public String getCurrendSelectClassName(){
+		int selectRow = jTable1.getSelectedRow();
+		if(selectRow==-1){
+			return null;
+		}
+		
+		return (String) jTable1.getModel().getValueAt(selectRow,1);
+	}
+	
+	public String getCurrendSelectMethod(){
+		int selectRow = jTable1.getSelectedRow();
+		if(selectRow==-1){
+			return null;
+		}
+		
+		return (String) jTable1.getModel().getValueAt(selectRow,2);
+	}
 	private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {
 		//System.out.print("搜索");
 		String searchStr = jTextField1.getText();
@@ -366,33 +460,43 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 		
 	}
 
+	private void doShowClassM(){
+		int selectRow = jTable1.getSelectedRow();
+		
+		if(selectRow==-1){
+			DialogFactory.showErrorMessageDialog(this, "你未选择行", "错误");
+			return;
+		}
+		
+		ServerJavaBeanDatasourceSet s = new ServerJavaBeanDatasourceSet(this,true);
+		Misc.centerFrame(s);
+		s.setVisible(true);
+	}
 
 	private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {
 		//System.out.print("修改");
 		try {
 			
-			int selectRow = jTable1.getSelectedRow();
+			doShowClassM();
 			
-			if(selectRow<=0){
-				DialogFactory.showErrorMessageDialog(this, "你未选择行", "错误");
-				return;
-			}
-			
-			String id = (String) jTable1.getModel().getValueAt(selectRow,1);
+		/*	String id = (String) jTable1.getModel().getValueAt(selectRow,1);
 			String classname = (String) jTable1.getModel().getValueAt(selectRow,2);
 			String method = (String) jTable1.getModel().getValueAt(selectRow,3);
 			
 			
 			IreportRmiClient.getInstance();
-			IreportRmiClient.rmiInterfactRemote.unLockAllReport();
+			//修改数据库
 			
-			String searchStr = jTextField1.getText();
-			jTable1.setModel(new MyTableModel(searchStr,currentPage));
-			resetColumn();
-			AddedOperator.log("解除所有锁定成功", IreportConstant.RIGHT_);
+			ReportDatasourceBean rb = new ReportDatasourceBean();
+			rb.setBean_report_id(id);
+			rb.setClass_name(classname);
+			rb.setMethod_name(method);
+			IreportRmiClient.rmiInterfactRemote.updateJavaBeanDataSourceRecord(rb);*/
+			
+			
 		} catch (Exception e) {
-			AddedOperator.log("删除所有锁定记录错误", IreportConstant.ERROR_);
-			DialogFactory.showErrorMessageDialog(this, "删除所有锁定记录错误", "解锁失败");
+			AddedOperator.log("修改javabean数据源信息错误:"+e.getMessage(), IreportConstant.ERROR_);
+			DialogFactory.showErrorMessageDialog(this, "修改javabean数据源信息错误:"+e.getMessage(), "错误");
 		}
 	}
 
@@ -413,7 +517,7 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 	private javax.swing.JPanel jPanel4;
 	private javax.swing.JPanel jPanel5;
 	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JTable jTable1;
+	public javax.swing.JTable jTable1;
 	private javax.swing.JTextField jTextField1;
 	private javax.swing.JTextField jTextField2;
 
@@ -454,7 +558,7 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 			
 			}
 
-		private String[] columnNames = { "", "报表ID", "工厂类", "方法", 
+		private String[] columnNames = {"报表ID", "工厂类", "方法", 
 				"修改时间" };
 
 		public int getColumnCount() {
@@ -491,11 +595,9 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 		public boolean isCellEditable(int row, int col) {
 			// Note that the data/cell address is constant,
 			// no matter where the cell appears onscreen.
-			if (col < 1) {
-				return true;
-			} else {
+		
 				return false;
-			}
+			
 		}
 
 		/*
@@ -528,16 +630,8 @@ public class CollectionFactoryDialog extends javax.swing.JDialog {
 	
 	private void resetColumn(){
 		if(jTable1.getColumnModel().getColumnCount()>0){
-		    jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
-	        jTable1.getColumnModel().getColumn(0).setMinWidth(30);
-	        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-	        
-	        //jTable1.getColumnModel().getColumn(2).setMaxWidth(100);
-	        //jTable1.getColumnModel().getColumn(2).setMinWidth(100);
-	        jTable1.getColumnModel().getColumn(2).setPreferredWidth(250);
-	        
-	        
-	        jTable1.getColumnModel().getColumn(0).setResizable(false);
+	        jTable1.getColumnModel().getColumn(1).setMaxWidth(600);
+	        jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
 	        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			}
 	}

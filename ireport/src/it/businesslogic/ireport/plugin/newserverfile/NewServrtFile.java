@@ -655,7 +655,7 @@ public class NewServrtFile extends javax.swing.JFrame {
 		    		AddedOperator.log("远程javabean数据源:classname["+classname+"] methodname["+methodname+"]", IreportConstant.INFO_);
 		    	}
 		    	
-		    	
+		    	System.out.println("HAHAHAHAH:"+ifi.getClass_name());
 		    	String returnid = null;
 		    	returnid = IreportRmiClient.getRmiRemoteInterface().addNewReport(ifi);
 		    	if(IreportUtil.isBlank(returnid)){
