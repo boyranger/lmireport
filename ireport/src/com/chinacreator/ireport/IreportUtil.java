@@ -87,7 +87,7 @@ public class IreportUtil {
 			}
 			BufferedOutputStream output = null;
 			File file = new File(filePath);
-			if (!file.exists()) {
+			if (file!=null && !file.exists()) {
 				file.createNewFile();
 			}
 			output = new BufferedOutputStream(new FileOutputStream(file));
@@ -353,7 +353,7 @@ public class IreportUtil {
 				.getJMDIDesktopPane().getAllFrames();
 
 		for (int i = 0; i < intfs.length; i++) {
-			if (intfs != null && intfs[i] instanceof JReportFrame) {
+			if (intfs[i] != null && intfs[i] instanceof JReportFrame) {
 				JReportFrame jf = (JReportFrame) intfs[i];
 				if (jf.getReport().getFilename() == null
 						|| jf.getReport().getFilename().trim().equals("")) {
@@ -516,7 +516,7 @@ public class IreportUtil {
 		if (f == null) {
 			return;
 		}
-		if (f.exists()) {
+		if ( f.exists()) {
 			f.delete();
 		}
 	}
@@ -727,7 +727,7 @@ public class IreportUtil {
 	 * @param list
 	 * @return
 	 */
-	public static Object[][] ReportLockToObjectArray(List<ReportLock> list) {
+	public static Object[][] reportLockToObjectArray(List<ReportLock> list) {
 		if (list != null && list.size() > 0) {
 			Object[][] date = new Object[list.size()][6];
 			for (int i = 0; i < list.size(); i++) {
@@ -749,7 +749,7 @@ public class IreportUtil {
 	 * @param list
 	 * @return
 	 */
-	public static Object[][] CollectionFactoryToObjectArray(List<ReportDatasourceBean> list) {
+	public static Object[][] collectionFactoryToObjectArray(List<ReportDatasourceBean> list) {
 		if (list != null && list.size() > 0) {
 			Object[][] date = new Object[list.size()][4];
 			for (int i = 0; i < list.size(); i++) {

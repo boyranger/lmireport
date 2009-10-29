@@ -192,7 +192,7 @@ public class AddedOperator implements AddedOepretorInterface{
 	}
 
 	//不需要同步锁
-	public static AddedOepretorInterface getInstance(){
+	public static synchronized AddedOepretorInterface getInstance(){
 
 		if(addInstance == null){
 			addInstance =  new AddedOperator();
@@ -299,10 +299,6 @@ public class AddedOperator implements AddedOepretorInterface{
 				         } catch (Exception ex)
 				         {
 				        	 log("加载远程数据源失败", JOptionPane.ERROR_MESSAGE);
-				        	 /*  JOptionPane.showMessageDialog(MainFrame.getMainInstance(),
-				                                I18n.getFormattedString("messages.connectionsDialog.errorLoadingConnections" ,"Error loading connections.\n{0}", new Object[]{ex.getMessage()}),
-				                                I18n.getString("message.title.error","Error"), JOptionPane.ERROR_MESSAGE);
-				              ex.printStackTrace();*/
 				         }
 				         MainFrame.getMainInstance().setActiveConnection(myDefaulconn);
 				         MainFrame.getMainInstance().saveiReportConfiguration();
@@ -344,13 +340,13 @@ public class AddedOperator implements AddedOepretorInterface{
 	        	logger.info("ireportFile为："+ireportFile.getFileName()+"::::"+ireportFile.getContent().length);
 				String tmp_file_path = MainFrame.getMainInstance().IREPORT_TMP_FILE_DIR;
 				File tmp_file = new File(tmp_file_path);
-				if(!tmp_file.exists()){
+				if(tmp_file!=null && !tmp_file.exists()){
 					tmp_file.mkdirs();
 				}
 				String path = MainFrame.getMainInstance().IREPORT_TMP_FILE_DIR+"/"+IreportConstant.NAME_SUFFIX+ireportFile.getFileName();
 				logger.info("报表文件夹存放于："+path);
 				File oldFile = new File(path);
-				if(oldFile.exists()){
+				if(oldFile!=null && oldFile.exists()){
 					oldFile.delete();
 				}
 
@@ -497,7 +493,7 @@ public class AddedOperator implements AddedOepretorInterface{
 		//checkThread.setPriority(Prio);
 		checkThread.setDaemon(true);
 		
-		scheduler.scheduleAtFixedRate(checkThread, 10, 5, TimeUnit.SECONDS);
+		scheduler.scheduleAtFixedRate((Runnable)checkThread, 10, 5, TimeUnit.SECONDS);
 		return null;
 	}
 
@@ -508,16 +504,16 @@ public class AddedOperator implements AddedOepretorInterface{
 					try {
 					System.out.println("开始加载模板文件夹："+MainFrame.getMainInstance().IREPORT_TMP_TEMPLATE_DIR);
 					File tmplateDir = new File(MainFrame.getMainInstance().IREPORT_TMP_TEMPLATE_DIR);
-					if(!tmplateDir.exists()){
+					if(tmplateDir!=null && !tmplateDir.exists()){
 						tmplateDir.mkdirs();
 					}
 					File[] fs = tmplateDir.listFiles();
-					if(fs==null || fs.length==0){
+					if(fs!=null && fs.length==0){
 
 						System.out.println("开始从服务器获取模板文件...");
 						//删除本地模板文件
 						for (int i = 0; i < fs.length; i++) {
-							if(fs[i].isFile()){
+							if(fs[i]!=null && fs[i].isFile()){
 								fs[i].delete();
 							}
 						}
@@ -552,7 +548,6 @@ public class AddedOperator implements AddedOepretorInterface{
 	public Object initRemoteArgs(String[] args) {
 		logger.info("开始initRemoteArgs");
 
-		System.out.println("args..............."+args.length);
 		if(args!=null && args.length>0){
 			for (int i = 0; i < args.length; i++) {
 				System.out.println("********参数"+(i+1)+":["+args[i]+"]********");
@@ -594,7 +589,9 @@ public class AddedOperator implements AddedOepretorInterface{
 				//没有找到配置文件目录将创建目录
 				log("未找到插件文件夹："+plugDir.getPath()+"，创建该文件夹",IreportConstant.INFO_);
 				System.out.println("未找到插件文件夹："+plugDir.getPath()+"，创建该文件夹");
+				if(plugDir!=null){
 				plugDir.mkdirs();
+				}
 			}
 			if(plugDir.listFiles()!=null && plugDir.listFiles().length==0){
 				logger.info("从服务器加载插件文件...");
@@ -607,8 +604,10 @@ public class AddedOperator implements AddedOepretorInterface{
 				for (int i = 0; i < fs.size(); i++) {
 		        	IreportFile irf= fs.get(i);
 		        	File f = IreportUtil.bytesToFile(MainFrame.getMainInstance().IREPORT_PLUGIN_DIR+"/"+irf.getFileName(), irf.getContent());
-					f.mkdir();
-					System.out.println("成功加载配置插件文件:"+f.getPath());
+					if(f!=null){
+		        	f.mkdir();
+		        	}
+					System.out.println("成功加载配置插件文件:"+f==null?"":f.getPath());
 		        }
 		        log("成功加载配置插件文件"+fs.size()+"个", IreportConstant.INFO_);
 			}else{

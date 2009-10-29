@@ -211,7 +211,7 @@ public class JavaBeanRemoteDataSourceConnectionEditor extends javax.swing.JPanel
 
     public IReportConnection getIReportConnection() {
         
-        IReportConnection irConn = irConn = new JavaBeanRemoteDataSourceConnection();
+        IReportConnection irConn = new JavaBeanRemoteDataSourceConnection();
         
         ((JavaBeanRemoteDataSourceConnection)irConn).setFactoryClass( this.jTextFieldJBSetFactoryClass.getText().trim() );
         ((JavaBeanRemoteDataSourceConnection)irConn).setMethodToCall( this.jTextFieldJBSetMethodToCall.getText().trim() );

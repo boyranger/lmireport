@@ -25,8 +25,6 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
     public static String BEAN_ARRAY = "BEAN_ARRAY";
     public static String BEAN_COLLECTION = "BEAN_COLLECTION";
     
-    private String name;
-    
     private String factoryClass;
     
     private String methodToCall;
@@ -88,7 +86,7 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
      *
      */
     public java.lang.String getMethodToCall() {
-        return methodToCall;
+        return this.methodToCall;
     }
     
     /** Setter for property methodToCall.
@@ -104,7 +102,7 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
      *
      */
     public java.lang.String getFactoryClass() {
-        return factoryClass;
+        return this.factoryClass;
     }
     
     /** Setter for property factoryClass.
@@ -128,7 +126,7 @@ public class JavaBeanRemoteDataSourceConnection extends it.businesslogic.ireport
      * @param type New value of property type.
      */
     public void setType(java.lang.String type) {
-        this.type = type;
+    	JavaBeanRemoteDataSourceConnection.type = type;
     }    
     
         /**

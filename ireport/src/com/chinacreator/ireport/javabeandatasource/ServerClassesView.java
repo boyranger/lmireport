@@ -243,7 +243,6 @@ public class ServerClassesView extends javax.swing.JDialog {
 					IreportConstant.ERROR_);
 		}
 
-		Thread processThread = null;
 		try {
 
 			new Thread(new Runnable() {
@@ -292,11 +291,14 @@ public class ServerClassesView extends javax.swing.JDialog {
 							}
 
 							String str = null;
-							if (pp[1] != 0 && pp[0] != 0 && pp[1] >= pp[0]) {
+							
+							if (pp!=null && pp[1] != 0 && pp[0] != 0 && pp[1] >= pp[0]) {
 								str = "100%";
 							} else {
-								str = nf.format(new Double(pp[1])
-										/ new Double(pp[0]));// 要转化的数
+								if(nf!=null){
+								str = nf.format(new Double(pp[1]).doubleValue()
+										/ new Double(pp[0]).doubleValue());// 要转化的数
+								}
 							}
 
 							jb.jLabel4.setText("正在创建索引..." + str);
@@ -330,15 +332,16 @@ public class ServerClassesView extends javax.swing.JDialog {
 
 			});
 			pt.start();
-			processThread = pt;
 
 			// jLabel4.setText("完成");
 			// AddedOperator.log("新建索引成功", IreportConstant.RIGHT_);
 		} catch (Exception e) {
-			try {
+			/*try {
+				if(processThread!=null){
 				processThread.interrupt();
+				}
 			} catch (Exception ex) {
-			}
+			}*/
 			jLabel4.setText("创建索引失败！");
 			AddedOperator.log("新建索引错误：" + e.getMessage(),
 					IreportConstant.ERROR_);
@@ -446,7 +449,7 @@ public class ServerClassesView extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration
-	class MylistModel extends AbstractListModel {
+	static class MylistModel extends AbstractListModel {
 		List<String> lists;
 
 		MylistModel(List<String> lists) {

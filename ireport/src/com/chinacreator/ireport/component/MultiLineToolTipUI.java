@@ -17,8 +17,6 @@ import javax.swing.plaf.metal.MetalToolTipUI;
 
 public class MultiLineToolTipUI extends MetalToolTipUI {
 	private String[] strs;
-	private int maxWidth = 0;
-
 	public void paint(Graphics g, JComponent c) {
 		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(
 				g.getFont());
@@ -65,7 +63,6 @@ public class MultiLineToolTipUI extends MetalToolTipUI {
 			}
 		}
 		int height = metrics.getHeight() * lines;
-		this.maxWidth = maxWidth;
 		return new Dimension(maxWidth + 6, height + 4);
 	}
 }

@@ -30,6 +30,7 @@ import java.applet.Applet;
 //begin Ireport.java
 public class Ireport extends Applet{
 	@Override
+	
 	public void init() {
 		MainFrame.main(null);
 	}
