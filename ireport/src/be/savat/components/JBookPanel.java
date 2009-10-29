@@ -46,6 +46,7 @@ import javax.swing.Timer;
 import javax.swing.event.MouseInputListener;
 
 /**
+ * 
  * The BookPanel uses the page turn effect to navigate between pages. The images used
  * as pages are set by specifying their location, the basename and the extension.
  * Each image should have the same basename followed by its index, ranging 1 to x.
@@ -81,7 +82,7 @@ public class JBookPanel extends JPanel
 	protected Timer timer;
 	//protected AutomatedAction action;
 	protected Integer action;
-        protected Point autoPoint;
+    protected Point autoPoint;
 	protected Point tmpPoint;
 
 	protected int leftPageIndex;
