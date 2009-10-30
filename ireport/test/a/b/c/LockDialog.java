@@ -512,7 +512,7 @@ public class LockDialog extends javax.swing.JDialog {
 					IreportConstant.DEFAULT_PAGE_SIZE);
 			if (pg != null) {
 				java.util.List<ReportLock> list = pg.getIreports();
-				Object[][] mydata = IreportUtil.ReportLockToObjectArray(list);
+				Object[][] mydata = IreportUtil.reportLockToObjectArray(list);
 				if (mydata != null && mydata.length != 0) {
 					data = mydata;
 				}
